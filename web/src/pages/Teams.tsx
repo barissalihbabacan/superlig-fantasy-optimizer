@@ -177,16 +177,16 @@ export const Teams: React.FC<TeamsProps> = ({ dataset }) => {
                 {/* Pos counts grid */}
                 <div className="grid grid-cols-4 gap-1.5 text-center text-[10px] font-semibold">
                   <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    GK: {item.gk}
+                    KL: {item.gk}
                   </div>
                   <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
                     DEF: {item.def}
                   </div>
                   <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    MID: {item.mid}
+                    OS: {item.mid}
                   </div>
                   <div className="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                    FWD: {item.fwd}
+                    FOR: {item.fwd}
                   </div>
                 </div>
 

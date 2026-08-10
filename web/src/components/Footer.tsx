@@ -3,7 +3,7 @@ import { Mail, Github, FileText, AlertCircle } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="mt-auto border-t border-[var(--border-color)] bg-[var(--bg-surface)] py-8 text-sm text-[var(--text-secondary)]">
+    <footer className="mt-16 sm:mt-24 border-t border-[var(--border-color)] bg-[var(--bg-surface)] py-8 text-sm text-[var(--text-secondary)]">
       <div className="app-container flex flex-col gap-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
           {/* Column 1: Independence & Project Title */}

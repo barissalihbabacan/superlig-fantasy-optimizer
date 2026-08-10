@@ -25,10 +25,10 @@ export const Rules: React.FC = () => {
           <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)] space-y-2">
             <div className="font-bold text-[var(--text-primary)]">Kadro Yapısı (15 Oyuncu)</div>
             <ul className="space-y-1.5 text-[var(--text-secondary)] list-disc list-inside">
-              <li><strong className="text-[var(--text-primary)]">2 Kaleci (GK)</strong></li>
+              <li><strong className="text-[var(--text-primary)]">2 Kaleci (KL)</strong></li>
               <li><strong className="text-[var(--text-primary)]">5 Defans (DEF)</strong></li>
-              <li><strong className="text-[var(--text-primary)]">5 Orta Saha (MID)</strong></li>
-              <li><strong className="text-[var(--text-primary)]">3 Forvet (FWD)</strong></li>
+              <li><strong className="text-[var(--text-primary)]">5 Orta Saha (OS)</strong></li>
+              <li><strong className="text-[var(--text-primary)]">3 Forvet (FOR)</strong></li>
             </ul>
           </div>
 
@@ -51,7 +51,7 @@ export const Rules: React.FC = () => {
           <span>2. Desteklenen Formasyonlar (8 Diziliş)</span>
         </h3>
         <p className="text-xs text-[var(--text-secondary)]">
-          İlk 11'de her zaman 1 Kaleci (GK) bulunmalıdır. Kalan 10 oyuncu aşağıdaki formasyonlara göre sahaya yerleştirilebilir:
+          İlk 11'de her zaman 1 Kaleci (KL) bulunmalıdır. Kalan 10 oyuncu aşağıdaki formasyonlara göre sahaya yerleştirilebilir:
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs font-mono">
@@ -92,22 +92,22 @@ export const Rules: React.FC = () => {
               </tr>
               <tr>
                 <td className="font-semibold">Kaleci Golü</td>
-                <td>GK oyuncusunun attığı her gol</td>
+                <td>Kaleci oyuncusunun attığı her gol</td>
                 <td className="font-mono font-bold text-emerald-400">+10 Puan</td>
               </tr>
               <tr>
                 <td className="font-semibold">Defans Golü</td>
-                <td>DEF oyuncusunun attığı her gol</td>
+                <td>Defans oyuncusunun attığı her gol</td>
                 <td className="font-mono font-bold text-emerald-400">+6 Puan</td>
               </tr>
               <tr>
                 <td className="font-semibold">Orta Saha Golü</td>
-                <td>MID oyuncusunun attığı her gol</td>
+                <td>Orta Saha oyuncusunun attığı her gol</td>
                 <td className="font-mono font-bold text-emerald-400">+5 Puan</td>
               </tr>
               <tr>
                 <td className="font-semibold">Forvet Golü</td>
-                <td>FWD oyuncusunun attığı her gol</td>
+                <td>Forvet oyuncusunun attığı her gol</td>
                 <td className="font-mono font-bold text-emerald-400">+4 Puan</td>
               </tr>
               <tr>
@@ -117,12 +117,12 @@ export const Rules: React.FC = () => {
               </tr>
               <tr>
                 <td className="font-semibold">Gol Yememe (Clean Sheet)</td>
-                <td>GK ve DEF oyuncuları (&ge;60 dk oynama şartı)</td>
+                <td>Kaleci ve Defans oyuncuları (&ge;60 dk oynama şartı)</td>
                 <td className="font-mono font-bold text-emerald-400">+4 Puan</td>
               </tr>
               <tr>
-                <td className="font-semibold">Gol Yememe (Clean Sheet - MID)</td>
-                <td>MID oyuncuları (&ge;60 dk oynama şartı)</td>
+                <td className="font-semibold">Gol Yememe (Clean Sheet - Orta Saha)</td>
+                <td>Orta Saha oyuncuları (&ge;60 dk oynama şartı)</td>
                 <td className="font-mono font-bold text-emerald-400">+1 Puan</td>
               </tr>
               <tr>

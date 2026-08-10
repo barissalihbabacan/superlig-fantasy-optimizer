@@ -81,13 +81,13 @@ export function getPositionBadgeColor(position: string): { bg: string; text: str
 export function translatePosition(position: string): string {
   switch (position) {
     case 'Goalkeeper':
-      return 'Kaleci (GK)';
+      return 'Kaleci';
     case 'Defender':
-      return 'Defans (DEF)';
+      return 'Defans';
     case 'Midfielder':
-      return 'Orta Saha (MID)';
+      return 'Orta Saha';
     case 'Forward':
-      return 'Forvet (FWD)';
+      return 'Forvet';
     default:
       return position;
   }
@@ -96,13 +96,13 @@ export function translatePosition(position: string): string {
 export function getShortPosition(position: string): string {
   switch (position) {
     case 'Goalkeeper':
-      return 'GK';
+      return 'KL';
     case 'Defender':
       return 'DEF';
     case 'Midfielder':
-      return 'MID';
+      return 'OS';
     case 'Forward':
-      return 'FWD';
+      return 'FOR';
     default:
       return position;
   }

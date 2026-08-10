@@ -80,14 +80,14 @@ export const Pitch: React.FC<PitchProps> = ({
         {/* Forwards */}
         <div className="pitch-row">
           {Array.from({ length: counts.fwd }).map((_, i) =>
-            renderSlot('FWD', fwdList[i], i)
+            renderSlot('FOR', fwdList[i], i)
           )}
         </div>
 
         {/* Midfielders */}
         <div className="pitch-row">
           {Array.from({ length: counts.mid }).map((_, i) =>
-            renderSlot('MID', midList[i], i)
+            renderSlot('OS', midList[i], i)
           )}
         </div>
 
@@ -100,7 +100,7 @@ export const Pitch: React.FC<PitchProps> = ({
 
         {/* Goalkeeper */}
         <div className="pitch-row justify-center">
-          {renderSlot('GK', gkList[0], 0)}
+          {renderSlot('KL', gkList[0], 0)}
         </div>
       </div>
 
@@ -132,7 +132,7 @@ export const Pitch: React.FC<PitchProps> = ({
             ))
           ) : (
             <>
-              {['GK', 'DEF', 'MID', 'FWD'].map((pos, idx) => (
+              {['KL', 'DEF', 'OS', 'FOR'].map((pos, idx) => (
                 <div
                   key={idx}
                   className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)] opacity-60"

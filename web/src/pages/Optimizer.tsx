@@ -119,7 +119,7 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset: _dataset }) => {
               <span>Uygulanan Kadro Kuralları</span>
             </div>
             <ul className="space-y-1 text-[var(--text-secondary)] list-disc list-inside text-[11px]">
-              <li>15 Oyuncu: 2 GK, 5 DEF, 5 MID, 3 FWD</li>
+              <li>15 Oyuncu: 2 KL, 5 DEF, 5 OS, 3 FOR</li>
               <li>11 Kişilik İlk 11 + 4 Kişilik Yedek Kulübesi</li>
               <li>Takım başına en fazla 3 oyuncu sınırı</li>
               <li>Bütçe aşımı yapılamaz (Bütçe &le; {(budget / 100).toFixed(1)}M ₺)</li>

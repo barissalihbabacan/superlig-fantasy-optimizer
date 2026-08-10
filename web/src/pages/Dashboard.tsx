@@ -190,7 +190,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab }) =
           {/* GK */}
           <div className="glass-panel p-4 flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md">GK</span>
+              <span className="text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md">KL</span>
               <span className="text-xs text-[var(--text-muted)]">Kaleci</span>
             </div>
             <div className="mt-3">
@@ -214,7 +214,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab }) =
           {/* MID */}
           <div className="glass-panel p-4 flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">MID</span>
+              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">OS</span>
               <span className="text-xs text-[var(--text-muted)]">Orta Saha</span>
             </div>
             <div className="mt-3">
@@ -226,7 +226,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab }) =
           {/* FWD */}
           <div className="glass-panel p-4 flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md">FWD</span>
+              <span className="text-xs font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md">FOR</span>
               <span className="text-xs text-[var(--text-muted)]">Forvet</span>
             </div>
             <div className="mt-3">
