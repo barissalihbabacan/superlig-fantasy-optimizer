@@ -18,3 +18,8 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# Node / Frontend çıktıları
+node_modules/
+dist/
+
