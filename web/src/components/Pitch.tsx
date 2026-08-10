@@ -7,8 +7,8 @@ interface PitchProps {
   formation: FormationType;
   lineup?: Player[];
   bench?: Player[];
-  captainId?: string;
-  viceCaptainId?: string;
+  captainId?: number | string;
+  viceCaptainId?: number | string;
 }
 
 export const Pitch: React.FC<PitchProps> = ({

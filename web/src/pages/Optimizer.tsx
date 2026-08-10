@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { SeasonDataset, FormationType } from '../types';
 import { Pitch } from '../components/Pitch';
-import { Zap, AlertTriangle, Shield, Sliders } from 'lucide-react';
+import { runClientOptimizer, OptimizationResult } from '../services/optimizer';
+import { formatPrice } from '../services/dataset';
+import { Zap, Shield, Sliders, CheckCircle2, Info } from 'lucide-react';
 
 interface OptimizerProps {
   dataset: SeasonDataset;
 }
 
-export const Optimizer: React.FC<OptimizerProps> = ({ dataset: _dataset }) => {
+export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
   const [budget, setBudget] = useState<number>(10000);
   const [formation, setFormation] = useState<FormationType>('3-5-2');
   const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [result, setResult] = useState<OptimizationResult | null>(null);
 
   const formations: FormationType[] = [
     'Auto',
@@ -27,13 +29,17 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset: _dataset }) => {
 
   const handleOptimizeClick = () => {
     setIsOptimizing(true);
-    setStatusMessage(null);
 
-    // Simulate clean interface trigger without generating fake optimization results
     setTimeout(() => {
+      const optRes = runClientOptimizer(
+        dataset.players,
+        dataset.projections,
+        budget,
+        formation
+      );
+      setResult(optRes);
       setIsOptimizing(false);
-      setStatusMessage('Web optimizer entegrasyonu hazırlanıyor. (Rust CLI optimizer sunucu/WASM katmanı ilk sürümde read-only olarak çalışmaktadır.)');
-    }, 600);
+    }, 400);
   };
 
   return (
@@ -101,14 +107,37 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset: _dataset }) => {
             <span>{isOptimizing ? 'Hesaplanıyor...' : 'Optimize Et'}</span>
           </button>
 
-          {/* Status Alert Banner */}
-          {statusMessage && (
+          {/* Result Card or Notice */}
+          {result ? (
+            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs space-y-3 animate-fadeIn">
+              <div className="flex items-center gap-2 font-bold text-emerald-400">
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                <span>Optimal Kadro Hesaplandı</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 font-mono text-[11px]">
+                <div className="p-2 rounded-lg bg-emerald-950/40 border border-emerald-500/20">
+                  <div className="text-[10px] text-emerald-400/80">Tahmini Puan</div>
+                  <div className="text-base font-bold text-emerald-300">{result.totalPoints.toFixed(1)} Puan</div>
+                </div>
+                <div className="p-2 rounded-lg bg-emerald-950/40 border border-emerald-500/20">
+                  <div className="text-[10px] text-emerald-400/80">Kadro Maliyeti</div>
+                  <div className="text-base font-bold text-emerald-300">{formatPrice(result.totalPrice)}</div>
+                </div>
+              </div>
+              <div className="text-[11px] text-emerald-200/90 leading-relaxed">
+                Kaptan (C): <span className="font-semibold text-white">{result.captain?.name}</span> (2x Puan)<br />
+                İkinci Kaptan (VC): <span className="font-semibold text-white">{result.viceCaptain?.name}</span>
+              </div>
+            </div>
+          ) : (
             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs space-y-2 animate-fadeIn">
               <div className="flex items-center gap-2 font-bold text-amber-400">
-                <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                <Info className="w-4 h-4 flex-shrink-0" />
                 <span>Web Optimizer Durumu</span>
               </div>
-              <p className="leading-relaxed text-amber-200/90">{statusMessage}</p>
+              <p className="leading-relaxed text-amber-200/90">
+                Web optimizer entegrasyonu hazırlanıyor. (Rust CLI optimizer sunucu/WASM katmanı ilk sürümde read-only olarak çalışmaktadır.)
+              </p>
             </div>
           )}
 
@@ -134,14 +163,26 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset: _dataset }) => {
             <div>
               <h3 className="font-bold text-[var(--text-primary)] text-sm flex items-center gap-2">
                 <span>Saha Diziliş Önizlemesi</span>
-                <span className="badge bg-blue-500/20 text-blue-400 font-mono">{formation}</span>
+                <span className="badge bg-blue-500/20 text-blue-400 font-mono">
+                  {result ? result.formation : formation}
+                </span>
               </h3>
-              <p className="text-xs text-[var(--text-muted)]">Optimizer sonuçları aktarıldığında ilk 11 sahada görüntülenecektir.</p>
+              <p className="text-xs text-[var(--text-muted)]">
+                {result
+                  ? 'Optimal ilk 11 ve 4 yedek oyuncu sahaya dizildi.'
+                  : 'Optimize Et butonuna basıldığında ilk 11 sahada görüntülenecektir.'}
+              </p>
             </div>
           </div>
 
           {/* Interactive Pitch Component */}
-          <Pitch formation={formation} />
+          <Pitch
+            formation={result ? result.formation : formation}
+            lineup={result ? result.startingXI : undefined}
+            bench={result ? result.bench : undefined}
+            captainId={result?.captain?.id}
+            viceCaptainId={result?.viceCaptain?.id}
+          />
         </div>
       </div>
     </div>
