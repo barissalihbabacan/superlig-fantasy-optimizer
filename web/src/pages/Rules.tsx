@@ -3,7 +3,7 @@ import { BookOpen, Shield, Award, Layers, TrendingUp } from 'lucide-react';
 
 export const Rules: React.FC = () => {
   return (
-    <div className="space-y-8 animate-fadeIn max-w-4xl mx-auto">
+    <div className="space-y-8 animate-fadeIn w-full">
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">

@@ -44,7 +44,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab }) =
     <div className="space-y-8 animate-fadeIn">
       {/* Hero Welcome Banner */}
       <div className="glass-panel p-6 sm:p-8 relative overflow-hidden bg-gradient-to-r from-blue-900/40 via-slate-900/60 to-emerald-900/40 border border-blue-500/20">
-        <div className="max-w-3xl space-y-3 relative z-10">
+        <div className="w-full space-y-3 relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold border border-blue-500/30">
             <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" />
             <span>Süper Lig Fantasy 2026/27 Sezonu</span>
