@@ -4,6 +4,7 @@ import { loadSeasonDataset } from './services/dataset';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { SeasonNoticeModal } from './components/SeasonNoticeModal';
 
 import { Dashboard } from './pages/Dashboard';
 import { Players } from './pages/Players';
@@ -23,12 +24,18 @@ export const App: React.FC = () => {
 
   const [dataset, setDataset] = useState<SeasonDataset | null>(null);
   const [loadingError, setLoadingError] = useState<string | null>(null);
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState<boolean>(false);
 
-  // Sync dataset on mount
+  // Sync dataset and check first-time notice on mount
   useEffect(() => {
     try {
       const data = loadSeasonDataset();
       setDataset(data);
+
+      const hasSeenNotice = localStorage.getItem('sf_seen_season_notice_2026_27');
+      if (!hasSeenNotice) {
+        setIsNoticeModalOpen(true);
+      }
     } catch (err: unknown) {
       console.error(err);
       const message = err instanceof Error ? err.message : 'Dataset yüklenemedi.';
@@ -44,6 +51,15 @@ export const App: React.FC = () => {
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  const handleCloseNotice = () => {
+    localStorage.setItem('sf_seen_season_notice_2026_27', 'true');
+    setIsNoticeModalOpen(false);
+  };
+
+  const handleOpenNotice = () => {
+    setIsNoticeModalOpen(true);
   };
 
   const renderActiveTab = useMemo(() => {
@@ -105,6 +121,7 @@ export const App: React.FC = () => {
         theme={theme}
         toggleTheme={toggleTheme}
         season={dataset.meta.season}
+        onOpenNotice={handleOpenNotice}
       />
 
       <main className="app-container flex-grow pb-12">
@@ -112,6 +129,12 @@ export const App: React.FC = () => {
       </main>
 
       <Footer />
+
+      {/* Season Pre-start Notice Modal */}
+      <SeasonNoticeModal
+        isOpen={isNoticeModalOpen}
+        onClose={handleCloseNotice}
+      />
     </div>
   );
 };
