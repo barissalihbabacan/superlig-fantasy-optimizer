@@ -1,203 +1,284 @@
 # Süper Lig Fantasy Optimizer
 
-Süper Lig Fantasy Optimizer, Türkiye Süper Lig fantezi futbolu oynayan kullanıcıların haftalık kadrolarını oluşturmasına yardımcı olan bağımsız, ücretsiz ve açık kaynaklı bir analiz ve optimizasyon aracıdır. Proje, kararları desteklemek için oyuncu, bütçe, fikstür ve beklenen performans verilerini birlikte değerlendirmeyi amaçlar.
+Süper Lig Fantasy Optimizer (`sf`), Trendyol Süper Lig Fantasy kadrolarını
+doğrulamak, fantasy puanlarını hesaplamak, oyuncu projeksiyonlarını incelemek
+ve bütçe kısıtları altında deterministik kadro önerileri üretmek için yazılmış
+bağımsız bir Rust CLI projesidir.
 
-## Projenin amacı
+## Özellikler
 
-Amaç yalnızca toplam performansı yüksek oyuncuları sıralamak değildir. Oyuncuların;
-
-- fiyatını,
-- pozisyonunu,
-- fikstürünü,
-- beklenen dakika ve ilk 11 olasılığını,
-- gol ve asist beklentisini,
-- clean sheet olasılığını,
-- kart ve diğer negatif puan risklerini,
-- maç bonusu potansiyelini
-
-birlikte değerlendirmek hedeflenir.
-
-Temel hedef, “en iyi futbolcuları” seçmek değil; oyun kuralları ve bütçe kısıtları altında beklenen verimliliği en yüksek kadroyu bulmaktır. Son karar her zaman kullanıcıya aittir.
-
-## Temel özellikler
-
-- 15 kişilik kadro optimizasyonu
-- 100M TL bütçe sınırı
-- Pozisyon kısıtlarına uygun kadro oluşturma
+- Rust CLI (`sf`)
+- Fantasy scoring engine
+- Squad validation
+- 15 oyunculuk kadro: 2 GK, 5 DEF, 5 MID, 3 FWD
+- 11 kişilik starting XI ve 4 kişilik bench
+- 8 desteklenen formasyon
+- Bütçe kısıtı
 - Takım başına en fazla 3 oyuncu
-- İlk 11 optimizasyonu
-- Yedek sıralaması önerisi
-- Kaptan ve vice kaptan önerisi
-- Oyuncu fiyat/puan analizi
-- Fikstür analizi
-- Beklenen fantasy puanı hesaplama
-- Transfer önerileri
-- İleride menajer kartı desteği
-- İleride Nostradamus desteği
+- Captain / vice captain seçimi
+- Son maçlara dayalı historical projection altyapısı
+- Gelecek fixture context çözümlemesi
+- Deterministik optimizer
+- JSON veri okuma ve JSON çıktı
+- Dataset ve referans bütünlüğü doğrulaması
 
-## Fantasy puanlama sistemi
+Mevcut maç kayıtları gerçek 2026-27 oyuncu performanslarını içermediği için
+production projection coverage şu anda 0 olabilir. Eşleşen gerçek performans
+verisi yoksa expected points değeri 0 kalır; proje eksik veriyi uydurmaz.
 
-Optimizer, aşağıdaki mevcut oyun kurallarını modellemeyi hedefler:
+## Gereksinimler
 
-| Olay | Puan |
-| --- | ---: |
-| 60 dakika oynamak | +1 |
-| 60 dakikadan fazla oynamak | +2 |
-| Kaleci golü | +10 |
-| Defans golü | +6 |
-| Orta saha golü | +5 |
-| Forvet golü | +4 |
-| Asist | +3 |
-| Kaleci/defans clean sheet | +4 |
-| Orta saha clean sheet | +1 |
-| Her 3 kaleci kurtarışı | +1 |
-| Penaltı kurtarışı | +5 |
-| Penaltı kaçırma | -2 |
-| Kaleci/defansta her 2 yenilen gol | -1 |
-| Sarı kart | -1 |
-| Kırmızı kart | -3 |
-| Kendi kalesine gol | -2 |
-| Maç bonusları | 3 / 2 / 1 |
-| Kaptan puanı | 2x |
+- Rust stable
+- Cargo
 
-Bu puanlama, oyunun mevcut kurallarına göre modellenmektedir. Oyun kuralları değişirse puanlama motorunun ve ilgili analizlerin güncellenmesi gerekir.
+Bağımlılıklar Cargo tarafından `Cargo.toml` üzerinden yönetilir.
 
-## Kadro kuralları
+## Kurulum
 
-Standart kadro yapısı şöyledir:
+Standart kurulum:
 
-- 2 kaleci
-- 5 defans
-- 5 orta saha
-- 3 forvet
-- Toplam 100M bütçe
-- Aynı takımdan en fazla 3 oyuncu
-- İlk 11'de en az 1 kaleci, 3 defans ve 1 forvet
-
-İlk 11 ve yedekler oluşturulurken oyuncunun oynama ihtimali, pozisyonu ve beklenen katkısı dikkate alınır. Otomatik oyuncu değişikliği, ilk 11'deki bir oyuncu maça çıkmadığında kadro kurallarını bozmadan ve yedek sırasını izleyerek uygun bir yedek oyuncunun devreye girmesi mantığıyla ele alınır. Nihai uygulama, oyunun güncel otomatik değişiklik kurallarıyla uyumlu olmalıdır.
-
-## Yerel-first mimari
-
-Projenin backend gerektirmemesi ve temel olarak tarayıcıda çalışması hedeflenmektedir. Hedeflenen veri akışı şöyledir:
-
-```text
-JSON veri dosyaları
-        -> tarayıcı
-        -> IndexedDB
-        -> optimizer
-        -> kullanıcı arayüzü
+```bash
+cargo install --path .
+sf version
+sf --help
 ```
 
-İlk açılışta repository içinde bulunan JSON verilerinin tarayıcıdaki IndexedDB alanına aktarılması, sonraki kullanımlarda ise mümkün olduğunca yerel verinin kullanılması planlanmaktadır. Kullanıcı verilerinin sunucuya gönderilmemesi hedeflenir. Bu yaklaşım; gizlilik, çevrimdışı kullanım ve düşük altyapı ihtiyacı açısından önemlidir.
+Geliştirme çalıştırması:
 
-## Veri kaynakları
+```bash
+cargo run --bin sf -- --help
+cargo run --bin sf -- optimize --budget 10000 --formation 3-5-2
+```
 
-Kullanılan kamuya açık futbol verilerinin kaynakları açıkça belirtilecektir. Türkiye Futbol Federasyonu'nun kamuya açık verileri kullanılabilir; ancak bu proje TFF'nin resmi ürünü değildir. İleride farklı açık veya lisanslı veri sağlayıcıları da değerlendirilebilir.
+Release binary oluşturma:
 
-Farklı kaynaklardan alınan veriler, proje için tanımlanacak kendi JSON şemamızda normalize edilecektir. Kaynakların kullanım koşulları, atıf gereklilikleri ve yeniden kullanım izinleri ayrıca gözetilecektir.
+```bash
+cargo build --release
+./target/release/sf version
+```
 
-## TFF ile bağımsızlık bildirimi
+CLI varsayılan dataset yolunu çalışma dizininde, executable yanında veya
+Cargo manifest dizininde arar. Farklı bir dataset konumu için `SF_DATA_DIR`
+ortam değişkeni kullanılabilir. `sf data` komutlarında `--path` açık yolu
+öncelikli olarak kullanır.
 
-> **Bu proje Türkiye Futbol Federasyonu (TFF) tarafından geliştirilmemiştir, desteklenmemektedir, onaylanmamıştır, yayınlanmamıştır ve TFF ile herhangi bir kurumsal bağlantısı bulunmamaktadır.**
+## Dataset
 
-Bu proje:
+Sezon dataset'i `data/2026-27/` altında bulunur:
 
-- TFF'nin resmi fantasy uygulaması değildir.
-- TFF'nin yerine geçen bir uygulama değildir.
-- Yalnızca TFF Fantasy Lig oynayan kullanıcılar için bağımsız bir yardımcı araçtır.
+- `teams.json`: takım kimlikleri ve adları
+- `players.json`: oyuncu kimlikleri, takımları, pozisyonları ve fiyatları
+- `fixtures.json`: sezon fikstürü
+- `projections.json`: manuel veya türetilmiş projection kayıtları
+- `matches/`: ham maç ve oyuncu performansı kayıtları
 
-Buradaki “yayınlanmamıştır” ifadesi, projenin TFF tarafından resmi olmayan anlamında kullanılmaktadır. Projenin TFF tarafından yayınlandığı veya dağıtıldığı izlenimi oluşturulamaz. TFF adı, logosu, marka unsurları ve görsel kimliği TFF'ye aittir.
+Dataset dosyaları proje kapsamında manuel olarak yönetilir. Otomatik scraping,
+API veya ağ üzerinden veri alma sistemi bulunmamaktadır. JSON dosyalarındaki
+`source` metadata alanı, mevcut kayıt için kaynak bağlamını taşıyabilir.
 
-## Ticari amaç ve gelir
+## Veri Kaynakları
 
-Bu proje;
+Veri kaynakları, mevcut dataset kayıtlarında bulunan metadata ve repository
+bağlamı ölçüsünde değerlendirilmelidir. Bu proje tüm verilerin belirli bir
+kurum tarafından sağlandığını veya doğrulandığını iddia etmez. Veri katkıları
+kaynak bilgisiyle birlikte sunulmalı ve ilgili kullanım koşulları ayrıca
+incelenmelidir.
 
-- ücretsiz,
-- açık kaynak,
-- reklamsız,
-- aboneliksiz ve
-- ticari amaç taşımayan
+## CLI Kullanımı
 
-bir topluluk projesi olarak tasarlanmaktadır.
+```bash
+sf version
+sf --help
+sf rules
+sf formation list
+sf formation show 3-5-2
+sf projection stats
+sf projection validate
+sf projection show PLAYER_ID
+sf projection calculate --dry-run
+sf optimize --budget 10000
+sf optimize --budget 10000 --formation 3-5-2
+sf validate data/2026-27/players.json
+sf score --input performance.json
+```
 
-İsteğe bağlı kullanıcı bağışları herhangi bir özellik, veri veya avantaj karşılığında değildir. Bağışlar projeyi ücretli bir hizmete dönüştürmez ve kullanıcılar arasında ücret karşılığı ayrıcalık oluşturmaz.
+Tam komut ve seçenek listesi için `sf --help` çıktısı kullanılmalıdır.
 
-## Topluluk tarafından geliştirme
+`--format json` destekleyen komutlar makine tarafından işlenebilir JSON çıktı
+üretir. Örneğin:
 
-Süper Lig Fantasy Optimizer tek bir geliştiriciye ait kapalı bir ürün olarak tasarlanmamaktadır. Proje topluluk katkılarına açıktır. Issue, Pull Request, veri düzeltmesi, modelleme ve algoritma katkıları memnuniyetle karşılanır.
+```bash
+sf optimize --budget 10000 --formation 3-5-2 --format json
+sf projection stats --format json
+```
 
-## Hukuki bilgilendirme
+## Optimizer
 
-Bu README veya proje hukuki tavsiye vermez. Kamuya açık veriler kullanılırken ilgili kaynakların kullanım koşullarına uyulacaktır. TFF'nin veya başka bir veri sağlayıcının içerik, marka ya da diğer haklarını ihlal etmek projenin amacı değildir.
+Optimizer şu girdileri kullanır:
 
-## Cease and Desist / Hak talepleri
+- oyuncular
+- fiyatlar
+- pozisyonlar
+- takım başına oyuncu limiti
+- bütçe
+- mevcut projection değerleri
 
-İçerik, veri, marka veya başka bir unsur üzerinde hak sahibi olduğunu düşünen kişi ya da kurumlar proje sahibiyle iletişime geçebilir:
+Sonuçta şunları üretir:
 
-**[İLETİŞİM ADRESİ BURAYA EKLENECEK]**
+- 15 oyunculuk squad
+- seçilen formasyona uygun starting XI
+- kalan 4 oyuncudan oluşan bench
+- captain ve vice captain
+- toplam maliyet
+- expected points
 
-Haklı ve doğrulanabilir bir talep geldiğinde ilgili veri veya içerik incelenecek; gerekli görülürse kaldırılabilecek ya da değiştirilebilecektir. İnceleme sürecinde kaynak bilgileri, kullanım koşulları ve talebin dayanağı dikkate alınır.
+Uygulanan temel kısıtlar:
+
+- 15 oyuncu
+- 2 GK, 5 DEF, 5 MID, 3 FWD
+- takım başına en fazla 3 oyuncu
+- toplam maliyet bütçeyi aşamaz
+- starting XI seçilen formasyona uymalıdır
+- lineup ve bench oyuncuları birbirinden farklı olmalıdır
+
+Bütçe fiyat birimleriyle ifade edilir; `10000`, 100M TL bütçeye karşılık gelir.
+
+## Formations
+
+Desteklenen formasyonlar:
+
+- 3-5-2
+- 3-4-3
+- 4-3-3
+- 4-4-2
+- 4-5-1
+- 5-4-1
+- 5-3-2
+- 5-2-3
+
+Her formasyonda kaleci sayısı 1’dir ve formasyon yalnızca starting XI
+dağılımını belirler. Squad pozisyon dağılımı her zaman 2 GK / 5 DEF / 5 MID /
+3 FWD olarak kalır.
+
+## Scoring
+
+Scoring engine ham maç performansından fantasy puanı üretir. Mevcut kurallar
+arasında dakika, pozisyona göre gol, asist, clean sheet, kurtarış, penaltı,
+kart, kendi kalesine gol, yenilen gol ve maç bonusu puanları bulunur. Captain
+çarpanı scoring kurallarında 2x olarak uygulanır.
+
+## Projection
+
+Historical projection sistemi:
+
+- Son 5 oynanan maçı kullanır.
+- Ağırlıklar `[1, 2, 3, 4, 5]` şeklindedir.
+- En yeni maç en yüksek ağırlığı alır.
+- Dakikası 0 olan performanslar hesaba katılmaz.
+- Oyuncunun eşleşen performansı yoksa expected points `0` olur.
+- Gelecek en fazla 3 fixture metadata olarak gösterilir.
+- Difficulty güvenilir veri yoksa `Unknown` kalır.
+- Rastgele xG, sakatlık, home advantage veya takım gücü üretilmez.
+
+Fixture context home/away ve rakip bilgisi sağlayabilir; güvenilir, kalibre
+edilmiş bir difficulty modeli yoksa historical weighted average değiştirilmez.
+Sezon başlamadan veya gerçek performans verisi eşleşmeden projection coverage
+0 olabilir.
+
+## Data Quality
+
+Veriler manuel olarak yönetildiği için güncellik, doğruluk, eksiksizlik veya
+belirli bir amaca uygunluk garanti edilmez. Dataset resmi gerçek zamanlı bir
+feed değildir. Kullanıcılar verileri ve optimizer çıktılarını kendi
+kararlarının tek veya kesin kaynağı olarak kullanmamalıdır.
+
+## TFF / Bağımsızlık
+
+Süper Lig Fantasy Optimizer, Türkiye Futbol Federasyonu (TFF) ile resmi,
+ticari veya kurumsal bağlantısı olmayan bağımsız bir projedir. TFF’nin resmi
+ürünü, servisi, uygulaması veya veri sağlayıcısı değildir.
+
+TFF adı, yalnızca ilgili futbol organizasyonunu, ligi veya veri bağlamını
+açıklamak amacıyla referans olarak anılmaktadır. TFF tarafından geliştirilmiş,
+onaylanmış, desteklenmiş veya işletilmiş izlenimi oluşturulmamalıdır. TFF
+logosu veya kurumsal marka kimliği kullanılmamalıdır.
+
+## Yasal Uyarı ve Sorumluluk Reddi
+
+Projede yer alan oyuncu bilgileri, takım kadroları, oyuncu değerleri veya
+fiyatları, puan durumları ve benzeri bilgiler proje kapsamında manuel olarak
+girilmiş ve kaydedilmiştir. Bu bilgiler resmi hukuki, finansal, sportif veya
+profesyonel tavsiye niteliğinde değildir.
+
+Optimizer çıktıları yalnızca bilgi ve karar desteği amacı taşır. Proje;
+bahis, kumar, finansal yatırım veya benzeri yüksek riskli kararlar için
+garanti, kesin tahmin veya kazanç vaadi sunmaz. Kullanıcıların proje
+çıktılarından hareketle aldığı kararların sonuçları kendilerine aittir. Bu
+açıklama, yürürlükteki emredici hukuk kuralları kapsamındaki hak ve
+yükümlülükleri ortadan kaldırmaz.
+
+Proje mevcut kullanım modeli kapsamında ticari gelir, ücretli üyelik, satış,
+bahis geliri, reklam geliri veya benzeri bir ticari kazanç elde etme amacı
+taşımamaktadır.
+
+Bu metin hukuki danışmanlık değildir.
+
+## İletişim ve Sorun Bildirme
+
+Veri hatası, telif veya fikri mülkiyet iddiası, içerik kaldırma talebi ya da
+projeyle ilgili başka bir sorun için aşağıdaki e-posta adresinden iletişim
+kurulabilir:
+
+`barissalihbabacan@gmail.com`
+
+Telefon numarası paylaşılmamaktadır.
 
 ## Lisans
 
-Kaynak kodu için lisans seçimi ayrıca yapılacaktır.
+Bu proje [MIT License](LICENSE) kapsamında lisanslanmıştır. Veri dosyalarının
+kullanım koşulları, kaynaklarına göre ayrıca değerlendirilmelidir.
 
-Kaynak kodu lisansı ile veri dosyalarının lisans ve kullanım koşulları birbirinden ayrı değerlendirilebilir. Veri dosyaları için her kaynağın kendi izinleri ve kısıtları geçerlidir.
+## Development
 
-## Gizlilik
+Değişikliklerden önce ve sonra şu kontroller çalıştırılmalıdır:
 
-Projenin yerel-first yaklaşımı kapsamında aşağıdaki ilkeler hedeflenmektedir:
+```bash
+cargo fmt --check
+cargo test
+cargo clippy --all-targets --all-features -- -D warnings
+```
 
-- Hesap gerektirmemesi
-- Backend kullanmaması
-- Kullanıcı kadrosunun sunucuya gönderilmemesi
-- Reklam takip sistemi içermemesi
-- Kullanıcı verilerinin satılmaması
-- Verilerin mümkün olduğunca tarayıcı içinde tutulması
+## Project Structure
 
-Tarayıcı depolama alanının temizlenmesi veya cihaz değişikliği gibi durumlarda yerel verilerin kaybolabileceği kullanıcıya açıkça bildirilmelidir.
+```text
+src/
+├── data/               # JSON modelleri, yükleme ve validation
+├── error.rs            # Veri ve domain hataları
+├── models.rs           # Puanlama ve kadro domain modelleri
+├── optimizer.rs        # Formation, lineup ve squad optimizer
+├── projection_engine.rs # Historical projection ve fixture context
+├── rules.rs            # Scoring ve squad kuralları
+├── scoring.rs          # Ham performans -> fantasy puanı
+└── main.rs             # sf CLI
+data/2026-27/           # Sezon JSON dataset'i
+tests/                  # CLI, data, scoring ve projection testleri
+```
 
-## Yol haritası
+## Roadmap
 
-MVP ve sonraki geliştirmeler için öngörülen sıra:
+Aşağıdaki konular, mevcut veri ve doğrulama kapsamı genişlediğinde ele
+alınabilecek planlı çalışmalardır; şu anda tamamlanmış özellik olarak
+sunulmaz:
 
-1. Veri modeli
-2. JSON veri yapısı
-3. IndexedDB entegrasyonu
-4. Puanlama motoru
-5. Oyuncu projeksiyonu
-6. Kadro optimizer'ı
-7. İlk 11 optimizer'ı
-8. Kaptan ve vice kaptan önerileri
-9. Fikstür analizi
-10. Transfer önerileri
-11. Menajer kartları
-12. Nostradamus
-13. Risk analizi
-14. Topluluk katkıları için süreç ve araçlar
+- Gerçek ve schema ile eşleşen maç performanslarının eklenmesi
+- Projection coverage’ın sezon verisi geldikçe artırılması
+- Fixture context için doğrulanabilir difficulty modelinin geliştirilmesi
 
-Yol haritası, veri erişimi ve oyunun kurallarındaki değişikliklere göre güncellenebilir.
+## Katkıda Bulunma
 
-## Teknik yaklaşım
+Katkı süreci için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
 
-Teknoloji yığını henüz kesinleştirilmemiştir. Bu nedenle belirli bir framework veya araç kesinleşmiş gibi değerlendirilmemelidir. Projenin hedeflenen teknik yaklaşımı client-side, local-first ve veri odaklı bir mimaridir. Hesaplama mantığının, yerel veri saklamanın ve kullanıcı arayüzünün mümkün olduğunca ayrıştırılabilir olması amaçlanır.
+## Güvenlik
 
-## Katkıda bulunma
-
-Katkıda bulunmak isteyenler şu yolları izleyebilir:
-
-1. Bir issue açarak problemi veya öneriyi paylaşın.
-2. Yaklaşım ve etkileri toplulukla tartışın.
-3. Bir Pull Request gönderin.
-4. Veri hatalarını, eksik kaynakları veya güncellik sorunlarını bildirin.
-5. Algoritma ve optimizasyon iyileştirmeleri önerin.
-
-Katkılarda veri kaynağının, kullanılan varsayımların ve değişikliğin beklenen etkisinin açıklanması yararlı olur.
-
-## Veri doğruluğu uyarısı
-
-Optimizer tahmin ve modelleme yapar; hiçbir öneri garanti değildir. Oyuncu dakikaları, sakatlıklar, teknik tercihler, maç içi olaylar ve diğer etkenler sonuçları değiştirebilir. Futbol yüksek varyanslı bir spordur. Öneriler karar desteği olarak görülmeli, kadro seçiminden önce güncel bilgiler kullanıcı tarafından kontrol edilmelidir.
-
-## Proje mottosu
-
-> **Veriyi analiz et. Bütçeyi optimize et. Kadronu kur.**
+Güvenlik bildirimleri için [SECURITY.md](SECURITY.md) dosyasındaki iletişim
+adresini kullanın.

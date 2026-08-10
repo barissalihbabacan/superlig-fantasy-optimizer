@@ -1,0 +1,18 @@
+[package]
+name = "superlig-fantasy-optimizer"
+version = "0.1.0"
+license = "MIT"
+edition = "2021"
+description = "Süper Lig Fantasy için deterministik kadro kuralları ve puanlama çekirdeği."
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[lib]
+name = "superlig_fantasy_optimizer"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sf"
+path = "src/main.rs"

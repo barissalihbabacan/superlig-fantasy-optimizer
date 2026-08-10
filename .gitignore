@@ -1,0 +1,20 @@
+# Rust derleme çıktıları
+/target/
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db
+
+# IDE ve editör ayarları
+.idea/
+.vscode/
+
+# Geçici ve yedek dosyaları
+*.swp
+*.swo
+*~
+
+# Yerel ortam dosyaları
+.env
+.env.*
+!.env.example

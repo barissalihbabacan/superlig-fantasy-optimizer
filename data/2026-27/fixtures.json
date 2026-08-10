@@ -1,0 +1,2458 @@
+{
+  "schema_version": 1,
+  "season": "2026-27",
+  "source": {
+    "name": "Trendyol Süper Lig 2026-27 fixture list",
+    "retrieved_at": "not-provided"
+  },
+  "fixtures": [
+    {
+      "id": "2026-27-w01-01",
+      "round": 1,
+      "home_team_id": "galatasaray",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w01-02",
+      "round": 1,
+      "home_team_id": "konyaspor",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w01-03",
+      "round": 1,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w01-04",
+      "round": 1,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w01-05",
+      "round": 1,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w01-06",
+      "round": 1,
+      "home_team_id": "besiktas",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w01-07",
+      "round": 1,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w01-08",
+      "round": 1,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w01-09",
+      "round": 1,
+      "home_team_id": "samsunspor",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W01",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-01",
+      "round": 2,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-02",
+      "round": 2,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-03",
+      "round": 2,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-04",
+      "round": 2,
+      "home_team_id": "corum-fk",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-05",
+      "round": 2,
+      "home_team_id": "eyupspor",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-06",
+      "round": 2,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-07",
+      "round": 2,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-08",
+      "round": 2,
+      "home_team_id": "goztepe",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w02-09",
+      "round": 2,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W02",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-01",
+      "round": 3,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-02",
+      "round": 3,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-03",
+      "round": 3,
+      "home_team_id": "galatasaray",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-04",
+      "round": 3,
+      "home_team_id": "konyaspor",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-05",
+      "round": 3,
+      "home_team_id": "eyupspor",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-06",
+      "round": 3,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-07",
+      "round": 3,
+      "home_team_id": "samsunspor",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-08",
+      "round": 3,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w03-09",
+      "round": 3,
+      "home_team_id": "besiktas",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W03",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-01",
+      "round": 4,
+      "home_team_id": "corum-fk",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-02",
+      "round": 4,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-03",
+      "round": 4,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-04",
+      "round": 4,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-05",
+      "round": 4,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-06",
+      "round": 4,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-07",
+      "round": 4,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-08",
+      "round": 4,
+      "home_team_id": "goztepe",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w04-09",
+      "round": 4,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W04",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-01",
+      "round": 5,
+      "home_team_id": "galatasaray",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-02",
+      "round": 5,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-03",
+      "round": 5,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-04",
+      "round": 5,
+      "home_team_id": "eyupspor",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-05",
+      "round": 5,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-06",
+      "round": 5,
+      "home_team_id": "samsunspor",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-07",
+      "round": 5,
+      "home_team_id": "besiktas",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-08",
+      "round": 5,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w05-09",
+      "round": 5,
+      "home_team_id": "konyaspor",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W05",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-01",
+      "round": 6,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-02",
+      "round": 6,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-03",
+      "round": 6,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-04",
+      "round": 6,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-05",
+      "round": 6,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-06",
+      "round": 6,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-07",
+      "round": 6,
+      "home_team_id": "goztepe",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-08",
+      "round": 6,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w06-09",
+      "round": 6,
+      "home_team_id": "corum-fk",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W06",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-01",
+      "round": 7,
+      "home_team_id": "besiktas",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-02",
+      "round": 7,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-03",
+      "round": 7,
+      "home_team_id": "eyupspor",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-04",
+      "round": 7,
+      "home_team_id": "galatasaray",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-05",
+      "round": 7,
+      "home_team_id": "konyaspor",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-06",
+      "round": 7,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-07",
+      "round": 7,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-08",
+      "round": 7,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w07-09",
+      "round": 7,
+      "home_team_id": "samsunspor",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W07",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-01",
+      "round": 8,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-02",
+      "round": 8,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-03",
+      "round": 8,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-04",
+      "round": 8,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-05",
+      "round": 8,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-06",
+      "round": 8,
+      "home_team_id": "corum-fk",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-07",
+      "round": 8,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-08",
+      "round": 8,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w08-09",
+      "round": 8,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W08",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-01",
+      "round": 9,
+      "home_team_id": "samsunspor",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-02",
+      "round": 9,
+      "home_team_id": "eyupspor",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-03",
+      "round": 9,
+      "home_team_id": "besiktas",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-04",
+      "round": 9,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-05",
+      "round": 9,
+      "home_team_id": "goztepe",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-06",
+      "round": 9,
+      "home_team_id": "konyaspor",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-07",
+      "round": 9,
+      "home_team_id": "galatasaray",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-08",
+      "round": 9,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w09-09",
+      "round": 9,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W09",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-01",
+      "round": 10,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-02",
+      "round": 10,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-03",
+      "round": 10,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-04",
+      "round": 10,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-05",
+      "round": 10,
+      "home_team_id": "konyaspor",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-06",
+      "round": 10,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-07",
+      "round": 10,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-08",
+      "round": 10,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w10-09",
+      "round": 10,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W10",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-01",
+      "round": 11,
+      "home_team_id": "galatasaray",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-02",
+      "round": 11,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-03",
+      "round": 11,
+      "home_team_id": "goztepe",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-04",
+      "round": 11,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-05",
+      "round": 11,
+      "home_team_id": "besiktas",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-06",
+      "round": 11,
+      "home_team_id": "samsunspor",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-07",
+      "round": 11,
+      "home_team_id": "corum-fk",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-08",
+      "round": 11,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w11-09",
+      "round": 11,
+      "home_team_id": "eyupspor",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W11",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-01",
+      "round": 12,
+      "home_team_id": "galatasaray",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-02",
+      "round": 12,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-03",
+      "round": 12,
+      "home_team_id": "konyaspor",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-04",
+      "round": 12,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-05",
+      "round": 12,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-06",
+      "round": 12,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-07",
+      "round": 12,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-08",
+      "round": 12,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w12-09",
+      "round": 12,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W12",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-01",
+      "round": 13,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-02",
+      "round": 13,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-03",
+      "round": 13,
+      "home_team_id": "eyupspor",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-04",
+      "round": 13,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-05",
+      "round": 13,
+      "home_team_id": "samsunspor",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-06",
+      "round": 13,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-07",
+      "round": 13,
+      "home_team_id": "besiktas",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-08",
+      "round": 13,
+      "home_team_id": "goztepe",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w13-09",
+      "round": 13,
+      "home_team_id": "corum-fk",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W13",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-01",
+      "round": 14,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-02",
+      "round": 14,
+      "home_team_id": "besiktas",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-03",
+      "round": 14,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-04",
+      "round": 14,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-05",
+      "round": 14,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-06",
+      "round": 14,
+      "home_team_id": "konyaspor",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-07",
+      "round": 14,
+      "home_team_id": "galatasaray",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-08",
+      "round": 14,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w14-09",
+      "round": 14,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W14",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-01",
+      "round": 15,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-02",
+      "round": 15,
+      "home_team_id": "corum-fk",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-03",
+      "round": 15,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-04",
+      "round": 15,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-05",
+      "round": 15,
+      "home_team_id": "goztepe",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-06",
+      "round": 15,
+      "home_team_id": "eyupspor",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-07",
+      "round": 15,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-08",
+      "round": 15,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w15-09",
+      "round": 15,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W15",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-01",
+      "round": 16,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-02",
+      "round": 16,
+      "home_team_id": "konyaspor",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-03",
+      "round": 16,
+      "home_team_id": "samsunspor",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-04",
+      "round": 16,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-05",
+      "round": 16,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-06",
+      "round": 16,
+      "home_team_id": "besiktas",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-07",
+      "round": 16,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-08",
+      "round": 16,
+      "home_team_id": "galatasaray",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w16-09",
+      "round": 16,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W16",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-01",
+      "round": 17,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-02",
+      "round": 17,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-03",
+      "round": 17,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-04",
+      "round": 17,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-05",
+      "round": 17,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-06",
+      "round": 17,
+      "home_team_id": "corum-fk",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-07",
+      "round": 17,
+      "home_team_id": "goztepe",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-08",
+      "round": 17,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w17-09",
+      "round": 17,
+      "home_team_id": "eyupspor",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W17",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-01",
+      "round": 18,
+      "home_team_id": "corum-fk",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-02",
+      "round": 18,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-03",
+      "round": 18,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-04",
+      "round": 18,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-05",
+      "round": 18,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-06",
+      "round": 18,
+      "home_team_id": "eyupspor",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-07",
+      "round": 18,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-08",
+      "round": 18,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w18-09",
+      "round": 18,
+      "home_team_id": "goztepe",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W18",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-01",
+      "round": 19,
+      "home_team_id": "galatasaray",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-02",
+      "round": 19,
+      "home_team_id": "samsunspor",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-03",
+      "round": 19,
+      "home_team_id": "konyaspor",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-04",
+      "round": 19,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-05",
+      "round": 19,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-06",
+      "round": 19,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-07",
+      "round": 19,
+      "home_team_id": "besiktas",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-08",
+      "round": 19,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w19-09",
+      "round": 19,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W19",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-01",
+      "round": 20,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-02",
+      "round": 20,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-03",
+      "round": 20,
+      "home_team_id": "goztepe",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-04",
+      "round": 20,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-05",
+      "round": 20,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-06",
+      "round": 20,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-07",
+      "round": 20,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-08",
+      "round": 20,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w20-09",
+      "round": 20,
+      "home_team_id": "corum-fk",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W20",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-01",
+      "round": 21,
+      "home_team_id": "eyupspor",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-02",
+      "round": 21,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-03",
+      "round": 21,
+      "home_team_id": "galatasaray",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-04",
+      "round": 21,
+      "home_team_id": "konyaspor",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-05",
+      "round": 21,
+      "home_team_id": "samsunspor",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-06",
+      "round": 21,
+      "home_team_id": "besiktas",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-07",
+      "round": 21,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-08",
+      "round": 21,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w21-09",
+      "round": 21,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W21",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-01",
+      "round": 22,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-02",
+      "round": 22,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-03",
+      "round": 22,
+      "home_team_id": "goztepe",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-04",
+      "round": 22,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-05",
+      "round": 22,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-06",
+      "round": 22,
+      "home_team_id": "corum-fk",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-07",
+      "round": 22,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-08",
+      "round": 22,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w22-09",
+      "round": 22,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W22",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-01",
+      "round": 23,
+      "home_team_id": "samsunspor",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-02",
+      "round": 23,
+      "home_team_id": "besiktas",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-03",
+      "round": 23,
+      "home_team_id": "konyaspor",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-04",
+      "round": 23,
+      "home_team_id": "galatasaray",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-05",
+      "round": 23,
+      "home_team_id": "eyupspor",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-06",
+      "round": 23,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-07",
+      "round": 23,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-08",
+      "round": 23,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w23-09",
+      "round": 23,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W23",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-01",
+      "round": 24,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-02",
+      "round": 24,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-03",
+      "round": 24,
+      "home_team_id": "goztepe",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-04",
+      "round": 24,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-05",
+      "round": 24,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-06",
+      "round": 24,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-07",
+      "round": 24,
+      "home_team_id": "corum-fk",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-08",
+      "round": 24,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w24-09",
+      "round": 24,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W24",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-01",
+      "round": 25,
+      "home_team_id": "samsunspor",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-02",
+      "round": 25,
+      "home_team_id": "besiktas",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-03",
+      "round": 25,
+      "home_team_id": "eyupspor",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-04",
+      "round": 25,
+      "home_team_id": "galatasaray",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-05",
+      "round": 25,
+      "home_team_id": "konyaspor",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-06",
+      "round": 25,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-07",
+      "round": 25,
+      "home_team_id": "goztepe",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-08",
+      "round": 25,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w25-09",
+      "round": 25,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W25",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-01",
+      "round": 26,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-02",
+      "round": 26,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-03",
+      "round": 26,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-04",
+      "round": 26,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-05",
+      "round": 26,
+      "home_team_id": "corum-fk",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-06",
+      "round": 26,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-07",
+      "round": 26,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-08",
+      "round": 26,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w26-09",
+      "round": 26,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W26",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-01",
+      "round": 27,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-02",
+      "round": 27,
+      "home_team_id": "samsunspor",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-03",
+      "round": 27,
+      "home_team_id": "besiktas",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-04",
+      "round": 27,
+      "home_team_id": "eyupspor",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-05",
+      "round": 27,
+      "home_team_id": "galatasaray",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-06",
+      "round": 27,
+      "home_team_id": "corum-fk",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-07",
+      "round": 27,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-08",
+      "round": 27,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w27-09",
+      "round": 27,
+      "home_team_id": "goztepe",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W27",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-01",
+      "round": 28,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-02",
+      "round": 28,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-03",
+      "round": 28,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-04",
+      "round": 28,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-05",
+      "round": 28,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-06",
+      "round": 28,
+      "home_team_id": "konyaspor",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-07",
+      "round": 28,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-08",
+      "round": 28,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w28-09",
+      "round": 28,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W28",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-01",
+      "round": 29,
+      "home_team_id": "samsunspor",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-02",
+      "round": 29,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-03",
+      "round": 29,
+      "home_team_id": "besiktas",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-04",
+      "round": 29,
+      "home_team_id": "eyupspor",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-05",
+      "round": 29,
+      "home_team_id": "corum-fk",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-06",
+      "round": 29,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-07",
+      "round": 29,
+      "home_team_id": "goztepe",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-08",
+      "round": 29,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w29-09",
+      "round": 29,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W29",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-01",
+      "round": 30,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-02",
+      "round": 30,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-03",
+      "round": 30,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-04",
+      "round": 30,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-05",
+      "round": 30,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-06",
+      "round": 30,
+      "home_team_id": "konyaspor",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-07",
+      "round": 30,
+      "home_team_id": "galatasaray",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-08",
+      "round": 30,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w30-09",
+      "round": 30,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W30",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-01",
+      "round": 31,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-02",
+      "round": 31,
+      "home_team_id": "samsunspor",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-03",
+      "round": 31,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-04",
+      "round": 31,
+      "home_team_id": "eyupspor",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-05",
+      "round": 31,
+      "home_team_id": "corum-fk",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-06",
+      "round": 31,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-07",
+      "round": 31,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-08",
+      "round": 31,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w31-09",
+      "round": 31,
+      "home_team_id": "goztepe",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W31",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-01",
+      "round": 32,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-02",
+      "round": 32,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-03",
+      "round": 32,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-04",
+      "round": 32,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-05",
+      "round": 32,
+      "home_team_id": "konyaspor",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-06",
+      "round": 32,
+      "home_team_id": "galatasaray",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-07",
+      "round": 32,
+      "home_team_id": "besiktas",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-08",
+      "round": 32,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w32-09",
+      "round": 32,
+      "home_team_id": "samsunspor",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W32",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-01",
+      "round": 33,
+      "home_team_id": "fenerbahce",
+      "away_team_id": "kasimpasa",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-02",
+      "round": 33,
+      "home_team_id": "eyupspor",
+      "away_team_id": "konyaspor",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-03",
+      "round": 33,
+      "home_team_id": "gaziantep-fk",
+      "away_team_id": "samsunspor",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-04",
+      "round": 33,
+      "home_team_id": "corum-fk",
+      "away_team_id": "genclerbirligi",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-05",
+      "round": 33,
+      "home_team_id": "erzurumspor-fk",
+      "away_team_id": "istanbul-basaksehir",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-06",
+      "round": 33,
+      "home_team_id": "caykur-rizespor",
+      "away_team_id": "besiktas",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-07",
+      "round": 33,
+      "home_team_id": "goztepe",
+      "away_team_id": "amed-sportif-faaliyetler",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-08",
+      "round": 33,
+      "home_team_id": "alanyaspor",
+      "away_team_id": "galatasaray",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w33-09",
+      "round": 33,
+      "home_team_id": "kocaelispor",
+      "away_team_id": "trabzonspor",
+      "kickoff": "2026-27-W33",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-01",
+      "round": 34,
+      "home_team_id": "amed-sportif-faaliyetler",
+      "away_team_id": "fenerbahce",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-02",
+      "round": 34,
+      "home_team_id": "kasimpasa",
+      "away_team_id": "kocaelispor",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-03",
+      "round": 34,
+      "home_team_id": "istanbul-basaksehir",
+      "away_team_id": "alanyaspor",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-04",
+      "round": 34,
+      "home_team_id": "genclerbirligi",
+      "away_team_id": "caykur-rizespor",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-05",
+      "round": 34,
+      "home_team_id": "galatasaray",
+      "away_team_id": "gaziantep-fk",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-06",
+      "round": 34,
+      "home_team_id": "konyaspor",
+      "away_team_id": "corum-fk",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-07",
+      "round": 34,
+      "home_team_id": "besiktas",
+      "away_team_id": "goztepe",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-08",
+      "round": 34,
+      "home_team_id": "trabzonspor",
+      "away_team_id": "erzurumspor-fk",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    },
+    {
+      "id": "2026-27-w34-09",
+      "round": 34,
+      "home_team_id": "samsunspor",
+      "away_team_id": "eyupspor",
+      "kickoff": "2026-27-W34",
+      "status": "scheduled"
+    }
+  ]
+}

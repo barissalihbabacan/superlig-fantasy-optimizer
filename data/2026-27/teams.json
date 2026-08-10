@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "season": "2026-27",
+  "source": {
+    "name": "Synthetic Fixture",
+    "retrieved_at": "2026-08-10T21:00:00+03:00"
+  },
+  "teams": [
+    {"id": "alanyaspor", "name": "Corendon Alanyaspor"},
+    {"id": "amed-sportif-faaliyetler", "name": "Amed Sportif Faaliyetler"},
+    {"id": "besiktas", "name": "Beşiktaş"},
+    {"id": "caykur-rizespor", "name": "Çaykur Rizespor"},
+    {"id": "corum-fk", "name": "Çorum FK"},
+    {"id": "erzurumspor-fk", "name": "Erzurumspor FK"},
+    {"id": "eyupspor", "name": "Eyüpspor"},
+    {"id": "fenerbahce", "name": "Fenerbahçe"},
+    {"id": "galatasaray", "name": "Galatasaray"},
+    {"id": "gaziantep-fk", "name": "Gaziantep FK"},
+    {"id": "genclerbirligi", "name": "Gençlerbirliği"},
+    {"id": "goztepe", "name": "Göztepe"},
+    {"id": "istanbul-basaksehir", "name": "İstanbul Başakşehir FK"},
+    {"id": "kasimpasa", "name": "Kasımpaşa"},
+    {"id": "kocaelispor", "name": "Kocaelispor"},
+    {"id": "konyaspor", "name": "Konyaspor"},
+    {"id": "samsunspor", "name": "Samsunspor"},
+    {"id": "trabzonspor", "name": "Trabzonspor"}
+  ]
+}
