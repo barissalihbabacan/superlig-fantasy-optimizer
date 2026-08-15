@@ -1,246 +1,157 @@
-# Süper Lig Fantasy Optimizer
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="Süper Lig Fantasy Optimizer — bütçe ve formasyon kısıtları altında matematiksel olarak en iyi 15 kişilik kadroyu bulan Rust ve WebAssembly motoru">
+</p>
 
-Süper Lig Fantasy Optimizer (`sf`), Trendyol Süper Lig Fantasy kadrolarını
-doğrulamak, fantasy puanlarını hesaplamak, oyuncu projeksiyonlarını incelemek
-ve bütçe kısıtları altında deterministik kadro önerileri üretmek için yazılmış
-bağımsız bir Rust CLI projesidir.
+<p align="center">
+  <a href="https://superlig-fantasy-optimizer.web.app">Canlı Demo</a>
+  ·
+  <a href="#kurulum">Kurulum</a>
+  ·
+  <a href="#kadro-kuralları">Kurallar</a>
+  ·
+  <a href="LICENSE">MIT Lisans</a>
+</p>
 
-## Özellikler
+<p align="center">
+  <a href="https://github.com/barissalihbabacan/superlig-fantasy-optimizer/actions/workflows/ci.yml"><img src="https://github.com/barissalihbabacan/superlig-fantasy-optimizer/actions/workflows/ci.yml/badge.svg" alt="CI durumu"></a>
+</p>
 
-- Rust CLI (`sf`)
-- Fantasy scoring engine
-- Squad validation
-- 15 oyunculuk kadro: 2 GK, 5 DEF, 5 MID, 3 FWD
-- 11 kişilik starting XI ve 4 kişilik bench
-- 8 desteklenen formasyon
-- Bütçe kısıtı
-- Takım başına en fazla 3 oyuncu
-- Captain / vice captain seçimi
-- Son maçlara dayalı historical projection altyapısı
-- Gelecek fixture context çözümlemesi
-- Deterministik optimizer
-- JSON veri okuma ve JSON çıktı
-- Dataset ve referans bütünlüğü doğrulaması
+Süper Lig Fantasy Optimizer (`sf`), Trendyol Süper Lig Fantasy kadronu **tahmin etmeden** kurmanı sağlar: oyuncuları, fiyatları ve bütçeni verirsin; deterministik bir branch-and-bound arama, o kısıtlar altında **matematiksel olarak en iyi** 15 kişilik kadroyu bulur — greedy bir yaklaşım gibi bütçeyi göz ardı etmez, gerçek optimumu garanti eder.
 
-Mevcut maç kayıtları gerçek 2026-27 oyuncu performanslarını içermediği için
-production projection coverage şu anda 0 olabilir. Eşleşen gerçek performans
-verisi yoksa expected points değeri 0 kalır; proje eksik veriyi uydurmaz.
+## Kanıt
 
-## Gereksinimler
+Gerçek 2026-27 sezon verisiyle, gerçek bir çalıştırma:
 
-- Rust stable
-- Cargo
+```text
+$ sf optimize --budget 10000 --formation 4-3-3
 
-Bağımlılıklar Cargo tarafından `Cargo.toml` üzerinden yönetilir.
+BEST SQUAD
+
+Budget: 10000
+Cost: 7650
+Remaining: 2350
+Formation: 4-3-3
+
+STARTING XI
+
+GOALKEEPER
+  Marcos Felipe de Freitas Monteiro  400    2.0 pts
+
+DEFENDER
+  Abdurrahim Dursun                 400    0.0 pts
+  Ali Badra Diabaté                 400    0.0 pts
+  Ali Ülgen                         400    0.0 pts
+  Amadou Cissé                      400    0.0 pts
+
+MIDFIELDER
+  Leroy Aziz Sané                   850    7.0 pts
+  Serdar Gürler                     500    5.0 pts
+  İlkay Gündoğan                    550    2.0 pts
+
+FORWARD
+  Victor James Osimhen             1200   13.0 pts
+  Jesús Andrés Ramírez Díaz         550    7.0 pts
+  Abdou Khadre Sy                   400    0.0 pts
+
+BENCH
+
+1. Abdoulaye Serge Marc Dylan Yoro
+2. Abdulsamed Damlu
+3. Alexandre Matos
+4. Amar Gërxhaliu
+
+Captain: Victor James Osimhen
+Vice Captain: Jesús Andrés Ramírez Díaz
+Expected Points: 49.0
+Total Cost: 7650
+```
+
+Sezon henüz yeni başladığı için çoğu oyuncunun `expected_points` değeri hâlâ `0` — proje bunu asla uydurmaz; gerçek maç verisi geldikçe projection coverage doğal olarak artar.
+
+## Neden Farklı
+
+Bir sürü fantasy aracı basit bir "en yüksek puanlıyı seç" sıralamasıyla çalışır; bu, bütçe kısıtı altında **yanlış** cevap verir. `sf` yerine tam bir branch-and-bound araması çalıştırır: her adayı bütçe, takım limiti ve formasyon kısıtlarına göre budar, en iyi kombinasyonu kanıtlanabilir şekilde bulur.
+
+<p align="center">
+  <img src="./assets/readme/architecture.svg" width="100%" alt="Bir Rust çekirdeği (rules, scoring, optimizer, projection_engine, data) hem sf CLI ikili dosyasını hem de WebAssembly üzerinden web arayüzünü besler">
+</p>
+
+Web arayüzü de aynı Rust motorunu doğrudan çağırır — `crates/wasm-bindings` ile derlenip WebAssembly olarak tarayıcıda çalışır. Ayrı bir TypeScript optimizer kopyası yok; kural bir kez yazılır, iki yerden kullanılır.
 
 ## Kurulum
-
-Standart kurulum:
 
 ```bash
 cargo install --path .
 sf version
-sf --help
+sf optimize --budget 10000 --formation 3-5-2
 ```
 
 Geliştirme çalıştırması:
 
 ```bash
-cargo run --bin sf -- --help
 cargo run --bin sf -- optimize --budget 10000 --formation 3-5-2
 ```
 
-Release binary oluşturma:
+CLI, dataset'i çalışma dizininde, executable yanında veya Cargo manifest dizininde arar; farklı bir konum için `SF_DATA_DIR` ortam değişkeni kullanılabilir.
+
+## Kullanım
 
 ```bash
-cargo build --release
-./target/release/sf version
-```
-
-CLI varsayılan dataset yolunu çalışma dizininde, executable yanında veya
-Cargo manifest dizininde arar. Farklı bir dataset konumu için `SF_DATA_DIR`
-ortam değişkeni kullanılabilir. `sf data` komutlarında `--path` açık yolu
-öncelikli olarak kullanır.
-
-## Dataset
-
-Sezon dataset'i `data/2026-27/` altında bulunur:
-
-- `teams.json`: takım kimlikleri ve adları
-- `players.json`: oyuncu kimlikleri, takımları, pozisyonları ve fiyatları
-- `fixtures.json`: sezon fikstürü
-- `projections.json`: manuel veya türetilmiş projection kayıtları
-- `matches/`: ham maç ve oyuncu performansı kayıtları
-
-Dataset dosyaları proje kapsamında manuel olarak yönetilir. Otomatik scraping,
-API veya ağ üzerinden veri alma sistemi bulunmamaktadır. JSON dosyalarındaki
-`source` metadata alanı, mevcut kayıt için kaynak bağlamını taşıyabilir.
-
-## Veri Kaynakları
-
-Veri kaynakları, mevcut dataset kayıtlarında bulunan metadata ve repository
-bağlamı ölçüsünde değerlendirilmelidir. Bu proje tüm verilerin belirli bir
-kurum tarafından sağlandığını veya doğrulandığını iddia etmez. Veri katkıları
-kaynak bilgisiyle birlikte sunulmalı ve ilgili kullanım koşulları ayrıca
-incelenmelidir.
-
-## CLI Kullanımı
-
-```bash
-sf version
-sf --help
 sf rules
 sf formation list
 sf formation show 3-5-2
 sf projection stats
-sf projection validate
 sf projection show PLAYER_ID
-sf projection calculate --dry-run
-sf optimize --budget 10000
 sf optimize --budget 10000 --formation 3-5-2
 sf validate data/2026-27/players.json
 sf score --input performance.json
 ```
 
-Tam komut ve seçenek listesi için `sf --help` çıktısı kullanılmalıdır.
-
-`--format json` destekleyen komutlar makine tarafından işlenebilir JSON çıktı
-üretir. Örneğin:
+Tam liste için `sf --help`. `--format json` destekleyen komutlar makine tarafından işlenebilir çıktı üretir:
 
 ```bash
 sf optimize --budget 10000 --formation 3-5-2 --format json
-sf projection stats --format json
 ```
 
-## Optimizer
+## Kadro Kuralları
 
-Optimizer şu girdileri kullanır:
+| Kısıt | Değer |
+| --- | --- |
+| Kadro büyüklüğü | 15 oyuncu (2 GK, 5 DEF, 5 MID, 3 FWD) |
+| Starting XI / Bench | 11 / 4 |
+| Takım başına oyuncu | En fazla 3 |
+| Bütçe | Fiyat birimi cinsinden (`10000` = 100.0M TL) |
+| Kaptan çarpanı | 2x |
 
-- oyuncular
-- fiyatlar
-- pozisyonlar
-- takım başına oyuncu limiti
-- bütçe
-- mevcut projection değerleri
+Optimizer bu kısıtların hiçbirini çiğnemez; bütçeyi aşan veya pozisyon dağılımını bozan bir kadro asla döndürmez.
 
-Sonuçta şunları üretir:
+## Formasyonlar
 
-- 15 oyunculuk squad
-- seçilen formasyona uygun starting XI
-- kalan 4 oyuncudan oluşan bench
-- captain ve vice captain
-- toplam maliyet
-- expected points
+`3-5-2` `3-4-3` `4-3-3` `4-4-2` `4-5-1` `5-4-1` `5-3-2` `5-2-3`
 
-Uygulanan temel kısıtlar:
+Formasyon yalnızca starting XI dağılımını belirler; squad pozisyon dağılımı her zaman 2 GK / 5 DEF / 5 MID / 3 FWD'dir.
 
-- 15 oyuncu
-- 2 GK, 5 DEF, 5 MID, 3 FWD
-- takım başına en fazla 3 oyuncu
-- toplam maliyet bütçeyi aşamaz
-- starting XI seçilen formasyona uymalıdır
-- lineup ve bench oyuncuları birbirinden farklı olmalıdır
+## Puanlama ve Projection
 
-Bütçe fiyat birimleriyle ifade edilir; `10000`, 100M TL bütçeye karşılık gelir.
+Scoring engine ham maç performansından (dakika, gol, asist, clean sheet, kurtarış, penaltı, kart, kendi kalesine gol, bonus) fantasy puanı üretir. Historical projection, oyuncunun son 5 maçının `[1,2,3,4,5]` ağırlıklı ortalamasını alır — en yeni maç en ağır basar, 0 dakikalık performanslar sayılmaz. Eşleşen gerçek performans yoksa expected points `0` kalır; rastgele xG, sakatlık veya takım gücü **uydurulmaz**.
 
-## Formations
+## Dataset ve Veri Kalitesi
 
-Desteklenen formasyonlar:
-
-- 3-5-2
-- 3-4-3
-- 4-3-3
-- 4-4-2
-- 4-5-1
-- 5-4-1
-- 5-3-2
-- 5-2-3
-
-Her formasyonda kaleci sayısı 1’dir ve formasyon yalnızca starting XI
-dağılımını belirler. Squad pozisyon dağılımı her zaman 2 GK / 5 DEF / 5 MID /
-3 FWD olarak kalır.
-
-## Scoring
-
-Scoring engine ham maç performansından fantasy puanı üretir. Mevcut kurallar
-arasında dakika, pozisyona göre gol, asist, clean sheet, kurtarış, penaltı,
-kart, kendi kalesine gol, yenilen gol ve maç bonusu puanları bulunur. Captain
-çarpanı scoring kurallarında 2x olarak uygulanır.
-
-## Projection
-
-Historical projection sistemi:
-
-- Son 5 oynanan maçı kullanır.
-- Ağırlıklar `[1, 2, 3, 4, 5]` şeklindedir.
-- En yeni maç en yüksek ağırlığı alır.
-- Dakikası 0 olan performanslar hesaba katılmaz.
-- Oyuncunun eşleşen performansı yoksa expected points `0` olur.
-- Gelecek en fazla 3 fixture metadata olarak gösterilir.
-- Difficulty güvenilir veri yoksa `Unknown` kalır.
-- Rastgele xG, sakatlık, home advantage veya takım gücü üretilmez.
-
-Fixture context home/away ve rakip bilgisi sağlayabilir; güvenilir, kalibre
-edilmiş bir difficulty modeli yoksa historical weighted average değiştirilmez.
-Sezon başlamadan veya gerçek performans verisi eşleşmeden projection coverage
-0 olabilir.
-
-## Data Quality
-
-Veriler manuel olarak yönetildiği için güncellik, doğruluk, eksiksizlik veya
-belirli bir amaca uygunluk garanti edilmez. Dataset resmi gerçek zamanlı bir
-feed değildir. Kullanıcılar verileri ve optimizer çıktılarını kendi
-kararlarının tek veya kesin kaynağı olarak kullanmamalıdır.
+Sezon dataset'i `data/2026-27/` altında (`teams.json`, `players.json`, `fixtures.json`, `projections.json`, `matches/`) elle yönetilir — otomatik scraping veya canlı API bağlantısı yoktur; her dosyadaki `source` alanı kaynak bağlamını taşır. Veriler manuel yönetildiği için güncellik, doğruluk veya eksiksizlik garanti edilmez; dataset resmi gerçek zamanlı bir feed değildir ve kararların tek kaynağı olarak kullanılmamalıdır.
 
 ## TFF / Bağımsızlık
 
-Süper Lig Fantasy Optimizer, Türkiye Futbol Federasyonu (TFF) ile resmi,
-ticari veya kurumsal bağlantısı olmayan bağımsız bir projedir. TFF’nin resmi
-ürünü, servisi, uygulaması veya veri sağlayıcısı değildir.
+Süper Lig Fantasy Optimizer, Türkiye Futbol Federasyonu (TFF) ile resmi, ticari veya kurumsal bağlantısı olmayan bağımsız bir projedir; TFF'nin resmi ürünü, servisi veya veri sağlayıcısı değildir. TFF adı yalnızca ilgili ligi tanımlamak amacıyla anılır; TFF logosu veya kurumsal marka kimliği kullanılmaz.
 
-TFF adı, yalnızca ilgili futbol organizasyonunu, ligi veya veri bağlamını
-açıklamak amacıyla referans olarak anılmaktadır. TFF tarafından geliştirilmiş,
-onaylanmış, desteklenmiş veya işletilmiş izlenimi oluşturulmamalıdır. TFF
-logosu veya kurumsal marka kimliği kullanılmamalıdır.
+## Yasal Uyarı
 
-## Yasal Uyarı ve Sorumluluk Reddi
+Projedeki oyuncu, kadro, fiyat ve puan bilgileri manuel girilmiştir ve resmi hukuki, finansal veya sportif tavsiye niteliği taşımaz. Optimizer çıktıları yalnızca bilgi ve karar desteği amaçlıdır; proje bahis, kumar veya finansal kararlar için garanti ya da kazanç vaadi sunmaz. Kullanıcıların kendi kararlarının sonuçları kendilerine aittir. Proje ticari gelir, ücretli üyelik veya bahis geliri amacı taşımaz. Bu metin hukuki danışmanlık değildir.
 
-Projede yer alan oyuncu bilgileri, takım kadroları, oyuncu değerleri veya
-fiyatları, puan durumları ve benzeri bilgiler proje kapsamında manuel olarak
-girilmiş ve kaydedilmiştir. Bu bilgiler resmi hukuki, finansal, sportif veya
-profesyonel tavsiye niteliğinde değildir.
+## İletişim
 
-Optimizer çıktıları yalnızca bilgi ve karar desteği amacı taşır. Proje;
-bahis, kumar, finansal yatırım veya benzeri yüksek riskli kararlar için
-garanti, kesin tahmin veya kazanç vaadi sunmaz. Kullanıcıların proje
-çıktılarından hareketle aldığı kararların sonuçları kendilerine aittir. Bu
-açıklama, yürürlükteki emredici hukuk kuralları kapsamındaki hak ve
-yükümlülükleri ortadan kaldırmaz.
+Veri hatası, telif iddiası veya başka bir sorun için: `barissalihbabacan@gmail.com`
 
-Proje mevcut kullanım modeli kapsamında ticari gelir, ücretli üyelik, satış,
-bahis geliri, reklam geliri veya benzeri bir ticari kazanç elde etme amacı
-taşımamaktadır.
-
-Bu metin hukuki danışmanlık değildir.
-
-## İletişim ve Sorun Bildirme
-
-Veri hatası, telif veya fikri mülkiyet iddiası, içerik kaldırma talebi ya da
-projeyle ilgili başka bir sorun için aşağıdaki e-posta adresinden iletişim
-kurulabilir:
-
-`barissalihbabacan@gmail.com`
-
-Telefon numarası paylaşılmamaktadır.
-
-## Lisans
-
-Bu proje [MIT License](LICENSE) kapsamında lisanslanmıştır. Veri dosyalarının
-kullanım koşulları, kaynaklarına göre ayrıca değerlendirilmelidir.
-
-## Development
-
-Değişikliklerden önce ve sonra şu kontroller çalıştırılmalıdır:
+## Geliştirme
 
 ```bash
 cargo fmt --check
@@ -248,37 +159,21 @@ cargo test
 cargo clippy --all-targets --all-features -- -D warnings
 ```
 
-## Project Structure
-
 ```text
 src/
-├── data/               # JSON modelleri, yükleme ve validation
-├── error.rs            # Veri ve domain hataları
-├── models.rs           # Puanlama ve kadro domain modelleri
-├── optimizer.rs        # Formation, lineup ve squad optimizer
-├── projection_engine.rs # Historical projection ve fixture context
-├── rules.rs            # Scoring ve squad kuralları
-├── scoring.rs          # Ham performans -> fantasy puanı
-└── main.rs             # sf CLI
-data/2026-27/           # Sezon JSON dataset'i
-tests/                  # CLI, data, scoring ve projection testleri
+├── data/                 # JSON modelleri, yükleme ve validation
+├── optimizer.rs          # Formation, lineup ve squad optimizer
+├── projection_engine.rs  # Historical projection ve fixture context
+├── rules.rs              # Scoring ve squad kuralları
+├── scoring.rs            # Ham performans -> fantasy puanı
+└── main.rs               # sf CLI
+crates/wasm-bindings/     # Web için WebAssembly bağlayıcıları
+web/                      # React + Vite web arayüzü
+data/2026-27/             # Sezon JSON dataset'i
 ```
 
-## Roadmap
+Katkı süreci için [CONTRIBUTING.md](CONTRIBUTING.md), güvenlik bildirimleri için [SECURITY.md](SECURITY.md).
 
-Aşağıdaki konular, mevcut veri ve doğrulama kapsamı genişlediğinde ele
-alınabilecek planlı çalışmalardır; şu anda tamamlanmış özellik olarak
-sunulmaz:
+## Lisans
 
-- Gerçek ve schema ile eşleşen maç performanslarının eklenmesi
-- Projection coverage’ın sezon verisi geldikçe artırılması
-- Fixture context için doğrulanabilir difficulty modelinin geliştirilmesi
-
-## Katkıda Bulunma
-
-Katkı süreci için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
-
-## Güvenlik
-
-Güvenlik bildirimleri için [SECURITY.md](SECURITY.md) dosyasındaki iletişim
-adresini kullanın.
+[MIT License](LICENSE). Veri dosyalarının kullanım koşulları kaynaklarına göre ayrıca değerlendirilmelidir.
