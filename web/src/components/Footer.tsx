@@ -46,8 +46,10 @@ export const Footer: React.FC = () => {
           </a>
         </div>
 
-        <div id="footer-disclaimer" className="text-[10px] text-[var(--text-muted)] text-center md:text-right">
-          TFF veya Trendyol ile ticari bağı bulunmayan bağımsız topluluk projesidir.
+        <div id="footer-disclaimer" className="text-[10px] text-[var(--text-muted)] text-center md:text-right max-w-md leading-relaxed">
+          <span>
+            Bağımsız analiz ve optimizasyon asistanıdır. TFF veya resmi lig organizatörleri ile resmi bir bağı yoktur. Veriler yalnızca istatistiki araştırma ve referans (Fair Use) amacıyla işlenmektedir.
+          </span>
         </div>
       </div>
     </footer>

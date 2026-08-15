@@ -2,7 +2,7 @@
 export default {
   content: [
     './index.html',
-    './web/**/*.{js,ts,jsx,tsx}',
+    './web/src/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: ['class', '[data-theme="dark"]'],
   theme: {
