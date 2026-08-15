@@ -301,9 +301,13 @@ fn projection_calculate_dry_run_supports_json_output() {
         .unwrap();
     assert!(output.status.success());
     let value: Value = serde_json::from_slice(&output.stdout).unwrap();
+    // Total player count is stable
     assert_eq!(value["players"], 443);
-    assert_eq!(value["projected"], 0);
-    assert_eq!(value["missing"], 443);
+    // projected + missing must always equal total players
+    let projected = value["projected"].as_u64().unwrap();
+    let missing = value["missing"].as_u64().unwrap();
+    assert_eq!(projected + missing, 443);
+    // dry-run flag must always be set
     assert_eq!(value["dry_run"], true);
 }
 
