@@ -1,9 +1,16 @@
 name: Deploy GitHub Pages
 
+# The app now lives on Firebase Hosting (see firebase.json). This workflow no
+# longer builds/deploys the full app — it only publishes a small static
+# redirect page (gh-pages-redirect/) pointing visitors at the new host.
+
 on:
   push:
     branches:
       - main
+    paths:
+      - 'gh-pages-redirect/**'
+      - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,7 +23,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  deploy-redirect:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -25,47 +32,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-
-      - name: Cache cargo registry and wasm-pack
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin/wasm-pack
-            target
-          key: ${{ runner.os }}-cargo-wasm-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-wasm-
-
-      - name: Install wasm-pack
-        run: which wasm-pack || cargo install wasm-pack --locked
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build Web Application
-        run: npm run build
-
       - name: Deploy to gh-pages branch (Branch Deployment)
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist
+          folder: gh-pages-redirect
           branch: gh-pages
 
       - name: Upload Pages artifact (Actions Deployment)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./gh-pages-redirect
 
       - name: Deploy to GitHub Pages (Actions Deployment)
         id: deployment

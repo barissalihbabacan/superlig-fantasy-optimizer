@@ -6,11 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Süper Lig Fantasy Optimizer (`sf`) is a Rust CLI/library that validates Trendyol Süper Lig
 Fantasy squads, calculates fantasy scores from match performance, projects expected points, and
-produces deterministic squad recommendations under budget constraints. A React/TypeScript web
-app (`web/`) reads the same JSON dataset directly (via `resolveJsonModule` imports) and reimplements
-the scoring/optimizer/projection logic in TypeScript for a static GitHub Pages deployment — it does
-not call the Rust binary. When changing scoring, optimizer, or projection rules, check whether the
-equivalent logic in `web/src/services/` needs the same change.
+produces deterministic squad recommendations under budget constraints. A React/TypeScript web app
+(`web/`) reads the same JSON dataset directly (via `resolveJsonModule` imports) and calls the squad
+optimizer's real Rust implementation (`src/optimizer.rs`) compiled to WebAssembly via
+`crates/wasm-bindings` — there is no separate TypeScript reimplementation of that logic to keep in
+sync. The web app is hosted on Firebase Hosting (see `firebase.json` / `web/src/services/firebase.ts`);
+GitHub Pages now only serves a small static redirect page pointing at it (see below).
 
 The project has no scraping/API-fetch system baked into the CLI or web app itself; dataset updates
 come from the sync scripts in `scripts/` (see below) or manual edits. All data is manually curated —
@@ -50,8 +51,11 @@ npm run preview
 ```
 
 Note: `package.json` lives at the repo root but all frontend source is under `web/src`; `vite.config.ts`
-aliases `@` to `web/src` and sets `base: '/superlig-fantasy-optimizer/'` for GitHub Pages. There is no
-web test runner configured — verification is `tsc --noEmit` + `eslint` + manual/browser check.
+aliases `@` to `web/src` and reads `base` from `VITE_BASE_PATH` (defaults to `/`, matching Firebase
+Hosting). `npm run build`/`npm run dev` first run `wasm-pack` on `crates/wasm-bindings` (needs the
+`wasm32-unknown-unknown` rustup target and `wasm-pack` installed) before building the frontend.
+Vitest (`npm test`) covers the wasm optimizer binding; everything else is `tsc --noEmit` + `eslint` +
+manual/browser check.
 
 ## Architecture
 
@@ -109,9 +113,12 @@ squad, or single match performance) from the file contents.
 - `services/dataset.ts` — imports the JSON dataset directly and exposes `loadSeasonDataset()`,
   team branding/colors, and Turkish-language formatting/translation helpers (position names, price
   formatting, date formatting).
-- `services/optimizer.ts`, `services/matchPredictor.ts`, `services/highlightChecker.ts`,
-  `services/nostradamusStorage.ts`, `services/rapidApiFootball.ts` — TS ports of optimizer/prediction
-  logic and a client for the same RapidAPI football data source the sync script uses.
+- `services/optimizer.ts` — calls the wasm-compiled Rust optimizer (via `optimizer.worker.ts`, a Web
+  Worker, since the search can be slow on real season data before it's rich with real match results)
+  and adapts its result into the shape the `Optimizer` page renders.
+- `services/matchPredictor.ts`, `services/highlightChecker.ts`, `services/nostradamusStorage.ts`,
+  `services/rapidApiFootball.ts` — frontend-only prediction/display logic and a client for the same
+  RapidAPI football data source the sync script uses.
 - `pages/` — one component per route (Dashboard, Fixtures, MatchDetail, Nostradamus, Optimizer,
   Players, Rules, Teams); `components/` holds shared UI (Header, Footer, Pitch, MatchTicker, modals,
   Toast).
@@ -125,9 +132,11 @@ squad, or single match performance) from the file contents.
   matchdays (Fri/Sat/Sun/Mon evenings), which validates the synced data (`sf data validate`) before
   rebuilding and redeploying the web app.
 
-Two deploy workflows exist: `pages.yml` (build on push to `main`, deploy `dist/` to GitHub Pages) and
-`sync_match_data.yml` (data sync + rebuild + commit-and-push + redeploy). Both ultimately publish the
-same static site built from `web/`.
+The canonical hosting is Firebase Hosting (deployed from the committed `dist/`, `firebase.json`'s
+`public` dir). `.github/workflows/pages.yml` no longer builds/deploys the app itself — it only
+publishes `gh-pages-redirect/index.html`, a static page pointing visitors at the Firebase URL, and
+only runs when that page (or the workflow) changes. `sync_match_data.yml` still rebuilds and commits
+`dist/` after a data sync so it stays in sync for Firebase deployment.
 
 ## Contribution norms (from CONTRIBUTING.md)
 
