@@ -22,4 +22,7 @@ Thumbs.db
 # Node / Frontend çıktıları
 node_modules/
 
+# Agent / Tooling
+.claude/
+
 

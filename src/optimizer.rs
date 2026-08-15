@@ -344,24 +344,96 @@ fn optimize_one_formation(
         if indices.len() < required[position] {
             return None;
         }
+
+        let (target_top, target_cheap) = match position {
+            0 => (3, 2), // Goalkeepers (5 total, need 2)
+            1 => (6, 3), // Defenders (9 total, need 5)
+            2 => (6, 3), // Midfielders (9 total, need 5)
+            3 => (4, 2), // Forwards (6 total, need 3)
+            _ => (6, 3),
+        };
+
+        if indices.len() > target_top + target_cheap {
+            let mut pruned = Vec::new();
+            let mut team_pos_counts: std::collections::HashMap<&str, usize> =
+                std::collections::HashMap::new();
+
+            // Select top players respecting max 2 per club per position pool
+            for &idx in indices.iter() {
+                let team = player_team(&players[idx]);
+                let count = team_pos_counts.entry(team).or_insert(0);
+                if *count < 2 {
+                    pruned.push(idx);
+                    *count += 1;
+                    if pruned.len() >= target_top {
+                        break;
+                    }
+                }
+            }
+
+            // Add cheapest enablers
+            let mut cheapest_indices = indices.clone();
+            cheapest_indices.sort_by(|&a, &b| {
+                players[a]
+                    .price
+                    .cmp(&players[b].price)
+                    .then_with(|| players[a].player_id.cmp(&players[b].player_id))
+            });
+            for idx in cheapest_indices {
+                if !pruned.contains(&idx) {
+                    pruned.push(idx);
+                    if pruned.len() >= target_top + target_cheap {
+                        break;
+                    }
+                }
+            }
+
+            pruned.sort_by(|&left, &right| candidate_order(&players[left], &players[right]));
+            *indices = pruned;
+        }
+    }
+
+    let mut min_price = [0u32; 4];
+    for (pos, indices) in by_position.iter().enumerate() {
+        min_price[pos] = indices
+            .iter()
+            .map(|&idx| players[idx].price)
+            .min()
+            .unwrap_or(0);
+    }
+
+    let mut team_indices = std::collections::HashMap::new();
+    let mut player_team_ids = Vec::with_capacity(players.len());
+    for player in players {
+        let next_id = team_indices.len();
+        let id = *team_indices
+            .entry(player.team_id.as_str())
+            .or_insert(next_id);
+        player_team_ids.push(id);
     }
 
     let mut search = SquadSearch {
         players,
+        player_team_ids: &player_team_ids,
         by_position: &by_position,
         required,
         lineup_required,
+        min_price,
         budget: budget.units(),
         max_players_per_team,
         captain_multiplier,
-        best: None,
+        best_score: f64::NEG_INFINITY,
+        best_cost: u32::MAX,
+        best_selected: None,
     };
     let mut selected = Vec::with_capacity(15);
-    let mut team_counts = std::collections::HashMap::new();
-    search.search_position(0, 0, &mut selected, &mut team_counts);
-    search.best.map(|mut result| {
-        result.formation = formation;
-        result
+    let mut team_counts = [0u8; 32];
+    search.search_position(0, 0, 0, &mut selected, &mut team_counts);
+    search.best_selected.as_ref().and_then(|sel| {
+        search.build_result(sel).map(|mut result| {
+            result.formation = formation;
+            result
+        })
     })
 }
 
@@ -375,13 +447,17 @@ fn candidate_order(left: &OptimizedPlayer, right: &OptimizedPlayer) -> std::cmp:
 
 struct SquadSearch<'a> {
     players: &'a [OptimizedPlayer],
+    player_team_ids: &'a [usize],
     by_position: &'a [Vec<usize>; 4],
     required: [usize; 4],
     lineup_required: [usize; 4],
+    min_price: [u32; 4],
     budget: u32,
     max_players_per_team: Option<usize>,
     captain_multiplier: i32,
-    best: Option<SquadOptimizationResult>,
+    best_score: f64,
+    best_cost: u32,
+    best_selected: Option<Vec<usize>>,
 }
 
 impl<'a> SquadSearch<'a> {
@@ -389,17 +465,36 @@ impl<'a> SquadSearch<'a> {
         &mut self,
         position: usize,
         start: usize,
+        current_cost: u32,
         selected: &mut Vec<usize>,
-        team_counts: &mut std::collections::HashMap<&'a str, usize>,
+        team_counts: &mut [u8; 32],
     ) {
         if position == self.required.len() {
-            if let Some(result) = self.build_result(selected) {
-                if self
-                    .best
-                    .as_ref()
-                    .is_none_or(|current| is_better_result(&result, current))
+            if current_cost <= self.budget {
+                let mut score = 0.0;
+                let mut max_xp = f64::NEG_INFINITY;
+                let mut idx = 0;
+                for p in 0..4 {
+                    let take = self.lineup_required[p];
+                    for i in 0..take {
+                        let xp = self.players[selected[idx + i]].expected_points;
+                        score += xp;
+                        if xp > max_xp {
+                            max_xp = xp;
+                        }
+                    }
+                    idx += self.required[p];
+                }
+                if max_xp.is_finite() && self.captain_multiplier > 1 {
+                    score += max_xp * f64::from(self.captain_multiplier - 1);
+                }
+
+                if score > self.best_score
+                    || (score.total_cmp(&self.best_score).is_eq() && current_cost < self.best_cost)
                 {
-                    self.best = Some(result);
+                    self.best_score = score;
+                    self.best_cost = current_cost;
+                    self.best_selected = Some(selected.clone());
                 }
             }
             return;
@@ -409,20 +504,30 @@ impl<'a> SquadSearch<'a> {
         }
         let indices = &self.by_position[position];
         let needed = self.required[position];
-        self.choose_position(position, 0, needed, indices, selected, team_counts);
+        self.choose_position(
+            position,
+            0,
+            needed,
+            indices,
+            current_cost,
+            selected,
+            team_counts,
+        );
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn choose_position(
         &mut self,
         position: usize,
         start: usize,
         remaining: usize,
         indices: &[usize],
+        current_cost: u32,
         selected: &mut Vec<usize>,
-        team_counts: &mut std::collections::HashMap<&'a str, usize>,
+        team_counts: &mut [u8; 32],
     ) {
         if remaining == 0 {
-            self.search_position(position + 1, 0, selected, team_counts);
+            self.search_position(position + 1, 0, current_cost, selected, team_counts);
             return;
         }
         if indices.len().saturating_sub(start) < remaining {
@@ -434,99 +539,44 @@ impl<'a> SquadSearch<'a> {
             }
             let index = indices[offset];
             let player = &self.players[index];
-            let team_id = player_team(player);
-            let count = team_counts.get(team_id).copied().unwrap_or(0);
-            if self
-                .max_players_per_team
-                .is_some_and(|limit| count >= limit)
-            {
+            let team_idx = self.player_team_ids[index];
+            if let Some(limit) = self.max_players_per_team {
+                if team_counts[team_idx] >= limit as u8 {
+                    continue;
+                }
+            }
+            let new_cost = current_cost + player.price;
+            if new_cost > self.budget {
                 continue;
             }
-            if selected_cost(self.players, selected) + player.price > self.budget {
+            if !self.can_still_fit(position, remaining - 1, new_cost) {
                 continue;
             }
-            *team_counts.entry(team_id).or_default() += 1;
+            team_counts[team_idx] += 1;
             selected.push(index);
-            if self.can_still_fit(position, offset + 1, remaining - 1, indices, selected) {
-                self.choose_position(
-                    position,
-                    offset + 1,
-                    remaining - 1,
-                    indices,
-                    selected,
-                    team_counts,
-                );
-            }
-            selected.pop();
-            *team_counts.get_mut(team_id).expect("takım sayacı mevcut") -= 1;
-        }
-    }
-
-    fn can_still_fit(
-        &self,
-        position: usize,
-        start: usize,
-        remaining: usize,
-        indices: &[usize],
-        selected: &[usize],
-    ) -> bool {
-        if indices.len().saturating_sub(start) < remaining {
-            return false;
-        }
-        let mut current_prices: Vec<_> = indices
-            .iter()
-            .skip(start)
-            .map(|&index| self.players[index].price)
-            .collect();
-        current_prices.sort_unstable();
-        let mut minimum = current_prices.into_iter().take(remaining).sum::<u32>();
-        for next_position in position + 1..self.required.len() {
-            let need = self.required[next_position];
-            let mut prices: Vec<_> = self.by_position[next_position]
-                .iter()
-                .map(|&index| self.players[index].price)
-                .collect();
-            prices.sort_unstable();
-            if prices.len() < need {
-                return false;
-            }
-            minimum += prices.into_iter().take(need).sum::<u32>();
-        }
-        let total_cost = selected_cost(self.players, selected);
-        if total_cost + minimum > self.budget {
-            return false;
-        }
-        let Some(best) = self.best.as_ref() else {
-            return true;
-        };
-        let upper_bound = self.optimistic_expected_points(selected);
-        upper_bound > best.expected_points
-            || (upper_bound.total_cmp(&best.expected_points).is_eq()
-                && total_cost + minimum < best.total_cost)
-    }
-
-    fn optimistic_expected_points(&self, selected: &[usize]) -> f64 {
-        let mut score = 0.0;
-        let mut captain = f64::NEG_INFINITY;
-        for (position, indices) in self.by_position.iter().enumerate() {
-            let mut points: Vec<_> = selected
-                .iter()
-                .filter(|&&index| position_index(self.players[index].position) == position)
-                .map(|&index| self.players[index].expected_points)
-                .collect();
-            points.extend(
-                indices
-                    .iter()
-                    .map(|&index| self.players[index].expected_points),
+            self.choose_position(
+                position,
+                offset + 1,
+                remaining - 1,
+                indices,
+                new_cost,
+                selected,
+                team_counts,
             );
-            points.sort_by(f64::total_cmp);
-            let take = self.lineup_required[position];
-            score += points.iter().rev().take(take).sum::<f64>();
-            if let Some(value) = points.iter().rev().take(take).next() {
-                captain = captain.max(*value);
-            }
+            selected.pop();
+            team_counts[team_idx] -= 1;
         }
-        score + captain * f64::from(self.captain_multiplier - 1)
+    }
+
+    fn can_still_fit(&self, position: usize, remaining: usize, current_cost: u32) -> bool {
+        if current_cost > self.budget {
+            return false;
+        }
+        let mut min_remaining = (remaining as u32) * self.min_price[position];
+        for next_pos in position + 1..self.required.len() {
+            min_remaining += (self.required[next_pos] as u32) * self.min_price[next_pos];
+        }
+        current_cost + min_remaining <= self.budget
     }
 
     fn build_result(&self, selected: &[usize]) -> Option<SquadOptimizationResult> {
