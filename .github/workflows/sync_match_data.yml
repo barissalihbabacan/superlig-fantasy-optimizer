@@ -36,9 +36,8 @@ jobs:
       - name: 🟢 Node.js Kurulumu
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
-          cache-dependency-path: 'web/package-lock.json'
 
       - name: 🔄 Maç Sonuçlarını Senkronize Et
         env:
@@ -46,21 +45,17 @@ jobs:
         run: |
           python3 scripts/sync_fixtures_results.py
 
-      - name: 📦 Frontend Paketlerini Kur ve Derle
+      - name: 📦 Paketleri Kur ve Derle
         run: |
-          cd web
-          npm ci || npm install
+          npm ci
           npm run build
-          cd ..
-          mkdir -p dist
-          cp -r web/dist/* dist/
 
       - name: 💾 Değişiklikleri Kaydet ve Push Et
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          git add data/ web/dist/ dist/
+          git add data/ dist/
           if git diff --staged --quiet; then
             echo "ℹ️ Güncellenecek yeni veri değişikliği bulunamadı."
           else
