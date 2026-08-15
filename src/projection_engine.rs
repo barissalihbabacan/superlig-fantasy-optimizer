@@ -46,7 +46,7 @@ pub struct TeamStrength {
     pub goal_difference_per_match: f64,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, serde::Serialize)]
 pub struct PlayerProjectionSummary {
     pub player_id: String,
     pub matches_considered: usize,
@@ -58,7 +58,7 @@ pub struct PlayerProjectionSummary {
     pub upcoming_fixtures: Vec<UpcomingFixture>,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, serde::Serialize)]
 pub struct ProjectionCalculation {
     pub summaries: Vec<PlayerProjectionSummary>,
     pub projections: ProjectionDataset,

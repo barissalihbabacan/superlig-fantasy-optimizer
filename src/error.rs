@@ -3,7 +3,7 @@
 use crate::rules::PositionDistribution;
 use std::fmt;
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, serde::Serialize)]
 pub enum ValidationError {
     InvalidSquadSize {
         expected: usize,
@@ -63,7 +63,7 @@ impl fmt::Display for ValidationError {
 
 impl std::error::Error for ValidationError {}
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, serde::Serialize)]
 pub enum DataValidationError {
     Io(String),
     Json(String),

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SeasonDataset, FormationType } from '../types';
 import { Pitch } from '../components/Pitch';
-import { runClientOptimizer, OptimizationResult } from '../services/optimizer';
+import { runOptimizer, OptimizationResult } from '../services/optimizer';
+import { initOptimizerWasm, cancelOptimization } from '../services/optimizerWasm';
 import { formatPrice, getTeamBranding, getShortPosition } from '../services/dataset';
 import { useToast } from '../components/Toast';
 import {
@@ -9,6 +10,7 @@ import {
   Sliders,
   CheckCircle2,
   Shield,
+  XCircle,
 } from 'lucide-react';
 
 interface OptimizerProps {
@@ -34,23 +36,36 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
     '5-2-3',
   ];
 
-  const handleOptimizeClick = () => {
+  // Kullanıcı butona basmadan önce wasm worker'ını ısıt.
+  useEffect(() => {
+    initOptimizerWasm();
+  }, []);
+
+  const handleOptimizeClick = async () => {
     setIsOptimizing(true);
-    setTimeout(() => {
-      const optRes = runClientOptimizer(
-        dataset.players,
-        dataset.projections,
-        budget,
-        formation
-      );
+    try {
+      const optRes = await runOptimizer(dataset.players, dataset.projections, budget, formation);
       setResult(optRes);
-      setIsOptimizing(false);
       showToast(
         '⚡ Kadro Optimize Edildi',
         'optimizer',
         `${optRes.formation} dizilişinde ${formatPrice(optRes.totalPrice)} bütçeyle kadro hazırlandı.`
       );
-    }, 250);
+    } catch (error) {
+      showToast(
+        'Optimizasyon Hatası',
+        'warning',
+        error instanceof Error ? error.message : String(error)
+      );
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
+  const handleCancelClick = () => {
+    cancelOptimization();
+    setIsOptimizing(false);
+    showToast('Optimizasyon İptal Edildi', 'warning', 'Hesaplama durduruldu.');
   };
 
   return (
@@ -125,6 +140,24 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
               >
                 {isOptimizing ? 'Hesaplanıyor...' : '⚡ Optimize Kadro Oluştur'}
               </button>
+
+              {isOptimizing && (
+                <div id="optimizer-computing-notice" className="space-y-2">
+                  <p className="text-[10px] text-[var(--text-muted)] font-mono leading-relaxed">
+                    Oyuncu puanları arasındaki fark azken (ör. sezon başında gerçek maç verisi
+                    henüz yokken) bu hesaplama birkaç dakika sürebilir. Sekme kilitlenmez,
+                    dilediğiniz zaman iptal edebilirsiniz.
+                  </p>
+                  <button
+                    id="optimizer-cancel-btn"
+                    onClick={handleCancelClick}
+                    className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded text-xs font-bold border border-[var(--border)] text-[var(--text-secondary)] hover:text-white hover:border-red-500/50 transition-all"
+                  >
+                    <XCircle className="w-3.5 h-3.5" />
+                    İptal Et
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Result Metrics Card */}

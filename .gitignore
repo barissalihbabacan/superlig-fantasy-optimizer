@@ -26,4 +26,7 @@ node_modules/
 .claude/
 .firebase/
 
+# wasm-pack build çıktısı (crates/wasm-bindings'ten derlenir, commit edilmez)
+web/wasm-pkg/
+
 

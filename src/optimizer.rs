@@ -89,7 +89,7 @@ impl fmt::Display for Formation {
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize)]
 pub struct FormationParseError {
     pub value: String,
 }
@@ -131,7 +131,7 @@ pub struct PlayerProjection {
 }
 
 /// Dataset oyuncu ID'siyle ilişkilendirilmiş beklenen puan.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct NamedPlayerProjection {
     pub player_id: String,
     pub expected_points: f64,
@@ -177,7 +177,7 @@ pub struct OptimizedPlayer {
 }
 
 /// Bütçeli optimizer hataları.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize)]
 pub enum OptimizationError {
     NegativeBudget,
     InvalidPlayer(String),
