@@ -11,8 +11,9 @@
       "round": 1,
       "home_team_id": "galatasaray",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W01",
-      "status": "scheduled"
+      "kickoff": "2026-08-14T21:30:00+03:00",
+      "status": "finished",
+      "score": { "home": 2, "away": 2 }
     },
     {
       "id": "2026-27-w01-02",

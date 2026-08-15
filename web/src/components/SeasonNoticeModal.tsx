@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, CheckCircle, Calendar, Sparkles, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Calendar, Trophy, Sparkles, X } from 'lucide-react';
 
 interface SeasonNoticeModalProps {
   isOpen: boolean;
@@ -32,7 +32,7 @@ export const SeasonNoticeModal: React.FC<SeasonNoticeModalProps> = ({ isOpen, on
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20 mb-2">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Sezon Öncesi Bilgilendirme</span>
+              <span>Sezon Bilgilendirmesi</span>
             </div>
             <h3 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">
               Kadro Planlama Uyarısı
@@ -40,17 +40,31 @@ export const SeasonNoticeModal: React.FC<SeasonNoticeModalProps> = ({ isOpen, on
           </div>
         </div>
 
+        {/* Played match highlight */}
+        <div className="flex items-center justify-between p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-xs sm:text-sm">
+          <div className="flex items-center gap-2 text-green-400">
+            <Trophy className="w-4 h-4 flex-shrink-0" />
+            <span className="font-semibold">Galatasaray</span>
+          </div>
+          <div className="font-bold text-white text-base">2 – 2</div>
+          <div className="flex items-center gap-2 text-green-400 flex-row-reverse">
+            <Trophy className="w-4 h-4 flex-shrink-0 opacity-0" />
+            <span className="font-semibold">Çorum FK</span>
+          </div>
+        </div>
+
         {/* Message Content */}
         <div className="space-y-3 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs sm:text-sm text-amber-200/90 leading-relaxed">
           <p className="font-semibold text-amber-300 flex items-center gap-1.5">
             <Calendar className="w-4 h-4 flex-shrink-0" />
-            <span>2026/27 Lig Sezonu Başlangıç Durumu</span>
+            <span>2026/27 Sezonu — 1. Hafta Devam Ediyor</span>
           </p>
           <p>
-            Sezon henüz başlamadığı için kadro planlama ve optimizasyon motoru beklendiği gibi çalışmamaktadır. 
+            <span className="text-white font-medium">Galatasaray – Çorum FK</span> maç verisi (14 Ağu 2026) sisteme işlendi.
+            1. haftanın kalan sekiz maçının sonuçları henüz eklenmedi.
           </p>
           <p className="font-medium text-amber-100">
-            İlk lig haftası tamamlanıp maç verileri sisteme işlendikten sonra puan projeksiyonları güncellenecek ve sistem otomatik düzelecektir.
+            Eksik maç verileri tamamlandıkça puan projeksiyonları güncellenecek ve optimizasyon motoru tam kapasitede çalışacaktır.
           </p>
         </div>
 
