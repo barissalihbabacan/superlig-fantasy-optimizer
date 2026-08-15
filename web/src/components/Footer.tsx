@@ -1,68 +1,53 @@
 import React from 'react';
-import { Mail, Github, FileText, AlertCircle } from 'lucide-react';
+import { Mail, Github, FileText } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="mt-16 sm:mt-24 border-t border-[var(--border-color)] bg-[var(--bg-surface)] py-8 text-sm text-[var(--text-secondary)]">
-      <div className="app-container flex flex-col gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-          {/* Column 1: Independence & Project Title */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 font-bold text-[var(--text-primary)]">
-              <span className="text-blue-500">Süper Lig Fantasy Optimizer</span>
-            </div>
-            <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-              Trendyol Süper Lig Fantasy kadro analizi ve deterministik optimizasyon motoru.
-              Veriler manuel olarak yönetilmekte olup bağımsız açık kaynak topluluk projesidir.
-            </p>
+    <footer id="main-footer" className="mt-4 border-t border-[var(--border)] bg-[var(--bg-surface)] py-3 sm:py-3.5 text-xs text-[var(--text-secondary)]">
+      <div className="app-container flex flex-col md:flex-row items-center justify-between gap-2.5">
+        <div id="footer-brand" className="flex items-center gap-2 font-bold text-[var(--text-primary)]">
+          <div className="w-5 h-5 rounded bg-[var(--color-brand)] text-[#0c1017] flex items-center justify-center font-black text-[10px]">
+            SL
           </div>
-
-          {/* Column 2: Legal Disclaimer */}
-          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 space-y-1.5">
-            <div className="flex items-center gap-1.5 font-semibold text-amber-400">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>Yasal Sorumluluk Reddi</span>
-            </div>
-            <p className="leading-relaxed text-amber-200/80">
-              Süper Lig Fantasy Optimizer bağımsız bir projedir ve TFF (Türkiye Futbol Federasyonu) ile resmi, ticari veya kurumsal bağlantısı bulunmamaktadır. Veri hatası ve içerik talepleri için doğrudan iletişim kurulabilir.
-            </p>
-          </div>
-
-          {/* Column 3: Contact & Links */}
-          <div className="flex flex-col gap-2.5 text-xs md:items-end">
-            <div className="flex items-center gap-2 text-[var(--text-secondary)]">
-              <Mail className="w-4 h-4 text-blue-400" />
-              <a href="mailto:barissalihbabacan@gmail.com" className="hover:text-blue-400 transition-colors">
-                barissalihbabacan@gmail.com
-              </a>
-            </div>
-
-            <div className="flex items-center gap-4 mt-1">
-              <a 
-                href="https://github.com/barissalihbabacan/superlig-fantasy-optimizer" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-              >
-                <Github className="w-4 h-4" />
-                <span>GitHub Repository</span>
-              </a>
-              <a 
-                href="https://github.com/barissalihbabacan/superlig-fantasy-optimizer/blob/main/LICENSE" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-              >
-                <FileText className="w-4 h-4 text-emerald-400" />
-                <span>MIT Lisansı</span>
-              </a>
-            </div>
-          </div>
+          <span>Süper Lig Fantasy Optimizer</span>
+          <span className="font-mono text-[10px] text-[var(--text-muted)] font-normal">
+            · 2026/27 Açık Kaynak
+          </span>
         </div>
 
-        <div className="border-t border-[var(--border-color)] pt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--text-muted)] gap-2">
-          <p>© 2026 Süper Lig Fantasy Optimizer. All rights reserved.</p>
-          <p>Data is manually maintained and may be incomplete.</p>
+        <div id="footer-links" className="flex items-center gap-4 font-mono text-[11px]">
+          <a
+            id="footer-github-link"
+            href="https://github.com/barissalihbabacan/superlig-fantasy-optimizer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors"
+          >
+            <Github className="w-3.5 h-3.5" />
+            <span>GitHub</span>
+          </a>
+          <a
+            id="footer-license-link"
+            href="https://github.com/barissalihbabacan/superlig-fantasy-optimizer/blob/main/LICENSE"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors"
+          >
+            <FileText className="w-3.5 h-3.5 text-emerald-400" />
+            <span>MIT Lisansı</span>
+          </a>
+          <a
+            id="footer-contact-link"
+            href="mailto:barissalihbabacan@gmail.com"
+            className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors"
+          >
+            <Mail className="w-3.5 h-3.5 text-blue-400" />
+            <span>İletişim</span>
+          </a>
+        </div>
+
+        <div id="footer-disclaimer" className="text-[10px] text-[var(--text-muted)] text-center md:text-right">
+          TFF veya Trendyol ile ticari bağı bulunmayan bağımsız topluluk projesidir.
         </div>
       </div>
     </footer>

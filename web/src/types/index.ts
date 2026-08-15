@@ -39,6 +39,8 @@ export interface Fixture {
   away_team_id: string;
   kickoff: string;
   status: string;
+  score?: { home: number; away: number };
+  highlights_url?: string;
 }
 
 export interface FixturesDataset {
@@ -91,4 +93,4 @@ export type FormationType =
   | '5-3-2'
   | '5-2-3';
 
-export type NavTab = 'dashboard' | 'players' | 'teams' | 'fixtures' | 'optimizer' | 'rules';
+export type NavTab = 'dashboard' | 'players' | 'teams' | 'fixtures' | 'optimizer' | 'rules' | 'nostradamus';

@@ -1,18 +1,25 @@
 import React from 'react';
-import { AlertTriangle, CheckCircle, Calendar, Trophy, Sparkles, X } from 'lucide-react';
+import { SeasonDataset } from '../types';
+import { getTeamBranding } from '../services/dataset';
+import { AlertTriangle, CheckCircle, Calendar, Trophy, Sparkles, X, Clock } from 'lucide-react';
 
 interface SeasonNoticeModalProps {
   isOpen: boolean;
   onClose: () => void;
+  dataset?: SeasonDataset | null;
 }
 
-export const SeasonNoticeModal: React.FC<SeasonNoticeModalProps> = ({ isOpen, onClose }) => {
+export const SeasonNoticeModal: React.FC<SeasonNoticeModalProps> = ({ isOpen, onClose, dataset }) => {
   if (!isOpen) return null;
 
+  const week1Fixtures = dataset?.fixtures.filter((f) => f.round === 1) || [];
+  const finishedMatches = week1Fixtures.filter((f) => f.status === 'finished' && f.score);
+  const remainingMatches = week1Fixtures.filter((f) => f.status !== 'finished');
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fadeIn">
-      <div 
-        className="glass-panel w-full max-w-lg p-6 sm:p-8 space-y-6 relative border border-amber-500/30 shadow-2xl rounded-3xl bg-[var(--bg-surface)] text-[var(--text-primary)]"
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+      <div
+        className="glass-panel w-full max-w-lg p-5 sm:p-7 space-y-4 relative border border-amber-500/30 shadow-2xl rounded-3xl bg-[var(--bg-surface)] text-[var(--text-primary)] max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Icon Button */}
@@ -25,54 +32,88 @@ export const SeasonNoticeModal: React.FC<SeasonNoticeModalProps> = ({ isOpen, on
         </button>
 
         {/* Modal Header */}
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0 shadow-lg">
-            <AlertTriangle className="w-6 h-6 animate-pulse" />
+        <div className="flex items-start gap-3.5">
+          <div className="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0 shadow-lg">
+            <AlertTriangle className="w-5 h-5 animate-pulse" />
           </div>
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20 mb-2">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Sezon Bilgilendirmesi</span>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[11px] font-semibold border border-amber-500/20 mb-1">
+              <Sparkles className="w-3 h-3" />
+              <span>1. Hafta Maç Takvimi Bilgilendirmesi</span>
             </div>
-            <h3 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">
-              Kadro Planlama Uyarısı
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-[var(--text-primary)]">
+              Kadro Planlama & Canlı Durum
             </h3>
           </div>
         </div>
 
-        {/* Played match highlight */}
-        <div className="flex items-center justify-between p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-xs sm:text-sm">
-          <div className="flex items-center gap-2 text-green-400">
-            <Trophy className="w-4 h-4 flex-shrink-0" />
-            <span className="font-semibold">Galatasaray</span>
+        {/* Dynamic Finished Matches Feed */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-xs font-mono text-[var(--text-muted)] px-1">
+            <span className="font-bold text-emerald-400 flex items-center gap-1">
+              <Trophy className="w-3.5 h-3.5" />
+              Tamamlanan Karşılaşmalar ({finishedMatches.length})
+            </span>
+            <span>Resmi Sonuç</span>
           </div>
-          <div className="font-bold text-white text-base">2 – 2</div>
-          <div className="flex items-center gap-2 text-green-400 flex-row-reverse">
-            <Trophy className="w-4 h-4 flex-shrink-0 opacity-0" />
-            <span className="font-semibold">Çorum FK</span>
+
+          <div className="grid grid-cols-1 gap-1.5">
+            {finishedMatches.map((f) => {
+              const homeName = dataset?.teams.find((t) => t.id === f.home_team_id)?.name || f.home_team_id;
+              const awayName = dataset?.teams.find((t) => t.id === f.away_team_id)?.name || f.away_team_id;
+              const homeBrand = getTeamBranding(f.home_team_id);
+              const awayBrand = getTeamBranding(f.away_team_id);
+
+              return (
+                <div
+                  key={f.id}
+                  className="grid grid-cols-12 items-center p-2 sm:px-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs"
+                >
+                  {/* Home Team (5 cols) */}
+                  <div className="col-span-5 flex items-center gap-2 min-w-0">
+                    <span className="w-1.5 h-3.5 rounded-full flex-shrink-0" style={{ background: homeBrand.primaryColor }} />
+                    <span className="font-bold text-[var(--text-primary)] truncate">{homeName}</span>
+                  </div>
+
+                  {/* Score (2 cols, perfectly centered) */}
+                  <div className="col-span-2 flex items-center justify-center">
+                    <div className="font-mono font-black text-xs sm:text-sm px-2 py-0.5 rounded bg-[var(--bg-card)] border border-emerald-500/30 text-emerald-300 w-16 text-center">
+                      {f.score?.home} - {f.score?.away}
+                    </div>
+                  </div>
+
+                  {/* Away Team (5 cols) */}
+                  <div className="col-span-5 flex items-center gap-2 min-w-0 justify-end text-right">
+                    <span className="font-bold text-[var(--text-primary)] truncate">{awayName}</span>
+                    <span className="w-1.5 h-3.5 rounded-full flex-shrink-0" style={{ background: awayBrand.primaryColor }} />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* Message Content */}
-        <div className="space-y-3 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs sm:text-sm text-amber-200/90 leading-relaxed">
+        <div className="space-y-2 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/90 leading-relaxed">
           <p className="font-semibold text-amber-300 flex items-center gap-1.5">
             <Calendar className="w-4 h-4 flex-shrink-0" />
-            <span>2026/27 Sezonu — 1. Hafta Devam Ediyor</span>
+            <span>2026/27 Sezonu — 1. Hafta Karşılaşmaları Devam Ediyor</span>
           </p>
           <p>
-            <span className="text-white font-medium">Galatasaray – Çorum FK</span> maç verisi (14 Ağu 2026) sisteme işlendi.
-            1. haftanın kalan sekiz maçının sonuçları henüz eklenmedi.
+            İlk 5 karşılaşmanın resmi maç sonuçları ve oyuncu puanları sisteme işlendi. Kalan{' '}
+            <span className="text-white font-bold">{remainingMatches.length} karşılaşma</span> oynandıkça puan projeksiyonları ve canlı puan durumu anlık olarak güncellenecektir.
           </p>
-          <p className="font-medium text-amber-100">
-            Eksik maç verileri tamamlandıkça puan projeksiyonları güncellenecek ve optimizasyon motoru tam kapasitede çalışacaktır.
+          <p className="font-medium text-amber-100 flex items-center gap-1.5 pt-1">
+            <Clock className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+            <span>Kadro kurucunuz, tamamlanan maçlardaki oyuncu verilerini ve beklenen puanları dikkate alarak optimize edilmektedir.</span>
           </p>
         </div>
 
         {/* Action Button */}
-        <div className="pt-2">
+        <div className="pt-1">
           <button
             onClick={onClose}
-            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-[0.99]"
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-bold text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-[0.99]"
           >
             <CheckCircle className="w-4 h-4" />
             <span>Anladım, Kadro Planlamaya Devam Et</span>

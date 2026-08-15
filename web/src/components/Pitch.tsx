@@ -1,7 +1,6 @@
 import React from 'react';
 import { Player, FormationType } from '../types';
-import { getShortPosition, formatPrice } from '../services/dataset';
-import { Shield, User } from 'lucide-react';
+import { formatPrice, getTeamBranding } from '../services/dataset';
 
 interface PitchProps {
   formation: FormationType;
@@ -9,6 +8,7 @@ interface PitchProps {
   bench?: Player[];
   captainId?: number | string;
   viceCaptainId?: number | string;
+  onPlayerClick?: (player: Player) => void;
 }
 
 export const Pitch: React.FC<PitchProps> = ({
@@ -17,8 +17,8 @@ export const Pitch: React.FC<PitchProps> = ({
   bench,
   captainId,
   viceCaptainId,
+  onPlayerClick,
 }) => {
-  // Parse formation defenders, midfielders, forwards
   const parseFormation = (fmt: FormationType) => {
     if (fmt === 'Auto') return { def: 3, mid: 5, fwd: 2 };
     const parts = fmt.split('-').map(Number);
@@ -27,42 +27,48 @@ export const Pitch: React.FC<PitchProps> = ({
 
   const counts = parseFormation(formation);
 
-  // Group players by position if lineup is provided, else render slot placeholders
   const gkList = lineup ? lineup.filter((p) => p.position === 'Goalkeeper') : [];
   const defList = lineup ? lineup.filter((p) => p.position === 'Defender') : [];
   const midList = lineup ? lineup.filter((p) => p.position === 'Midfielder') : [];
   const fwdList = lineup ? lineup.filter((p) => p.position === 'Forward') : [];
 
-  const renderSlot = (
-    posLabel: string,
-    player?: Player,
-    index: number = 0
-  ) => {
-    const isCaptain = player && player.id === captainId;
-    const isViceCaptain = player && player.id === viceCaptainId;
+  const renderPlayerToken = (posLabel: string, player?: Player, index: number = 0) => {
+    const isCaptain = player && String(player.id) === String(captainId);
+    const isViceCaptain = player && String(player.id) === String(viceCaptainId);
+    const brand = player ? getTeamBranding(player.team_id) : null;
 
     return (
       <div
         key={`${posLabel}-${index}`}
-        className="pitch-card relative flex flex-col items-center justify-center p-2 rounded-xl transition-all"
+        onClick={() => player && onPlayerClick && onPlayerClick(player)}
+        className="player-token"
       >
-        {isCaptain && (
-          <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-amber-500 text-black text-[10px] font-bold flex items-center justify-center border border-amber-300 shadow">
-            C
-          </span>
-        )}
-        {isViceCaptain && (
-          <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-300 text-black text-[10px] font-bold flex items-center justify-center border border-white shadow">
-            VC
-          </span>
-        )}
-        <div className="w-8 h-8 rounded-full bg-slate-800/80 border border-white/20 flex items-center justify-center text-blue-400 mb-1 shadow">
-          <User className="w-4 h-4" />
+        <div
+          className="player-jersey-circle"
+          style={{
+            background: brand ? brand.primaryColor : 'rgba(15, 23, 42, 0.9)',
+            color: brand ? brand.textColor : '#fff',
+            borderColor: isCaptain ? '#f59e0b' : brand ? brand.secondaryColor : 'rgba(255,255,255,0.4)',
+          }}
+        >
+          {isCaptain && (
+            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-amber-400 text-black text-[9px] font-black flex items-center justify-center shadow">
+              C
+            </span>
+          )}
+          {isViceCaptain && (
+            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-slate-200 text-black text-[9px] font-black flex items-center justify-center shadow">
+              V
+            </span>
+          )}
+          <span>{player ? brand?.code : posLabel}</span>
         </div>
-        <div className="text-xs font-semibold text-white truncate max-w-[90px]">
-          {player ? player.name : `${posLabel} ${index + 1}`}
+
+        <div className="player-token-name">
+          {player ? player.name.split(' ').slice(-1)[0] : `${posLabel} ${index + 1}`}
         </div>
-        <div className="text-[10px] text-slate-300 font-mono">
+
+        <div className="player-token-price">
           {player ? formatPrice(player.price) : posLabel}
         </div>
       </div>
@@ -70,90 +76,80 @@ export const Pitch: React.FC<PitchProps> = ({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="pitch-container relative">
-        <div className="pitch-line-center" />
-        <div className="pitch-circle-center" />
-        <div className="pitch-penalty-area-top" />
-        <div className="pitch-penalty-area-bottom" />
+    <div id="pitch-container" className="h-full flex flex-col space-y-3">
+      {/* Tactical Football Pitch */}
+      <div id="pitch-field" className="pitch-field flex-1">
+        <div className="pitch-line-half" />
+        <div className="pitch-center-spot" />
+        <div className="pitch-box-top" />
+        <div className="pitch-box-bottom" />
 
-        {/* Forwards */}
-        <div className="pitch-row">
+        {/* Forwards (Top) */}
+        <div className="pitch-row-players">
           {Array.from({ length: counts.fwd }).map((_, i) =>
-            renderSlot('FOR', fwdList[i], i)
+            renderPlayerToken('FOR', fwdList[i], i)
           )}
         </div>
 
         {/* Midfielders */}
-        <div className="pitch-row">
+        <div className="pitch-row-players">
           {Array.from({ length: counts.mid }).map((_, i) =>
-            renderSlot('OS', midList[i], i)
+            renderPlayerToken('OS', midList[i], i)
           )}
         </div>
 
         {/* Defenders */}
-        <div className="pitch-row">
+        <div className="pitch-row-players">
           {Array.from({ length: counts.def }).map((_, i) =>
-            renderSlot('DEF', defList[i], i)
+            renderPlayerToken('DEF', defList[i], i)
           )}
         </div>
 
-        {/* Goalkeeper */}
-        <div className="pitch-row justify-center">
-          {renderSlot('KL', gkList[0], 0)}
+        {/* Goalkeeper (Bottom) */}
+        <div className="pitch-row-players">
+          {renderPlayerToken('KL', gkList[0], 0)}
         </div>
       </div>
 
-      {/* Bench Section */}
-      <div className="glass-panel p-4 rounded-2xl border border-[var(--border-color)]">
-        <div className="flex items-center gap-2 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
-          <Shield className="w-4 h-4 text-emerald-400" />
-          <span>Yedek Oyuncular (Bench - 4)</span>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {bench && bench.length > 0 ? (
-            bench.map((p) => (
-              <div
-                key={p.id}
-                className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)]"
-              >
-                <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 font-bold text-xs flex items-center justify-center">
-                  {getShortPosition(p.position)}
-                </div>
-                <div className="truncate">
-                  <div className="text-xs font-semibold text-[var(--text-primary)] truncate">
-                    {p.name}
-                  </div>
-                  <div className="text-[10px] text-[var(--text-muted)] font-mono">
-                    {formatPrice(p.price)}
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <>
-              {['KL', 'DEF', 'OS', 'FOR'].map((pos, idx) => (
+      {/* Dugout / Bench Section (Sofascore Style) */}
+      {bench && bench.length > 0 && (
+        <div className="sofa-card p-3">
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2 flex items-center justify-between">
+            <span>Yedek Kulübesi (4 Oyuncu)</span>
+            <span>Bütçeye Dahil</span>
+          </div>
+
+          <div className="grid grid-cols-4 gap-2">
+            {bench.map((player) => {
+              const brand = getTeamBranding(player.team_id);
+              return (
                 <div
-                  key={idx}
-                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)] opacity-60"
+                  key={player.id}
+                  onClick={() => onPlayerClick && onPlayerClick(player)}
+                  className="p-2 rounded bg-[var(--bg-surface)] border border-[var(--border)] flex flex-col items-center text-center hover:bg-[var(--bg-card-hover)] cursor-pointer transition-colors"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 font-bold text-xs flex items-center justify-center">
-                    {pos}
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-[10px] border shadow-sm"
+                    style={{
+                      background: brand.primaryColor,
+                      color: brand.textColor,
+                      borderColor: brand.secondaryColor,
+                    }}
+                  >
+                    {brand.code}
                   </div>
-                  <div>
-                    <div className="text-xs font-semibold text-[var(--text-muted)]">
-                      Yedek {idx + 1}
-                    </div>
-                    <div className="text-[10px] text-[var(--text-muted)] font-mono">
-                      Boş Slot
-                    </div>
-                  </div>
+                  <span className="font-bold text-[11px] text-[var(--text-primary)] truncate max-w-full mt-1">
+                    {player.name.split(' ').slice(-1)[0]}
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--color-brand)]">
+                    {formatPrice(player.price)}
+                  </span>
                 </div>
-              ))}
-            </>
-          )}
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

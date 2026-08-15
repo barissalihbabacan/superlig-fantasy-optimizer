@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { NavTab } from '../types';
-import { 
-  BarChart3, 
-  Users, 
-  Shield, 
-  Calendar, 
-  Zap, 
-  BookOpen, 
-  Sun, 
+import {
+  LayoutDashboard,
+  CalendarDays,
+  Zap,
+  Users,
+  Brain,
+  BookOpen,
+  Sun,
   Moon,
-  Trophy,
+  Info,
   Menu,
   X,
-  Info
+  Trophy,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -35,11 +35,11 @@ export const Header: React.FC<HeaderProps> = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems: { id: NavTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'dashboard', label: 'Ana Sayfa', icon: <BarChart3 className="w-4 h-4" /> },
-    { id: 'players', label: 'Oyuncular', icon: <Users className="w-4 h-4" /> },
-    { id: 'teams', label: 'Takımlar', icon: <Shield className="w-4 h-4" /> },
-    { id: 'fixtures', label: 'Fikstür', icon: <Calendar className="w-4 h-4" /> },
-    { id: 'optimizer', label: 'Optimizer', icon: <Zap className="w-4 h-4" /> },
+    { id: 'dashboard', label: 'Maç Merkezi', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { id: 'fixtures', label: 'Fikstür & Skorlar', icon: <CalendarDays className="w-4 h-4" /> },
+    { id: 'optimizer', label: 'Kadro Optimizer', icon: <Zap className="w-4 h-4" /> },
+    { id: 'players', label: 'Oyuncu İstatistikleri', icon: <Users className="w-4 h-4" /> },
+    { id: 'nostradamus', label: 'Nostradamus', icon: <Brain className="w-4 h-4" /> },
     { id: 'rules', label: 'Kurallar', icon: <BookOpen className="w-4 h-4" /> },
   ];
 
@@ -49,39 +49,45 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 glass-panel border-b border-[var(--border-color)] mb-6 rounded-none sm:rounded-b-2xl">
-      <div className="app-container flex items-center justify-between py-3 gap-4">
+    <header id="main-header" className="sticky top-0 z-40 bg-[var(--bg-surface)] border-b border-[var(--border)]">
+      <div className="app-container flex items-center justify-between h-14 gap-4">
         {/* Brand & Logo */}
-        <div 
-          onClick={() => handleNavClick('dashboard')} 
-          className="flex items-center gap-3 cursor-pointer group"
+        <div
+          id="brand-logo-btn"
+          onClick={() => handleNavClick('dashboard')}
+          className="flex items-center gap-2.5 cursor-pointer select-none group flex-shrink-0"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform flex-shrink-0">
-            <Trophy className="w-6 h-6" />
+          <div className="w-8 h-8 rounded-lg bg-[var(--color-brand)] text-[#0c1017] flex items-center justify-center font-black text-sm shadow-md">
+            <Trophy className="w-4 h-4 stroke-[2.5]" />
           </div>
-          <div>
-            <h1 className="text-base sm:text-lg font-bold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
-              SÜPER LİG FANTASY
-              <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                OPTIMIZER
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="font-extrabold text-sm tracking-tight text-[var(--text-primary)]">
+                SÜPER LİG
               </span>
-            </h1>
-            <p className="text-[11px] text-[var(--text-muted)] font-mono hidden sm:block">2026/27 Dataset Engine</p>
+              <span className="text-[10px] font-black tracking-wider uppercase px-1.5 py-0.5 rounded bg-[var(--color-brand)]/15 text-[var(--color-brand)] font-mono">
+                FANTASY
+              </span>
+            </div>
+            <span className="text-[10px] text-[var(--text-muted)] font-mono leading-tight mt-0.5">
+              {season} Sezonu · Canlı Veri Portalı
+            </span>
           </div>
         </div>
 
         {/* Desktop Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav id="desktop-nav" className="hidden lg:flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
+                id={`nav-btn-${item.id}`}
                 onClick={() => handleNavClick(item.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-3 py-2 rounded text-xs font-bold transition-all ${
                   isActive
-                    ? 'bg-blue-600/20 text-blue-400 border border-blue-500/40 shadow-sm'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]'
+                    ? 'text-[var(--color-brand)] bg-[var(--bg-card)] shadow-sm border border-[var(--border-strong)]'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]'
                 }`}
               >
                 {item.icon}
@@ -91,73 +97,63 @@ export const Header: React.FC<HeaderProps> = ({
           })}
         </nav>
 
-        {/* Right Section: Actions & Mobile Hamburger */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Season Indicator */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)] text-xs font-mono font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Sezon: {season}</span>
-          </div>
-
-          {/* Info Modal Button */}
+        {/* Right Section Tools */}
+        <div className="flex items-center gap-2">
           {onOpenNotice && (
             <button
+              id="notice-modal-trigger-btn"
               onClick={onOpenNotice}
-              className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 transition-all flex items-center justify-center"
-              title="Sezon Öncesi Bilgilendirme"
-              aria-label="Bilgilendirme Uyarısı"
+              className="p-2 rounded bg-[var(--bg-card)] border border-[var(--border)] text-amber-400 hover:border-amber-500/40 transition-all flex items-center justify-center text-xs gap-1.5 font-bold"
+              title="Sezon Durum Uyarısı"
             >
-              <Info className="w-4 h-4" />
+              <Info className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">1. Hafta</span>
             </button>
           )}
 
-          {/* Theme Toggle */}
           <button
+            id="theme-toggle-btn"
             onClick={toggleTheme}
-            className="p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-blue-500/50 transition-all"
-            title={theme === 'dark' ? 'Açık Temaya Geç' : 'Karanlık Temaya Geç'}
-            aria-label="Tema değiştir"
+            className="p-2 rounded bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
+            title={theme === 'dark' ? 'Açık Tema' : 'Karanlık Tema'}
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-500" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-400" />}
           </button>
 
-          {/* Mobile Hamburger Toggle Button */}
+          {/* Mobile Menu Toggle */}
           <button
+            id="mobile-menu-toggle-btn"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)] text-[var(--text-primary)] hover:border-blue-500/50 transition-all flex items-center justify-center"
-            aria-label="Menüyü aç/kapat"
+            className="lg:hidden p-2 rounded bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-primary)]"
+            aria-label="Menü"
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5 text-rose-400" /> : <Menu className="w-5 h-5 text-blue-400" />}
+            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Navigation Dropdown Overlay */}
+      {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-[var(--border-color)] bg-[var(--bg-surface)]/95 backdrop-blur-xl px-4 py-4 space-y-2 animate-fadeIn shadow-2xl">
-          <div className="grid grid-cols-2 gap-2">
+        <div id="mobile-nav-drawer" className="lg:hidden bg-[var(--bg-surface)] border-t border-[var(--border)] animate-fadeIn">
+          <div className="app-container py-3 grid grid-cols-2 gap-1.5">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
+                  id={`mobile-nav-btn-${item.id}`}
                   onClick={() => handleNavClick(item.id)}
-                  className={`flex items-center gap-3 p-3 rounded-xl text-sm font-semibold transition-all ${
+                  className={`flex items-center gap-2 p-2.5 rounded text-xs font-bold transition-all text-left ${
                     isActive
-                      ? 'bg-blue-600/20 text-blue-400 border border-blue-500/40 shadow-sm'
-                      : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--text-primary)]'
+                      ? 'bg-[var(--color-brand)] text-[#0c1017]'
+                      : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border)]'
                   }`}
                 >
                   {item.icon}
-                  <span>{item.label}</span>
+                  <span className="truncate">{item.label}</span>
                 </button>
               );
             })}
-          </div>
-
-          <div className="pt-2 flex items-center justify-between text-xs text-[var(--text-muted)] font-mono border-t border-[var(--border-color)] mt-3 px-1">
-            <span>Süper Lig Fantasy 2026/27</span>
-            <span className="text-emerald-400 font-semibold">v0.1.0-web</span>
           </div>
         </div>
       )}

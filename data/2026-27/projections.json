@@ -5,5 +5,90 @@
     "name": "derived",
     "retrieved_at": "not-provided"
   },
-  "projections": []
+  "projections": [
+    {
+      "player_id": "ugurcan-cakir",
+      "expected_points": 2.0
+    },
+    {
+      "player_id": "davinson-sanchez-mina",
+      "expected_points": 1.0
+    },
+    {
+      "player_id": "kazimcan-karatas",
+      "expected_points": 0.0
+    },
+    {
+      "player_id": "kaan-ayhan",
+      "expected_points": 1.0
+    },
+    {
+      "player_id": "ismail-joshua-jakobs",
+      "expected_points": 1.0
+    },
+    {
+      "player_id": "eren-eren-elmali",
+      "expected_points": 1.0
+    },
+    {
+      "player_id": "abdulkerim-bardakci",
+      "expected_points": 1.0
+    },
+    {
+      "player_id": "yunus-akgun",
+      "expected_points": 1.0
+    },
+    {
+      "player_id": "leroy-aziz-sane",
+      "expected_points": 7.0
+    },
+    {
+      "player_id": "mario-rene-junior-lemina",
+      "expected_points": 2.0
+    },
+    {
+      "player_id": "ilkay-gundogan",
+      "expected_points": 2.0
+    },
+    {
+      "player_id": "gabriel-davi-gomes-sara",
+      "expected_points": 2.0
+    },
+    {
+      "player_id": "lucas-sebastian-torreira-di-pasqua",
+      "expected_points": 0.0
+    },
+    {
+      "player_id": "victor-james-osimhen",
+      "expected_points": 13.0
+    },
+    {
+      "player_id": "marcos-felipe-de-freitas-monteiro",
+      "expected_points": 2.0
+    },
+    {
+      "player_id": "hrvoje-smolcic",
+      "expected_points": 1.0
+    },
+    {
+      "player_id": "arda-hilmi-sengul",
+      "expected_points": 1.0
+    },
+    {
+      "player_id": "ahmed-ildiz",
+      "expected_points": 2.0
+    },
+    {
+      "player_id": "serdar-gurler",
+      "expected_points": 5.0
+    },
+    {
+      "player_id": "jesus-andres-ramirez-diaz",
+      "expected_points": 7.0
+    },
+    {
+      "player_id": "mame-baba-thiam",
+      "expected_points": 2.0
+    }
+  ]
 }

@@ -1,281 +1,410 @@
-import React from 'react';
-import { SeasonDataset, NavTab } from '../types';
-import { formatPrice } from '../services/dataset';
-import { 
-  Shield, 
-  Users, 
-  Calendar, 
-  Layers, 
-  TrendingUp, 
-  AlertCircle, 
-  Info,
-  ArrowRight,
+import React, { useState, useEffect } from 'react';
+import { SeasonDataset, NavTab, Fixture } from '../types';
+import { formatPrice, getTeamBranding, formatDateDDMMYYYY } from '../services/dataset';
+import {
+  Trophy,
+  Calendar,
   Zap,
-  BookOpen
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  Star,
+  Clock,
 } from 'lucide-react';
 
 interface DashboardProps {
   dataset: SeasonDataset;
   setActiveTab: (tab: NavTab) => void;
+  onSelectFixture: (fixture: Fixture) => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab }) => {
-  const totalTeams = dataset.teams.length;
-  const totalPlayers = dataset.players.length;
-  const totalFixtures = dataset.fixtures.length;
-  const supportedFormationsCount = 8; // 3-5-2, 3-4-3, 4-3-3, 4-4-2, 4-5-1, 5-4-1, 5-3-2, 5-2-3
+export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab, onSelectFixture }) => {
+  const week1Fixtures = dataset.fixtures.filter((f) => f.round === 1);
+  const [carouselIndex, setCarouselIndex] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
 
-  // Compute projection coverage dynamically
-  const projectionCount = dataset.projections.size;
-  const projectionCoverageText = `${projectionCount} / ${totalPlayers}`;
+  // Autoplay carousel slides every 6 seconds if not hovered
+  useEffect(() => {
+    if (isPaused || week1Fixtures.length <= 1) return;
+    const interval = setInterval(() => {
+      setCarouselIndex((prev) => (prev < week1Fixtures.length - 1 ? prev + 1 : 0));
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isPaused, week1Fixtures.length]);
 
-  // Calculate position counts
-  const gkCount = dataset.players.filter((p) => p.position === 'Goalkeeper').length;
-  const defCount = dataset.players.filter((p) => p.position === 'Defender').length;
-  const midCount = dataset.players.filter((p) => p.position === 'Midfielder').length;
-  const fwdCount = dataset.players.filter((p) => p.position === 'Forward').length;
+  const currentSlideFixture = week1Fixtures[carouselIndex] || week1Fixtures[0];
+  const homeName = dataset.teams.find((t) => t.id === currentSlideFixture?.home_team_id)?.name || currentSlideFixture?.home_team_id;
+  const awayName = dataset.teams.find((t) => t.id === currentSlideFixture?.away_team_id)?.name || currentSlideFixture?.away_team_id;
+  const homeBrand = getTeamBranding(currentSlideFixture?.home_team_id || '');
+  const awayBrand = getTeamBranding(currentSlideFixture?.away_team_id || '');
+  const isFinished = currentSlideFixture?.status === 'finished';
+  const hasScore = currentSlideFixture?.score !== undefined && currentSlideFixture?.score !== null;
 
-  // Calculate average player price
-  const avgPrice = totalPlayers > 0
-    ? dataset.players.reduce((acc, p) => acc + p.price, 0) / totalPlayers
-    : 0;
+  // Top performers from the played matches in Week 1
+  const topPerformers = [
+    { id: 'victor-james-osimhen', name: 'Victor Osimhen', team: 'Galatasaray', pos: 'FOR', pts: 13, price: 1200, stats: '2 Gol · 38 Şut' },
+    { id: 'ali-sowe', name: 'Ali Sowe', team: 'Çaykur Rizespor', pos: 'FOR', pts: 9, price: 550, stats: '1 Gol · Maçın Adamı' },
+    { id: 'simon-banza', name: 'Simon Banza', team: 'Trabzonspor', pos: 'FOR', pts: 9, price: 850, stats: '1 Gol · Maçın Adamı' },
+    { id: 'irfan-can-egribayat', name: 'İrfan Can Eğribayat', team: 'Gençlerbirliği', pos: 'KL', pts: 8, price: 450, stats: '7 Kurtarış · Maçın Adamı' },
+    { id: 'paulo-victor-mileo-vidotti', name: 'Paulo Victor', team: 'Alanyaspor', pos: 'KL', pts: 8, price: 500, stats: '6 Kurtarış · Maçın Adamı' },
+    { id: 'franco-tongya', name: 'Franco Tongya', team: 'Gençlerbirliği', pos: 'OS', pts: 8, price: 500, stats: '1 Gol' },
+  ];
 
   return (
-    <div className="space-y-8 animate-fadeIn">
-      {/* Hero Welcome Banner */}
-      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden bg-gradient-to-r from-blue-900/40 via-slate-900/60 to-emerald-900/40 border border-blue-500/20">
-        <div className="w-full space-y-3 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold border border-blue-500/30">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" />
-            <span>Süper Lig Fantasy 2026/27 Sezonu</span>
+    <div id="dashboard-page-container" className="space-y-3.5 animate-fadeIn">
+      {/* Featured Matches Carousel (1. Hafta Karşılaşmaları) */}
+      {currentSlideFixture && (
+        <div
+          id="featured-match-carousel"
+          className="sofa-card overflow-hidden border-[var(--border-strong)] relative group"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {/* Header Bar with Slide Navigator */}
+          <div className="px-4 py-2 bg-[var(--bg-surface)] border-b border-[var(--border)] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className={`w-2 h-2 rounded-full ${isFinished ? 'bg-emerald-500 animate-pulse' : 'bg-blue-400'}`} />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-brand)]">
+                Öne Çıkan Maç · 1. Hafta ({carouselIndex + 1}/{week1Fixtures.length})
+              </span>
+            </div>
+
+            {/* Carousel Controls & Pagination Dots */}
+            <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center gap-1">
+                {week1Fixtures.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCarouselIndex(i)}
+                    className={`h-1.5 rounded-full transition-all ${
+                      carouselIndex === i
+                        ? 'w-5 bg-[var(--color-brand)]'
+                        : 'w-1.5 bg-[var(--border-strong)] hover:bg-[var(--text-muted)]'
+                    }`}
+                    title={`Maç ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+              <div className="flex items-center gap-1 ml-2">
+                <button
+                  id="carousel-prev-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCarouselIndex((prev) => (prev > 0 ? prev - 1 : week1Fixtures.length - 1));
+                  }}
+                  className="p-1 rounded bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-white"
+                  title="Önceki Maç"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  id="carousel-next-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCarouselIndex((prev) => (prev < week1Fixtures.length - 1 ? prev + 1 : 0));
+                  }}
+                  className="p-1 rounded bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-white"
+                  title="Sonraki Maç"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-primary)]">
-            Deterministik Kadro & Performans Analiz Dashboard'u
-          </h2>
-          <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
-            Süper Lig oyuncu verilerini, takımları ve 34 haftalık lig fikstürünü inceleyin. Deterministik kurallar ve historical projection altyapısı ile kadronuzu hazırlayın.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <button 
+
+          {/* Slide Body with Fixed Locked Height */}
+          <div
+            id="featured-match-trigger"
+            onClick={() => onSelectFixture(currentSlideFixture)}
+            className="p-5 sm:p-6 cursor-pointer hover:bg-[var(--bg-card-hover)] transition-colors select-none h-[150px] sm:h-[156px] flex flex-col justify-between"
+          >
+            <div className="grid grid-cols-3 items-center">
+              {/* Home Team */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center font-black text-sm shadow border-2 flex-shrink-0"
+                  style={{
+                    background: homeBrand.primaryColor,
+                    color: homeBrand.textColor,
+                    borderColor: homeBrand.secondaryColor,
+                  }}
+                >
+                  {homeBrand.code}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-extrabold text-sm sm:text-base text-[var(--text-primary)] truncate">
+                    {homeName}
+                  </h3>
+                  <div className="text-[11px] text-[var(--text-muted)] font-mono truncate h-[18px] flex items-center">
+                    {isFinished && currentSlideFixture.id === '2026-27-w01-01' ? '⚽ Osimhen 53\', 90\'' : 'Ev Sahibi'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Scoreline or Time Center (Fixed 56px height) */}
+              <div className="h-[56px] flex flex-col items-center justify-center text-center">
+                {isFinished && hasScore ? (
+                  <>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-strong)]">
+                      <span className="font-mono font-black text-xl sm:text-2xl text-[var(--text-primary)]">
+                        {currentSlideFixture.score?.home}
+                      </span>
+                      <span className="font-mono text-sm text-[var(--text-muted)]">:</span>
+                      <span className="font-mono font-black text-xl sm:text-2xl text-[var(--text-primary)]">
+                        {currentSlideFixture.score?.away}
+                      </span>
+                    </div>
+                    <div className="mt-1">
+                      <span className="sofa-badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 font-mono text-[9px] py-0.2">
+                        Maç Sonucu (MS)
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--bg-surface)] border border-[var(--border)] font-mono font-bold text-xs sm:text-sm text-[var(--text-primary)]">
+                      <Clock className="w-3.5 h-3.5 text-[var(--color-brand)]" />
+                      <span>{currentSlideFixture.kickoff.includes('T') ? currentSlideFixture.kickoff.split('T')[1].slice(0, 5) : 'Planlandı'}</span>
+                    </div>
+                    <div className="mt-1">
+                      <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                        {formatDateDDMMYYYY(currentSlideFixture.kickoff) || '1. Hafta'}
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Away Team */}
+              <div className="flex items-center justify-end gap-3 text-right min-w-0">
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-extrabold text-sm sm:text-base text-[var(--text-primary)] truncate">
+                    {awayName}
+                  </h3>
+                  <div className="text-[11px] text-[var(--text-muted)] font-mono truncate h-[18px] flex items-center justify-end">
+                    {isFinished && currentSlideFixture.id === '2026-27-w01-01' ? 'Kyziridis 59\', Ramírez 61\' ⚽' : 'Deplasman'}
+                  </div>
+                </div>
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center font-black text-sm shadow border-2 flex-shrink-0"
+                  style={{
+                    background: awayBrand.primaryColor,
+                    color: awayBrand.textColor,
+                    borderColor: awayBrand.secondaryColor,
+                  }}
+                >
+                  {awayBrand.code}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2.5 border-t border-[var(--border)] flex items-center justify-between text-xs text-[var(--text-muted)]">
+              <span className="flex items-center gap-1 font-mono truncate">
+                <MapPin className="w-3.5 h-3.5 text-[var(--color-brand)] flex-shrink-0" />
+                <span className="truncate">{homeBrand.stadium}, {homeBrand.city}</span>
+              </span>
+              <span className="text-[var(--color-brand)] font-bold flex items-center gap-0.5 flex-shrink-0 ml-2">
+                {isFinished ? 'Detaylı Maç Raporu' : 'Maç Detay Sayfası'} <ChevronRight className="w-3.5 h-3.5" />
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main 2-Column Sports Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+        {/* Left Column: Gameweek 1 Fixtures Schedule (7 cols) */}
+        <div id="gameweek-fixtures-section" className="lg:col-span-7 flex flex-col space-y-2">
+          <div className="flex items-center justify-between pb-0.5 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-[var(--color-brand)]" />
+              <h3 className="font-extrabold text-sm uppercase tracking-wider text-[var(--text-primary)]">
+                1. Hafta Maç Takvimi
+              </h3>
+            </div>
+            <button
+              id="view-all-fixtures-btn"
+              onClick={() => setActiveTab('fixtures')}
+              className="text-xs text-[var(--color-brand)] hover:underline font-bold flex items-center gap-0.5"
+            >
+              Tüm Fikstür <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div id="gameweek-fixtures-list" className="sofa-card divide-y divide-[var(--border)] overflow-hidden flex-1 flex flex-col justify-between">
+            {week1Fixtures.map((fixture) => {
+              const fHomeName = dataset.teams.find((t) => t.id === fixture.home_team_id)?.name || fixture.home_team_id;
+              const fAwayName = dataset.teams.find((t) => t.id === fixture.away_team_id)?.name || fixture.away_team_id;
+              const fHomeBrand = getTeamBranding(fixture.home_team_id);
+              const fAwayBrand = getTeamBranding(fixture.away_team_id);
+              const fIsFinished = fixture.status === 'finished';
+
+              return (
+                <div
+                  key={fixture.id}
+                  id={`dashboard-fixture-item-${fixture.id}`}
+                  onClick={() => onSelectFixture(fixture)}
+                  className="p-2 sm:px-3.5 flex items-center justify-between hover:bg-[var(--bg-card-hover)] cursor-pointer transition-colors flex-1"
+                >
+                  {/* Home Team */}
+                  <div className="flex-1 flex items-center gap-2 min-w-0">
+                    <span
+                      className="w-1.5 h-4 rounded-full flex-shrink-0"
+                      style={{ background: fHomeBrand.primaryColor }}
+                    />
+                    <span className="font-bold text-xs sm:text-sm text-[var(--text-primary)] truncate">
+                      {fHomeName}
+                    </span>
+                  </div>
+
+                  {/* Score / Time Box */}
+                  <div className="px-2.5 flex-shrink-0 text-center min-w-[76px]">
+                    {fIsFinished && fixture.score ? (
+                      <div className="flex flex-col items-center">
+                        <div className="font-mono font-black text-xs sm:text-sm px-2 py-0.5 rounded bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border)] leading-tight">
+                          {fixture.score.home} - {fixture.score.away}
+                        </div>
+                        <span className="text-[10px] font-mono text-emerald-400 font-bold mt-0.5">
+                          MS
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <div className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border)] leading-tight">
+                          {fixture.kickoff.includes('T') ? fixture.kickoff.split('T')[1].slice(0, 5) : 'Planlandı'}
+                        </div>
+                        <span className="text-[10px] font-mono text-[var(--color-brand)] font-semibold mt-0.5 whitespace-nowrap">
+                          {formatDateDDMMYYYY(fixture.kickoff)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Away Team */}
+                  <div className="flex-1 flex items-center justify-end gap-2 min-w-0 text-right">
+                    <span className="font-bold text-xs sm:text-sm text-[var(--text-primary)] truncate">
+                      {fAwayName}
+                    </span>
+                    <span
+                      className="w-1.5 h-4 rounded-full flex-shrink-0"
+                      style={{ background: fAwayBrand.primaryColor }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right Column: Top Performers & Quick Optimizer (5 cols) */}
+        <div id="dashboard-sidebar-section" className="lg:col-span-5 flex flex-col justify-between space-y-2.5">
+          {/* Top Performers Table */}
+          <div id="top-performers-card" className="space-y-2 flex-1 flex flex-col">
+            <div className="flex items-center justify-between pb-0.5 flex-shrink-0">
+              <div className="flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-amber-400" />
+                <h3 className="font-extrabold text-sm uppercase tracking-wider text-[var(--text-primary)]">
+                  Haftanın En İyileri
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-[var(--text-muted)]">Fantasy Puanı</span>
+            </div>
+
+            <div className="sofa-card divide-y divide-[var(--border)] overflow-hidden flex-1 flex flex-col justify-between">
+              {topPerformers.map((player, idx) => (
+                <div
+                  key={player.id}
+                  id={`top-performer-item-${player.id}`}
+                  className="p-2 sm:px-3 flex items-center justify-between gap-2 hover:bg-[var(--bg-card-hover)] transition-colors flex-1"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className={`w-5 h-5 rounded flex items-center justify-center font-mono font-bold text-xs flex-shrink-0 ${
+                      idx === 0 ? 'bg-[var(--color-brand)] text-black' : 'bg-[var(--bg-surface)] text-[var(--text-muted)]'
+                    }`}>
+                      {idx === 0 ? <Star className="w-3 h-3 fill-current" /> : idx + 1}
+                    </span>
+                    <div className="truncate">
+                      <div className="font-bold text-xs text-[var(--text-primary)] truncate">
+                        {player.name}
+                      </div>
+                      <div className="text-[10px] text-[var(--text-muted)] flex items-center gap-1 font-mono">
+                        <span>{player.team}</span>
+                        <span>·</span>
+                        <span>{formatPrice(player.price)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className="sofa-rating sofa-rating-high font-mono text-xs">
+                      {player.pts} pts
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Optimizer Banner */}
+          <div id="quick-optimizer-banner" className="sofa-card p-3 bg-gradient-to-r from-[var(--bg-card)] to-[var(--bg-surface)] border-[var(--border-strong)] flex-shrink-0">
+            <div className="flex items-center justify-between gap-3">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-1.5">
+                  <Zap className="w-4 h-4 text-[var(--color-brand)]" />
+                  <span className="font-extrabold text-xs sm:text-sm text-[var(--text-primary)]">
+                    Kadro Optimizer'ı
+                  </span>
+                </div>
+                <p className="text-[11px] text-[var(--text-secondary)]">
+                  100M TL ile en yüksek expected point getiren 11'i kurun.
+                </p>
+              </div>
+              <button
+                id="quick-start-optimizer-btn"
+                onClick={() => setActiveTab('optimizer')}
+                className="btn-sofa btn-sofa-primary text-xs flex-shrink-0 py-1.5 px-3"
+              >
+                Kadroyu Kur
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Stats Grid */}
+          <div id="dashboard-quick-stats" className="grid grid-cols-3 gap-2 flex-shrink-0">
+            <div
+              id="stat-players-card"
               onClick={() => setActiveTab('players')}
-              className="btn btn-primary"
+              className="sofa-card p-2.5 cursor-pointer hover:bg-[var(--bg-card-hover)] transition-colors text-center"
             >
-              <Users className="w-4 h-4" />
-              <span>Oyuncuları İncele</span>
-            </button>
-            <button 
-              onClick={() => setActiveTab('optimizer')}
-              className="btn btn-secondary"
+              <div className="text-[10px] font-mono uppercase text-[var(--text-muted)]">Oyuncu</div>
+              <div className="text-base font-black font-mono text-[var(--text-primary)] mt-0.5">
+                {dataset.players.length}
+              </div>
+            </div>
+
+            <div
+              id="stat-teams-card"
+              onClick={() => setActiveTab('teams')}
+              className="sofa-card p-2.5 cursor-pointer hover:bg-[var(--bg-card-hover)] transition-colors text-center"
             >
-              <Zap className="w-4 h-4 text-amber-400" />
-              <span>Optimizer Paneli</span>
-            </button>
-          </div>
-        </div>
-      </div>
+              <div className="text-[10px] font-mono uppercase text-[var(--text-muted)]">Kulüp</div>
+              <div className="text-base font-black font-mono text-[var(--text-primary)] mt-0.5">
+                {dataset.teams.length}
+              </div>
+            </div>
 
-      {/* Main Metric Cards Grid (Computed dynamically from JSON) */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        {/* Stat 1: Teams */}
-        <div 
-          onClick={() => setActiveTab('teams')}
-          className="glass-panel p-5 cursor-pointer hover:border-blue-500/50 transition-all group"
-        >
-          <div className="flex items-center justify-between text-[var(--text-muted)] mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Takım</span>
-            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 group-hover:scale-110 transition-transform">
-              <Shield className="w-5 h-5" />
+            <div
+              id="stat-projections-card"
+              onClick={() => setActiveTab('nostradamus')}
+              className="sofa-card p-2.5 cursor-pointer hover:bg-[var(--bg-card-hover)] transition-colors text-center"
+            >
+              <div className="text-[10px] font-mono uppercase text-[var(--text-muted)]">Projeksiyon</div>
+              <div className="text-base font-black font-mono text-[var(--color-brand)] mt-0.5">
+                {dataset.projections.size}
+              </div>
             </div>
           </div>
-          <div className="text-3xl font-extrabold text-[var(--text-primary)]">{totalTeams}</div>
-          <div className="text-xs text-[var(--text-muted)] mt-1">Süper Lig Kulübü</div>
-        </div>
-
-        {/* Stat 2: Players */}
-        <div 
-          onClick={() => setActiveTab('players')}
-          className="glass-panel p-5 cursor-pointer hover:border-emerald-500/50 transition-all group"
-        >
-          <div className="flex items-center justify-between text-[var(--text-muted)] mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Oyuncu</span>
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
-              <Users className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-[var(--text-primary)]">{totalPlayers}</div>
-          <div className="text-xs text-[var(--text-muted)] mt-1">Kayıtlı Kadro Oyuncusu</div>
-        </div>
-
-        {/* Stat 3: Fixtures */}
-        <div 
-          onClick={() => setActiveTab('fixtures')}
-          className="glass-panel p-5 cursor-pointer hover:border-cyan-500/50 transition-all group"
-        >
-          <div className="flex items-center justify-between text-[var(--text-muted)] mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Fikstür</span>
-            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:scale-110 transition-transform">
-              <Calendar className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-[var(--text-primary)]">{totalFixtures}</div>
-          <div className="text-xs text-[var(--text-muted)] mt-1">34 Hafta Sezon Maçı</div>
-        </div>
-
-        {/* Stat 4: Formations */}
-        <div 
-          onClick={() => setActiveTab('rules')}
-          className="glass-panel p-5 cursor-pointer hover:border-purple-500/50 transition-all group"
-        >
-          <div className="flex items-center justify-between text-[var(--text-muted)] mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Formasyon</span>
-            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 group-hover:scale-110 transition-transform">
-              <Layers className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-[var(--text-primary)]">{supportedFormationsCount}</div>
-          <div className="text-xs text-[var(--text-muted)] mt-1">Desteklenen Diziliş</div>
-        </div>
-
-        {/* Stat 5: Projection Coverage */}
-        <div className="glass-panel p-5 col-span-2 lg:col-span-1 border-amber-500/30">
-          <div className="flex items-center justify-between text-[var(--text-muted)] mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Projection</span>
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-[var(--text-primary)]">{projectionCoverageText}</div>
-          <div className="text-xs text-amber-400 mt-1 font-medium">Coverage Kapsamı</div>
-        </div>
-      </div>
-
-      {/* Projection Explanation & Data Notice Banners */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Projection Banner */}
-        <div className="glass-panel p-5 border-l-4 border-l-blue-500 flex items-start gap-3">
-          <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-          <div className="space-y-1 text-xs">
-            <div className="font-bold text-[var(--text-primary)] text-sm">Projection Veri Durumu</div>
-            <p className="text-[var(--text-secondary)] leading-relaxed">
-              {projectionCount === 0 
-                ? "Sezon henüz başlamadı veya eşleşen maç performansı bulunmuyor. Eşleşen gerçek maç verisi yoksa oyuncu tahmini 0 kalır; proje eksik veriyi uydurmaz."
-                : `${projectionCount} oyuncu için historical projection verisi mevcut.`}
-            </p>
-          </div>
-        </div>
-
-        {/* Dataset Info Banner */}
-        <div className="glass-panel p-5 border-l-4 border-l-amber-500 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-          <div className="space-y-1 text-xs">
-            <div className="font-bold text-[var(--text-primary)] text-sm">Veri Kaynağı Hakkında</div>
-            <p className="text-[var(--text-secondary)] leading-relaxed">
-              Data is manually maintained and may be incomplete. Veriler repository kapsamında manuel yönetilir ve resmi canlı yayın verisi değildir.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Position Breakdown Cards */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
-            <Users className="w-5 h-5 text-blue-400" />
-            <span>Kadro Pozisyon Dağılımı</span>
-          </h3>
-          <span className="text-xs text-[var(--text-muted)]">Ortalama Fiyat: {formatPrice(avgPrice)}</span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {/* GK */}
-          <div className="glass-panel p-4 flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md">KL</span>
-              <span className="text-xs text-[var(--text-muted)]">Kaleci</span>
-            </div>
-            <div className="mt-3">
-              <div className="text-2xl font-bold text-[var(--text-primary)]">{gkCount}</div>
-              <div className="text-[10px] text-[var(--text-muted)]">{(gkCount / totalPlayers * 100).toFixed(1)}% kadro payı</div>
-            </div>
-          </div>
-
-          {/* DEF */}
-          <div className="glass-panel p-4 flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md">DEF</span>
-              <span className="text-xs text-[var(--text-muted)]">Defans</span>
-            </div>
-            <div className="mt-3">
-              <div className="text-2xl font-bold text-[var(--text-primary)]">{defCount}</div>
-              <div className="text-[10px] text-[var(--text-muted)]">{(defCount / totalPlayers * 100).toFixed(1)}% kadro payı</div>
-            </div>
-          </div>
-
-          {/* MID */}
-          <div className="glass-panel p-4 flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">OS</span>
-              <span className="text-xs text-[var(--text-muted)]">Orta Saha</span>
-            </div>
-            <div className="mt-3">
-              <div className="text-2xl font-bold text-[var(--text-primary)]">{midCount}</div>
-              <div className="text-[10px] text-[var(--text-muted)]">{(midCount / totalPlayers * 100).toFixed(1)}% kadro payı</div>
-            </div>
-          </div>
-
-          {/* FWD */}
-          <div className="glass-panel p-4 flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md">FOR</span>
-              <span className="text-xs text-[var(--text-muted)]">Forvet</span>
-            </div>
-            <div className="mt-3">
-              <div className="text-2xl font-bold text-[var(--text-primary)]">{fwdCount}</div>
-              <div className="text-[10px] text-[var(--text-muted)]">{(fwdCount / totalPlayers * 100).toFixed(1)}% kadro payı</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Navigation Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-        <div 
-          onClick={() => setActiveTab('players')}
-          className="glass-panel p-5 cursor-pointer hover:border-blue-500/40 transition-all flex items-center justify-between group"
-        >
-          <div className="space-y-1">
-            <div className="font-bold text-[var(--text-primary)] group-hover:text-blue-400 transition-colors">
-              Oyuncu Arama & Filtreleme
-            </div>
-            <p className="text-xs text-[var(--text-muted)]">443 oyuncu arasında fiyat, pozisyon ve takıma göre arayın.</p>
-          </div>
-          <ArrowRight className="w-5 h-5 text-[var(--text-muted)] group-hover:translate-x-1 group-hover:text-blue-400 transition-all flex-shrink-0" />
-        </div>
-
-        <div 
-          onClick={() => setActiveTab('fixtures')}
-          className="glass-panel p-5 cursor-pointer hover:border-cyan-500/40 transition-all flex items-center justify-between group"
-        >
-          <div className="space-y-1">
-            <div className="font-bold text-[var(--text-primary)] group-hover:text-cyan-400 transition-colors">
-              Haftalık Lig Fikstürü
-            </div>
-            <p className="text-xs text-[var(--text-muted)]">1. haftadan 34. haftaya kadar maç programını görün.</p>
-          </div>
-          <ArrowRight className="w-5 h-5 text-[var(--text-muted)] group-hover:translate-x-1 group-hover:text-cyan-400 transition-all flex-shrink-0" />
-        </div>
-
-        <div 
-          onClick={() => setActiveTab('rules')}
-          className="glass-panel p-5 cursor-pointer hover:border-purple-500/40 transition-all flex items-center justify-between group"
-        >
-          <div className="space-y-1">
-            <div className="font-bold text-[var(--text-primary)] group-hover:text-purple-400 transition-colors">
-              Fantasy Oyun Kuralları
-            </div>
-            <p className="text-xs text-[var(--text-muted)]">Puanlama matrisi, formasyonlar ve kadro kısıtları.</p>
-          </div>
-          <BookOpen className="w-5 h-5 text-[var(--text-muted)] group-hover:translate-x-1 group-hover:text-purple-400 transition-all flex-shrink-0" />
         </div>
       </div>
     </div>

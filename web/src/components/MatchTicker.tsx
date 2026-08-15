@@ -1,0 +1,104 @@
+import React from 'react';
+import { Fixture } from '../types';
+import { getTeamBranding } from '../services/dataset';
+
+interface MatchTickerProps {
+  fixtures: Fixture[];
+  teamsMap?: Map<string, string>;
+  selectedRound: number;
+  onSelectRound?: (round: number) => void;
+  onSelectFixture?: (fixture: Fixture) => void;
+}
+
+export const MatchTicker: React.FC<MatchTickerProps> = ({
+  fixtures,
+  selectedRound,
+  onSelectFixture,
+}) => {
+  const currentRoundFixtures = fixtures.filter((f) => f.round === selectedRound);
+
+  // Duplicate items for a perfectly smooth, infinite marquee scroll loop
+  const loopFixtures = [...currentRoundFixtures, ...currentRoundFixtures];
+
+  return (
+    <div id="match-ticker-container" className="w-full bg-[var(--bg-surface)] border-b border-[var(--border)] overflow-hidden mb-3 sm:mb-3.5 shadow-sm">
+      <div className="app-container py-2 flex items-center gap-3">
+        {/* Fixed Round Selector Pill */}
+        <div id="match-ticker-round-badge" className="flex items-center gap-1.5 flex-shrink-0 pr-3 border-r border-[var(--border)] z-10 bg-[var(--bg-surface)]">
+          <span className="w-2 h-2 rounded-full bg-[var(--color-brand)] animate-pulse" />
+          <span className="text-[10px] font-mono font-black uppercase text-[var(--color-brand)] bg-[var(--color-brand)]/10 px-2 py-0.5 rounded tracking-wider">
+            {selectedRound}. Hafta
+          </span>
+        </div>
+
+        {/* Automatic Sliding Marquee Container */}
+        <div id="match-ticker-viewport" className="flex-1 overflow-hidden ticker-mask relative py-0.5">
+          <div id="match-ticker-track" className="ticker-marquee-track">
+            {loopFixtures.map((fixture, idx) => {
+              const homeBrand = getTeamBranding(fixture.home_team_id);
+              const awayBrand = getTeamBranding(fixture.away_team_id);
+              const isFinished = fixture.status === 'finished';
+              const hasScore = fixture.score !== undefined && fixture.score !== null;
+
+              return (
+                <button
+                  key={`${fixture.id}-${idx}`}
+                  id={`ticker-match-${fixture.id}-${idx < currentRoundFixtures.length ? 'primary' : 'clone'}`}
+                  onClick={() => onSelectFixture && onSelectFixture(fixture)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--color-brand)] hover:bg-[var(--bg-card-hover)] transition-colors flex-shrink-0 text-left cursor-pointer select-none"
+                  title={`${homeBrand.code} vs ${awayBrand.code} - Maç Detayı`}
+                >
+                  {/* Home Code & Color Tag */}
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className="w-1.5 h-3.5 rounded-full flex-shrink-0"
+                      style={{ background: homeBrand.primaryColor }}
+                    />
+                    <span className="font-bold text-xs text-[var(--text-primary)] font-mono">
+                      {homeBrand.code}
+                    </span>
+                  </div>
+
+                  {/* Score or VS */}
+                  {isFinished && hasScore ? (
+                    <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-[var(--bg-app)] font-mono font-black text-xs text-[var(--text-primary)] border border-[var(--border)]">
+                      <span>{fixture.score?.home}</span>
+                      <span className="text-[var(--text-muted)] font-normal">-</span>
+                      <span>{fixture.score?.away}</span>
+                    </div>
+                  ) : (
+                    <span className="text-[10px] font-mono font-bold text-[var(--text-muted)] px-1">
+                      vs
+                    </span>
+                  )}
+
+                  {/* Away Code & Color Tag */}
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-xs text-[var(--text-primary)] font-mono">
+                      {awayBrand.code}
+                    </span>
+                    <span
+                      className="w-1.5 h-3.5 rounded-full flex-shrink-0"
+                      style={{ background: awayBrand.primaryColor }}
+                    />
+                  </div>
+
+                  {/* Status Tag */}
+                  {isFinished ? (
+                    <span className="text-[9px] font-extrabold uppercase px-1 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono border border-emerald-500/20">
+                      MS
+                    </span>
+                  ) : (
+                    <span className="text-[9px] font-mono text-[var(--text-muted)] bg-[var(--bg-surface)] px-1 py-0.5 rounded">
+                      {fixture.kickoff.includes('T') ? fixture.kickoff.split('T')[1].slice(0, 5) : '—'}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

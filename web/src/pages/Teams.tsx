@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { SeasonDataset, Team } from '../types';
-import { formatPrice, getPositionBadgeColor, translatePosition } from '../services/dataset';
-import { Shield, ChevronRight, ArrowLeft } from 'lucide-react';
+import { formatPrice, getPositionBadgeColor, getShortPosition, getTeamBranding } from '../services/dataset';
+import { Shield, ChevronRight, ArrowLeft, MapPin } from 'lucide-react';
 
 interface TeamsProps {
   dataset: SeasonDataset;
@@ -11,7 +11,6 @@ export const Teams: React.FC<TeamsProps> = ({ dataset }) => {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [positionFilter, setPositionFilter] = useState<string>('all');
 
-  // Compute team statistics
   const teamStats = useMemo(() => {
     return dataset.teams.map((team) => {
       const teamPlayers = dataset.players.filter((p) => p.team_id === team.id);
@@ -35,7 +34,6 @@ export const Teams: React.FC<TeamsProps> = ({ dataset }) => {
     });
   }, [dataset.teams, dataset.players]);
 
-  // Selected Team's players
   const selectedTeamPlayers = useMemo(() => {
     if (!selectedTeam) return [];
     return dataset.players
@@ -45,99 +43,143 @@ export const Teams: React.FC<TeamsProps> = ({ dataset }) => {
   }, [selectedTeam, dataset.players, positionFilter]);
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div id="teams-page-container" className="space-y-4 animate-fadeIn">
+      {/* Top Header */}
+      <div id="teams-header-bar" className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
         <div>
-          <h2 className="text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
-            <Shield className="w-6 h-6 text-blue-500" />
-            <span>Süper Lig Kulüpleri (18 Takım)</span>
-          </h2>
-          <p className="text-xs text-[var(--text-muted)] mt-1">
-            2026/27 sezonu Süper Lig takımları ve kadro derinliği istatistikleri
+          <div className="flex items-center gap-2">
+            <Shield className="w-5 h-5 text-[var(--color-brand)]" />
+            <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-[var(--text-primary)]">
+              Süper Lig Kulüpleri
+            </h2>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+            2026/27 sezonunda mücadele eden 18 Süper Lig kulübünün kadro derinliği ve değerleri.
           </p>
         </div>
 
         {selectedTeam && (
           <button
+            id="teams-back-to-all-btn"
             onClick={() => setSelectedTeam(null)}
-            className="btn btn-secondary text-xs"
+            className="btn-sofa btn-sofa-secondary text-xs"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Tüm Takımlara Dön</span>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Tüm Kulüpler</span>
           </button>
         )}
       </div>
 
-      {/* Team Detail View */}
+      {/* View 1: Team Roster View */}
       {selectedTeam ? (
-        <div className="space-y-6 animate-fadeIn">
-          <div className="glass-panel p-6 border-l-4 border-l-blue-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <div className="text-xs font-semibold text-blue-400 uppercase tracking-wider">Kulüp Detayı</div>
-              <h3 className="text-3xl font-extrabold text-[var(--text-primary)] mt-1">{selectedTeam.name}</h3>
-              <p className="text-xs text-[var(--text-muted)] font-mono mt-1">ID: {selectedTeam.id}</p>
-            </div>
+        <div id="team-roster-view" className="space-y-4">
+          {/* Team Profile Header Card */}
+          {(() => {
+            const brand = getTeamBranding(selectedTeam.id);
+            const stats = teamStats.find((s) => s.team.id === selectedTeam.id);
 
-            <div className="flex items-center gap-2">
-              <select
-                value={positionFilter}
-                onChange={(e) => setPositionFilter(e.target.value)}
-                className="form-select text-xs"
+            return (
+              <div id="team-profile-header-card" className="sofa-card p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5">
+                    <div
+                      className="w-14 h-14 rounded-full flex items-center justify-center font-black text-base shadow border-2"
+                      style={{
+                        background: brand.primaryColor,
+                        color: brand.textColor,
+                        borderColor: brand.secondaryColor,
+                      }}
+                    >
+                      {brand.code}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-extrabold text-[var(--text-primary)]">
+                        {selectedTeam.name}
+                      </h3>
+                      <div className="text-xs text-[var(--text-muted)] flex items-center gap-2 mt-0.5 font-mono">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-[var(--color-brand)]" />
+                          {brand.stadium} · {brand.city}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {stats && (
+                    <div className="flex items-center gap-4 text-xs font-mono">
+                      <div className="p-2 rounded bg-[var(--bg-surface)] border border-[var(--border)] text-center">
+                        <div className="text-[10px] text-[var(--text-muted)] uppercase">Kadro</div>
+                        <div className="font-bold text-[var(--text-primary)]">{stats.totalPlayers} Oyuncu</div>
+                      </div>
+                      <div className="p-2 rounded bg-[var(--bg-surface)] border border-[var(--border)] text-center">
+                        <div className="text-[10px] text-[var(--text-muted)] uppercase">Ortalama Fiyat</div>
+                        <div className="font-bold text-[var(--color-brand)]">{formatPrice(stats.avgPrice)}</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Position Filter Tabs */}
+          <div id="team-position-filters" className="flex items-center gap-1.5 overflow-x-auto">
+            {['all', 'Goalkeeper', 'Defender', 'Midfielder', 'Forward'].map((pos) => (
+              <button
+                key={pos}
+                id={`team-pos-filter-${pos}`}
+                onClick={() => setPositionFilter(pos)}
+                className={`px-3 py-1 rounded text-xs font-bold transition-all ${
+                  positionFilter === pos
+                    ? 'bg-[var(--color-brand)] text-black'
+                    : 'bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-white border border-[var(--border)]'
+                }`}
               >
-                <option value="all">Tüm Mevkiler ({selectedTeamPlayers.length})</option>
-                <option value="Goalkeeper">Kaleci (GK)</option>
-                <option value="Defender">Defans (DEF)</option>
-                <option value="Midfielder">Orta Saha (MID)</option>
-                <option value="Forward">Forvet (FWD)</option>
-              </select>
-            </div>
+                {pos === 'all' ? 'Tüm Mevkiler' : pos === 'Goalkeeper' ? 'Kaleci' : pos === 'Defender' ? 'Defans' : pos === 'Midfielder' ? 'Orta Saha' : 'Forvet'}
+              </button>
+            ))}
           </div>
 
-          {/* Roster Table */}
-          <div className="custom-table-container glass-panel">
-            <table className="custom-table">
+          {/* Players Table */}
+          <div id="team-roster-table-wrapper" className="sofa-table-wrapper">
+            <table id="team-roster-table" className="sofa-table">
               <thead>
                 <tr>
+                  <th>Mevki</th>
                   <th>Oyuncu Adı</th>
-                  <th>Pozisyon</th>
                   <th>Fiyat</th>
-                  <th>Expected Points</th>
-                  <th>Projection</th>
+                  <th className="text-right">Sezon Puanı</th>
                 </tr>
               </thead>
               <tbody>
                 {selectedTeamPlayers.map((player) => {
-                  const proj = dataset.projections.get(player.id);
-                  const expPoints = proj ? proj.expected_points : 0;
-                  const posBadge = getPositionBadgeColor(player.position);
+                  const shortPos = getShortPosition(player.position);
+                  const posColor = getPositionBadgeColor(player.position);
+                  const pts = dataset.projections.get(player.id)?.expected_points ?? 0;
 
                   return (
-                    <tr key={player.id}>
-                      <td className="font-semibold text-[var(--text-primary)]">{player.name}</td>
+                    <tr key={player.id} id={`team-roster-row-${player.id}`}>
                       <td>
                         <span
-                          className="badge"
-                          style={{
-                            backgroundColor: posBadge.bg,
-                            color: posBadge.text,
-                            borderColor: posBadge.border,
-                          }}
+                          className="font-mono font-bold text-[10px] px-1.5 py-0.5 rounded"
+                          style={{ background: posColor.bg, color: posColor.text, border: `1px solid ${posColor.border}` }}
                         >
-                          {translatePosition(player.position)}
+                          {shortPos}
                         </span>
                       </td>
-                      <td className="font-mono font-bold text-[var(--text-primary)]">{formatPrice(player.price)}</td>
-                      <td className="font-mono font-semibold text-emerald-400">{expPoints.toFixed(1)}</td>
-                      <td>
-                        {proj ? (
-                          <span className="badge bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
-                            Aktif ({expPoints.toFixed(1)})
+                      <td className="font-bold text-[var(--text-primary)]">
+                        {player.name}
+                      </td>
+                      <td className="font-mono font-bold text-[var(--color-brand)]">
+                        {formatPrice(player.price)}
+                      </td>
+                      <td className="text-right">
+                        {pts > 0 ? (
+                          <span className="sofa-rating sofa-rating-high font-mono">
+                            {pts.toFixed(0)} pts
                           </span>
                         ) : (
-                          <span className="badge bg-slate-500/10 text-slate-400 border-slate-500/20">
-                            Projection yok
-                          </span>
+                          <span className="font-mono text-xs text-[var(--text-muted)] opacity-60">0.0 pts</span>
                         )}
                       </td>
                     </tr>
@@ -148,55 +190,69 @@ export const Teams: React.FC<TeamsProps> = ({ dataset }) => {
           </div>
         </div>
       ) : (
-        /* Team Cards Grid */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {teamStats.map((item) => (
-            <div
-              key={item.team.id}
-              onClick={() => setSelectedTeam(item.team)}
-              className="glass-panel p-5 cursor-pointer hover:border-blue-500/50 hover:scale-[1.01] transition-all group flex flex-col justify-between"
-            >
-              <div className="space-y-2">
+        /* View 2: All Teams Grid (Sofascore Style Club Cards) */
+        <div id="all-teams-grid" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {teamStats.map(({ team, totalPlayers, gk, def, mid, fwd, avgPrice }) => {
+            const brand = getTeamBranding(team.id);
+
+            return (
+              <div
+                key={team.id}
+                id={`team-card-${team.id}`}
+                onClick={() => setSelectedTeam(team)}
+                className="sofa-card p-4 hover:bg-[var(--bg-card-hover)] cursor-pointer transition-colors space-y-3"
+              >
                 <div className="flex items-center justify-between">
-                  <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">
-                    {item.team.name.charAt(0)}
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center font-black text-xs shadow border flex-shrink-0"
+                      style={{
+                        background: brand.primaryColor,
+                        color: brand.textColor,
+                        borderColor: brand.secondaryColor,
+                      }}
+                    >
+                      {brand.code}
+                    </div>
+                    <div className="truncate">
+                      <h4 className="font-extrabold text-sm text-[var(--text-primary)] truncate">
+                        {team.name}
+                      </h4>
+                      <div className="text-[10px] text-[var(--text-muted)] font-mono truncate">
+                        {brand.stadium}
+                      </div>
+                    </div>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-[var(--text-muted)] group-hover:translate-x-1 group-hover:text-blue-400 transition-all" />
+
+                  <ChevronRight className="w-4 h-4 text-[var(--text-muted)] flex-shrink-0" />
                 </div>
-                <h3 className="text-lg font-bold text-[var(--text-primary)] group-hover:text-blue-400 transition-colors">
-                  {item.team.name}
-                </h3>
+
+                <div className="grid grid-cols-4 gap-1 text-center font-mono text-[10px] pt-2 border-t border-[var(--border)]">
+                  <div className="p-1 rounded bg-[var(--bg-surface)]">
+                    <div className="text-[var(--text-muted)]">KL</div>
+                    <div className="font-bold text-[var(--text-primary)]">{gk}</div>
+                  </div>
+                  <div className="p-1 rounded bg-[var(--bg-surface)]">
+                    <div className="text-[var(--text-muted)]">DEF</div>
+                    <div className="font-bold text-[var(--text-primary)]">{def}</div>
+                  </div>
+                  <div className="p-1 rounded bg-[var(--bg-surface)]">
+                    <div className="text-[var(--text-muted)]">OS</div>
+                    <div className="font-bold text-[var(--text-primary)]">{mid}</div>
+                  </div>
+                  <div className="p-1 rounded bg-[var(--bg-surface)]">
+                    <div className="text-[var(--text-muted)]">FOR</div>
+                    <div className="font-bold text-[var(--text-primary)]">{fwd}</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)] pt-1">
+                  <span>Toplam {totalPlayers} Oyuncu</span>
+                  <span className="text-[var(--color-brand)] font-bold">Ort: {formatPrice(avgPrice)}</span>
+                </div>
               </div>
-
-              <div className="mt-4 pt-4 border-t border-[var(--border-color)] space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[var(--text-muted)]">Kadro Büyüklüğü:</span>
-                  <span className="font-bold text-[var(--text-primary)] font-mono">{item.totalPlayers} Oyuncu</span>
-                </div>
-
-                {/* Pos counts grid */}
-                <div className="grid grid-cols-4 gap-1.5 text-center text-[10px] font-semibold">
-                  <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    KL: {item.gk}
-                  </div>
-                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                    DEF: {item.def}
-                  </div>
-                  <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    OS: {item.mid}
-                  </div>
-                  <div className="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                    FOR: {item.fwd}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)]">
-                  <span>Ort. Oyuncu Fiyatı:</span>
-                  <span className="font-mono text-[var(--text-secondary)]">{formatPrice(item.avgPrice)}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
