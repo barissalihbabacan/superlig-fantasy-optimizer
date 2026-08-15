@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="200" viewBox="0 0 1200 200"
+     role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">Bir Rust çekirdeği, iki tüketici</title>
+  <desc id="arch-desc">Kural, puanlama ve optimizer motoru tek bir Rust crate'inde yaşar; sf CLI ve WebAssembly üzerinden web arayüzü bu çekirdeği doğrudan çağırır, aralarında ayrı bir mantık kopyası yoktur.</desc>
+
+  <rect width="1200" height="200" rx="18" fill="#0f1420" stroke="#1c2636" stroke-width="1"/>
+
+  <text x="48" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="21" font-weight="700" fill="#f2f5f9">Bir Rust Çekirdeği, İki Tüketici</text>
+  <text x="48" y="60" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" fill="#9aa8bb">Kural + puanlama + optimizer mantığı tek yerde yaşar.</text>
+  <text x="48" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" fill="#9aa8bb">CLI ve web aynı kodu çağırır, ayrı kopya tutmaz.</text>
+
+  <!-- core box -->
+  <g transform="translate(48 96)">
+    <rect x="0" y="0" width="300" height="80" rx="10" fill="#101d15" stroke="#00d563" stroke-width="1.5"/>
+    <text x="16" y="26" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700" fill="#00d563">superlig_fantasy_optimizer</text>
+    <text x="16" y="48" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#9aa8bb">rules · scoring · optimizer</text>
+    <text x="16" y="66" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#9aa8bb">projection_engine · data</text>
+  </g>
+
+  <!-- fork lines -->
+  <path d="M 348 118 C 420 118, 420 62, 492 62" fill="none" stroke="#2a3648" stroke-width="2"/>
+  <path d="M 348 156 C 420 156, 420 178, 492 178" fill="none" stroke="#2a3648" stroke-width="2"/>
+
+  <!-- CLI consumer -->
+  <g transform="translate(492 32)">
+    <rect x="0" y="0" width="300" height="60" rx="10" fill="#141a24" stroke="#2a3648" stroke-width="1.5"/>
+    <text x="16" y="24" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700" fill="#e6edf3">sf</text>
+    <text x="16" y="44" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12.5" fill="#9aa8bb">CLI ikili dosyası (src/main.rs)</text>
+  </g>
+
+  <!-- WASM/Web consumer -->
+  <g transform="translate(492 148)">
+    <rect x="0" y="0" width="300" height="60" rx="10" fill="#141a24" stroke="#2a3648" stroke-width="1.5"/>
+    <text x="16" y="24" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700" fill="#e6edf3">crates/wasm-bindings</text>
+    <text x="16" y="44" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12.5" fill="#9aa8bb">WebAssembly -&gt; React web app</text>
+  </g>
+
+  <!-- arrows to right edge -->
+  <path d="M 792 62 h 40" fill="none" stroke="#2a3648" stroke-width="2"/>
+  <path d="M 792 178 h 40" fill="none" stroke="#2a3648" stroke-width="2"/>
+
+  <g transform="translate(840 32)">
+    <rect x="0" y="0" width="312" height="60" rx="10" fill="#101319" stroke="#1c2636" stroke-width="1"/>
+    <text x="16" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">Terminalde optimum kadro</text>
+    <text x="16" y="44" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#5b6b82">sf optimize --format json</text>
+  </g>
+
+  <g transform="translate(840 148)">
+    <rect x="0" y="0" width="312" height="60" rx="10" fill="#101319" stroke="#1c2636" stroke-width="1"/>
+    <text x="16" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">Tarayıcıda optimum kadro</text>
+    <text x="16" y="44" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#5b6b82">Optimizer sayfası, Web Worker</text>
+  </g>
+</svg>

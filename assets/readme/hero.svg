@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">Süper Lig Fantasy Optimizer</title>
+  <desc id="hero-desc">Bütçe ve formasyon kısıtları altında matematiksel olarak en iyi 15 kişilik Süper Lig Fantasy kadrosunu bulan Rust ve WebAssembly motoru; sağda örnek bir 4-3-3 diziliş gösterilir.</desc>
+
+  <defs>
+    <linearGradient id="pitch-fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#12321f"/>
+      <stop offset="100%" stop-color="#0c1017"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="360" rx="24" fill="#0c1017"/>
+  <rect x="0.5" y="0.5" width="1199" height="359" rx="24" fill="none" stroke="#1c2636" stroke-width="1"/>
+
+  <g id="title-block" transform="translate(60 56)">
+    <text x="0" y="0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16" letter-spacing="2" fill="#00d563" font-weight="700">RUST CLI · WEBASSEMBLY · SÜPER LİG FANTASY</text>
+
+    <text x="0" y="56" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="52" font-weight="800" fill="#f2f5f9">Süper Lig Fantasy</text>
+    <text x="0" y="112" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="52" font-weight="800" fill="#f2f5f9">Optimizer</text>
+
+    <text x="0" y="160" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="21" fill="#9aa8bb">Bütçeni ve formasyonunu, kısıtları asla çiğnemeyen</text>
+    <text x="0" y="188" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="21" fill="#9aa8bb">kanıtlanabilir şekilde en iyi 15 kişilik kadroya çevirir.</text>
+
+    <g transform="translate(0 220)" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" fill="#5b6b82">
+      <text x="0" y="0">MIT Lisans</text>
+      <text x="108" y="0" fill="#2a3648">·</text>
+      <text x="124" y="0">Rust + WASM</text>
+      <text x="248" y="0" fill="#2a3648">·</text>
+      <text x="264" y="0">2026-27 Sezonu</text>
+    </g>
+
+    <g transform="translate(0 254)">
+      <rect x="0" y="0" width="209" height="40" rx="8" fill="#00d563"/>
+      <text x="104" y="26" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16" font-weight="700" fill="#0c1017">sf optimize --budget</text>
+    </g>
+  </g>
+
+  <g id="formation-proof" transform="translate(792 40)">
+    <rect x="0" y="0" width="348" height="280" rx="14" fill="url(#pitch-fade)" stroke="#1f3a28" stroke-width="1.5"/>
+
+    <!-- pitch markings -->
+    <line x1="14" y1="140" x2="334" y2="140" stroke="#26492f" stroke-width="1.5"/>
+    <circle cx="174" cy="140" r="34" fill="none" stroke="#26492f" stroke-width="1.5"/>
+    <circle cx="174" cy="140" r="2" fill="#26492f"/>
+    <path d="M 74 14 H 274 V 60 Q 174 84 74 60 Z" fill="none" stroke="#26492f" stroke-width="1.5"/>
+    <path d="M 74 266 H 274 V 220 Q 174 196 74 220 Z" fill="none" stroke="#26492f" stroke-width="1.5"/>
+
+    <!-- formation: 4-3-3, attacking upward, GK at bottom -->
+    <!-- goalkeeper -->
+    <circle cx="174" cy="246" r="9" fill="#e6edf3"/>
+
+    <!-- defenders x4 -->
+    <circle cx="82" cy="196" r="9" fill="#00d563"/>
+    <circle cx="139" cy="196" r="9" fill="#00d563"/>
+    <circle cx="209" cy="196" r="9" fill="#00d563"/>
+    <circle cx="266" cy="196" r="9" fill="#00d563"/>
+
+    <!-- midfielders x3 -->
+    <circle cx="102" cy="126" r="9" fill="#00d563"/>
+    <circle cx="174" cy="118" r="9" fill="#00d563"/>
+    <circle cx="246" cy="126" r="9" fill="#00d563"/>
+
+    <!-- forwards x3, center one is captain -->
+    <circle cx="102" cy="56" r="9" fill="#00d563"/>
+    <circle cx="174" cy="46" r="12" fill="#00d563" stroke="#fbbf24" stroke-width="3"/>
+    <circle cx="246" cy="56" r="9" fill="#00d563"/>
+
+    <text x="174" y="28" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" fill="#fbbf24" font-weight="700">C</text>
+  </g>
+
+  <text x="966" y="338" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#5b6b82" font-weight="700">4-3-3 · 8 diziliş desteklenir</text>
+</svg>
