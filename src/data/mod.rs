@@ -91,43 +91,53 @@ impl DatasetContext {
 
     /// Dataset'in terminal ve JSON özetlerinde kullanılan dinamik istatistikleri üretir.
     pub fn stats(&self) -> DatasetStats {
-        let mut players = PlayerStats::default();
-        for player in &self.players.players {
-            players.total += 1;
-            match player.position {
-                Position::Goalkeeper => players.goalkeepers += 1,
-                Position::Defender => players.defenders += 1,
-                Position::Midfielder => players.midfielders += 1,
-                Position::Forward => players.forwards += 1,
-            }
+        compute_dataset_stats(&self.teams, &self.players, &self.fixtures, &self.matches)
+    }
+}
+
+/// `DatasetContext::stats()` ile aynı hesaplamayı, dosya sistemine dokunmadan,
+/// zaten bellekte doğrulanmış parçalardan üretir (ör. wasm sınırında kullanılır).
+pub fn compute_dataset_stats(
+    teams: &TeamDataset,
+    players: &PlayerDataset,
+    fixtures: &FixtureDataset,
+    matches: &[MatchDataset],
+) -> DatasetStats {
+    let mut player_stats = PlayerStats::default();
+    for player in &players.players {
+        player_stats.total += 1;
+        match player.position {
+            Position::Goalkeeper => player_stats.goalkeepers += 1,
+            Position::Defender => player_stats.defenders += 1,
+            Position::Midfielder => player_stats.midfielders += 1,
+            Position::Forward => player_stats.forwards += 1,
         }
-        let mut fixtures = FixtureStats::default();
-        for fixture in &self.fixtures.fixtures {
-            fixtures.total += 1;
-            match fixture.status {
-                MatchStatus::Scheduled => fixtures.scheduled += 1,
-                MatchStatus::Live => fixtures.live += 1,
-                MatchStatus::Finished => fixtures.finished += 1,
-                MatchStatus::Postponed => fixtures.postponed += 1,
-                MatchStatus::Cancelled => fixtures.cancelled += 1,
-            }
+    }
+    let mut fixture_stats = FixtureStats::default();
+    for fixture in &fixtures.fixtures {
+        fixture_stats.total += 1;
+        match fixture.status {
+            MatchStatus::Scheduled => fixture_stats.scheduled += 1,
+            MatchStatus::Live => fixture_stats.live += 1,
+            MatchStatus::Finished => fixture_stats.finished += 1,
+            MatchStatus::Postponed => fixture_stats.postponed += 1,
+            MatchStatus::Cancelled => fixture_stats.cancelled += 1,
         }
-        DatasetStats {
-            season: self.teams.season.clone(),
-            schema_version: CURRENT_SCHEMA_VERSION,
-            teams: TeamStats {
-                total: self.teams.teams.len(),
-            },
-            players,
-            fixtures,
-            matches: MatchStats {
-                finished: self
-                    .matches
-                    .iter()
-                    .filter(|item| item.status == MatchStatus::Finished)
-                    .count(),
-            },
-        }
+    }
+    DatasetStats {
+        season: teams.season.clone(),
+        schema_version: CURRENT_SCHEMA_VERSION,
+        teams: TeamStats {
+            total: teams.teams.len(),
+        },
+        players: player_stats,
+        fixtures: fixture_stats,
+        matches: MatchStats {
+            finished: matches
+                .iter()
+                .filter(|item| item.status == MatchStatus::Finished)
+                .count(),
+        },
     }
 }
 

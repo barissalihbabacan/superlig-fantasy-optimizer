@@ -36,7 +36,7 @@ pub struct Match {
 }
 
 /// Bir oyuncunun maçtan gelen ham performansı. Fantasy puanı içermez.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct MatchPerformance {
     pub player_id: u32,
     pub player_name: String,
@@ -78,17 +78,17 @@ pub struct Squad {
     pub players: Vec<Player>,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Captain {
     pub player_id: u32,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct ViceCaptain {
     pub player_id: u32,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Lineup {
     pub player_ids: Vec<u32>,
     pub captain: Captain,
@@ -96,13 +96,13 @@ pub struct Lineup {
 }
 
 /// İlk 11'de yer almayan, sıra bilgisi korunmuş dört oyuncu.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Bench {
     pub player_ids: Vec<u32>,
 }
 
 /// Bir kadronun formasyona göre ilk 11 ve yedek ayrımı.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SquadSelection {
     pub lineup: Lineup,
     pub bench: Bench,

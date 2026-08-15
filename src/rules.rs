@@ -1,9 +1,9 @@
 //! Varsayılan fantasy ve kadro kuralları.
 
 use crate::models::Position;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct ScoringRules {
     pub minutes_60_points: i32,
     pub minutes_over_60_points: i32,
@@ -62,7 +62,7 @@ impl Default for ScoringRules {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct PositionDistribution {
     pub goalkeepers: usize,
     pub defenders: usize,
@@ -70,7 +70,7 @@ pub struct PositionDistribution {
     pub forwards: usize,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SquadRules {
     pub squad_size: usize,
     pub squad_positions: PositionDistribution,
