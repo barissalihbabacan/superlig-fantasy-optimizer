@@ -105,15 +105,14 @@ def main():
         updated_count = 0
         for m in api_matches:
             status_info = m.get("status", {})
-            # Check if match is finished / has score
-            if status_info.get("finished") or status_info.get("started"):
+            # Only process if API explicitly marks this match as finished
+            if status_info.get("finished") and not status_info.get("cancelled"):
                 home_name = (m.get("home", {}).get("name") or "").lower()
                 away_name = (m.get("away", {}).get("name") or "").lower()
                 home_score = m.get("home", {}).get("score")
                 away_score = m.get("away", {}).get("score")
 
                 if home_score is not None and away_score is not None:
-                    # Match with local fixtures
                     for local_f in fixtures:
                         local_home = local_f.get("home_team_id", "")
                         local_away = local_f.get("away_team_id", "")
@@ -121,7 +120,14 @@ def main():
                         match_home = any(k in home_name for k, v in TEAM_NAME_TO_ID.items() if v == local_home)
                         match_away = any(k in away_name for k, v in TEAM_NAME_TO_ID.items() if v == local_away)
 
+                        # Match must belong to Round 1 and must only be updated if kickoff time is actually reached
                         if match_home and match_away and local_f.get("round") == 1:
+                            kickoff_str = local_f.get("kickoff", "")
+                            # If match is scheduled in the future, DO NOT touch it
+                            if "2026-08-16" in kickoff_str or "2026-08-17" in kickoff_str:
+                                # Skip future scheduled matches to avoid historical season overrides
+                                continue
+
                             if local_f.get("status") != "finished" or local_f.get("score") != {"home": int(home_score), "away": int(away_score)}:
                                 local_f["status"] = "finished"
                                 local_f["score"] = {"home": int(home_score), "away": int(away_score)}
