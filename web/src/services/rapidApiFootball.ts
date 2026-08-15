@@ -16,11 +16,12 @@ const RAPIDAPI_KEY_STORAGE = 'superlig_rapidapi_football_key';
 
 export const getSavedRapidApiKey = (): string => {
   if (typeof window === 'undefined') return '';
-  return (
-    localStorage.getItem(RAPIDAPI_KEY_STORAGE) ||
-    (import.meta as any).env?.VITE_RAPIDAPI_KEY ||
-    ''
-  );
+  // Yalnızca kullanıcının kendi girdiği anahtar kullanılır. Bir build-time env
+  // değişkeni (ör. VITE_RAPIDAPI_KEY) burada okunmaz: Vite bu tür değişkenleri
+  // istemci bundle'ına düz metin olarak gömer, bu da paylaşılan/takım
+  // anahtarının devtools/network sekmesinden herkes tarafından görülebilmesi
+  // anlamına gelir.
+  return localStorage.getItem(RAPIDAPI_KEY_STORAGE) || '';
 };
 
 export const saveRapidApiKey = (key: string): void => {
