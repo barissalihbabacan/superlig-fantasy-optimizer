@@ -15,7 +15,9 @@ import { Fixtures } from './pages/Fixtures';
 import { Optimizer } from './pages/Optimizer';
 import { Rules } from './pages/Rules';
 import { Nostradamus } from './pages/Nostradamus';
+import { Tribun } from './pages/Tribun';
 import { MatchDetail } from './pages/MatchDetail';
+import { AuthProvider } from './contexts/AuthContext';
 
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
@@ -145,6 +147,8 @@ const AppContent: React.FC = () => {
         return <Optimizer dataset={dataset} />;
       case 'rules':
         return <Rules />;
+      case 'tribun':
+        return <Tribun dataset={dataset} />;
       case 'nostradamus':
         return (
           <Nostradamus
@@ -233,8 +237,10 @@ const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <ToastProvider>
-      <AppContent />
-    </ToastProvider>
+    <AuthProvider>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
+    </AuthProvider>
   );
 };

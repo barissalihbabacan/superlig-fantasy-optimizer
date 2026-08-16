@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavTab } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard,
   CalendarDays,
@@ -7,12 +8,16 @@ import {
   Users,
   Brain,
   BookOpen,
+  MessageSquare,
   Sun,
   Moon,
   Info,
   Menu,
   X,
   Trophy,
+  LogIn,
+  LogOut,
+  User as UserIcon,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -32,13 +37,16 @@ export const Header: React.FC<HeaderProps> = ({
   season,
   onOpenNotice,
 }) => {
+  const { currentUser, login, logout, isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const navItems: { id: NavTab; label: string; icon: React.ReactNode }[] = [
     { id: 'dashboard', label: 'Maç Merkezi', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'fixtures', label: 'Fikstür & Skorlar', icon: <CalendarDays className="w-4 h-4" /> },
     { id: 'optimizer', label: 'Kadro Optimizer', icon: <Zap className="w-4 h-4" /> },
-    { id: 'players', label: 'Oyuncu İstatistikleri', icon: <Users className="w-4 h-4" /> },
+    { id: 'players', label: 'Oyuncular', icon: <Users className="w-4 h-4" /> },
+    { id: 'tribun', label: 'Tribün (Sohbet)', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'nostradamus', label: 'Nostradamus', icon: <Brain className="w-4 h-4" /> },
     { id: 'rules', label: 'Kurallar', icon: <BookOpen className="w-4 h-4" /> },
   ];
@@ -50,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header id="main-header" className="sticky top-0 z-40 bg-[var(--bg-surface)] border-b border-[var(--border)]">
-      <div className="app-container flex items-center justify-between h-14 gap-4">
+      <div className="app-container flex items-center justify-between h-14 gap-3">
         {/* Brand & Logo */}
         <div
           id="brand-logo-btn"
@@ -84,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
                 key={item.id}
                 id={`nav-btn-${item.id}`}
                 onClick={() => handleNavClick(item.id)}
-                className={`flex items-center gap-2 px-3 py-2 rounded text-xs font-bold transition-all ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-bold transition-all ${
                   isActive
                     ? 'text-[var(--color-brand)] bg-[var(--bg-card)] shadow-sm border border-[var(--border-strong)]'
                     : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]'
@@ -97,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
           })}
         </nav>
 
-        {/* Right Section Tools */}
+        {/* Right Section Tools & Auth */}
         <div className="flex items-center gap-2">
           {onOpenNotice && (
             <button
@@ -119,6 +127,69 @@ export const Header: React.FC<HeaderProps> = ({
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-400" />}
           </button>
+
+          {/* User Auth Profile / Login */}
+          {isAuthenticated && currentUser ? (
+            <div className="relative">
+              <button
+                id="user-profile-btn"
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center gap-1.5 p-1 pr-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--color-brand)]/40 transition-all cursor-pointer"
+              >
+                {currentUser.photoURL ? (
+                  <img
+                    src={currentUser.photoURL}
+                    alt={currentUser.displayName || 'Kullanıcı'}
+                    className="w-6 h-6 rounded-full object-cover border border-[var(--border)]"
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-[var(--color-brand)]/20 text-[var(--color-brand)] flex items-center justify-center text-xs font-bold">
+                    {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : <UserIcon className="w-3.5 h-3.5" />}
+                  </div>
+                )}
+                <span className="text-xs font-bold text-[var(--text-primary)] max-w-[80px] sm:max-w-[110px] truncate hidden sm:inline">
+                  {currentUser.displayName?.split(' ')[0] || 'Kullanıcı'}
+                </span>
+              </button>
+
+              {/* Dropdown Menu */}
+              {isUserMenuOpen && (
+                <div
+                  id="user-dropdown-menu"
+                  className="absolute right-0 mt-2 w-48 rounded-xl bg-[var(--bg-surface-elevated)] border border-[var(--border)] shadow-xl py-1.5 z-50 animate-fadeIn"
+                >
+                  <div className="px-3 py-2 border-b border-[var(--border)]">
+                    <p className="text-xs font-bold text-[var(--text-primary)] truncate">
+                      {currentUser.displayName || 'Kullanıcı'}
+                    </p>
+                    <p className="text-[10px] text-[var(--text-muted)] truncate">
+                      {currentUser.email}
+                    </p>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      setIsUserMenuOpen(false);
+                      await logout();
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Çıkış Yap</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              id="google-login-btn"
+              onClick={login}
+              className="btn-sofa btn-sofa-primary bg-[var(--color-brand)] text-[#0c1017] hover:brightness-110 flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg cursor-pointer flex-shrink-0"
+              title="Google ile Giriş Yap"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Giriş Yap</span>
+            </button>
+          )}
 
           {/* Mobile Menu Toggle */}
           <button

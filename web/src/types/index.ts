@@ -93,4 +93,4 @@ export type FormationType =
   | '5-3-2'
   | '5-2-3';
 
-export type NavTab = 'dashboard' | 'players' | 'teams' | 'fixtures' | 'optimizer' | 'rules' | 'nostradamus';
+export type NavTab = 'dashboard' | 'players' | 'teams' | 'fixtures' | 'optimizer' | 'rules' | 'nostradamus' | 'tribun';
