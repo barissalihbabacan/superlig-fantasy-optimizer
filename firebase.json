@@ -12,6 +12,10 @@
         "function": "footballProxy"
       },
       {
+        "source": "/api/notifications/subscribe",
+        "function": "subscribeToGoalAlerts"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
@@ -41,6 +45,10 @@
       ]
     }
   ],
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
   "emulators": {
     "functions": {
       "port": 5001

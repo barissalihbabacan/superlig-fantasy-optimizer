@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Trophy,
+  BellRing,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -22,6 +23,7 @@ interface HeaderProps {
   toggleTheme: () => void;
   season: string;
   onOpenNotice?: () => void;
+  onOpenGoalAlerts?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,6 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
   toggleTheme,
   season,
   onOpenNotice,
+  onOpenGoalAlerts,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -108,6 +111,17 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Info className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">1. Hafta</span>
+            </button>
+          )}
+
+          {onOpenGoalAlerts && (
+            <button
+              id="goal-alerts-modal-trigger-btn"
+              onClick={onOpenGoalAlerts}
+              className="p-2 rounded bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-amber-400 hover:border-amber-500/40 transition-all"
+              title="Gol Bildirimleri"
+            >
+              <BellRing className="w-4 h-4" />
             </button>
           )}
 

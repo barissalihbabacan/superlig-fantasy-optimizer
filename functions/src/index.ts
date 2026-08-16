@@ -10,12 +10,13 @@
  * of the shared one) has it forwarded per-request rather than stored here.
  */
 import { onRequest } from 'firebase-functions/v2/https';
-import { defineSecret } from 'firebase-functions/params';
 import logger from 'firebase-functions/logger';
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
-const rapidApiKey = defineSecret('RAPIDAPI_KEY');
+import { fetchRapidApi, rapidApiKey } from './rapidApiClient.js';
 
-const API_HOST = 'free-api-live-football-data.p.rapidapi.com';
+initializeApp();
 
 // Only these endpoints are ever forwarded — this proxy must not become an
 // open relay for arbitrary RapidAPI hosts/paths.
@@ -80,49 +81,38 @@ export const footballProxy = onRequest(
     }
 
     const userKey = req.get('x-user-rapidapi-key');
-    const key = userKey || rapidApiKey.value();
-    if (!key) {
-      res.status(500).json({ success: false, error: 'Sunucuda RapidAPI anahtarı yapılandırılmamış.' });
+    const query: Record<string, string> = {};
+    for (const [param, value] of Object.entries(req.query)) {
+      if (typeof value === 'string') query[param] = value;
+    }
+
+    const result = await fetchRapidApi(endpoint, query, {
+      userSuppliedKey: userKey || undefined,
+      db: getFirestore(),
+    });
+
+    if (!result.ok) {
+      const status = result.status ?? 502;
+      logger.warn('RapidAPI upstream error', { endpoint, status, error: result.error });
+      res.status(status).json({
+        success: false,
+        error:
+          status === 401 || status === 403
+            ? 'Geçersiz RapidAPI anahtarı veya kota aşıldı.'
+            : status === 502
+              ? 'Ağ bağlantı hatası oluştu.'
+              : `API Hatası (${status})`,
+      });
       return;
     }
 
-    const query = new URLSearchParams();
-    for (const [param, value] of Object.entries(req.query)) {
-      if (typeof value === 'string') query.append(param, value);
-    }
-
-    const url = `https://${API_HOST}/${endpoint}${query.toString() ? `?${query.toString()}` : ''}`;
-
-    try {
-      const upstream = await fetch(url, {
-        headers: {
-          'x-rapidapi-key': key,
-          'x-rapidapi-host': API_HOST,
-        },
-      });
-
-      const body = await upstream.text();
-
-      if (!upstream.ok) {
-        logger.warn('RapidAPI upstream error', { endpoint, status: upstream.status });
-        res.status(upstream.status).json({
-          success: false,
-          error:
-            upstream.status === 401 || upstream.status === 403
-              ? 'Geçersiz RapidAPI anahtarı veya kota aşıldı.'
-              : `API Hatası (${upstream.status})`,
-        });
-        return;
-      }
-
-      // Short, shared CDN cache: identical requests within this window reuse
-      // one upstream call instead of costing quota per visitor.
-      res.set('Cache-Control', 'public, max-age=60, s-maxage=60');
-      res.set('Content-Type', 'application/json');
-      res.status(200).send(body);
-    } catch (error) {
-      logger.error('RapidAPI proxy request failed', { endpoint, error: String(error) });
-      res.status(502).json({ success: false, error: 'Ağ bağlantı hatası oluştu.' });
-    }
+    // Short, shared CDN cache: identical requests within this window reuse
+    // one upstream call instead of costing quota per visitor.
+    res.set('Cache-Control', 'public, max-age=60, s-maxage=60');
+    res.set('Content-Type', 'application/json');
+    res.status(200).send(result.body);
   }
 );
+
+export { liveGoalPoller } from './liveGoalPoller.js';
+export { subscribeToGoalAlerts } from './subscribeToGoalAlerts.js';

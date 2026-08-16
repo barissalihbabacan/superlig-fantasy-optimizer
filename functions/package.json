@@ -8,6 +8,7 @@
   },
   "main": "lib/index.js",
   "scripts": {
+    "prebuild": "node scripts/sync-shared-data.mjs",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",

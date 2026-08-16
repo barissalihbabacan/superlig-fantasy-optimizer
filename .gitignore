@@ -35,4 +35,8 @@ functions/lib/
 functions/.secret.local
 functions/*.local
 
+# functions/scripts/sync-shared-data.mjs tarafından data/2026-27'den kopyalanır
+# (tek doğruluk kaynağı orada); burada commit edilmez, her build'de yeniden üretilir
+functions/src/data/
+
 

@@ -6,7 +6,9 @@ import { Header } from './components/Header';
 import { MatchTicker } from './components/MatchTicker';
 import { Footer } from './components/Footer';
 import { SeasonNoticeModal } from './components/SeasonNoticeModal';
+import { GoalAlertsModal } from './components/GoalAlertsModal';
 import { ToastProvider, useToast } from './components/Toast';
+import { onForegroundGoalAlert } from './services/pushNotifications';
 
 import { Dashboard } from './pages/Dashboard';
 import { Players } from './pages/Players';
@@ -32,6 +34,7 @@ const AppContent: React.FC = () => {
   const [dataset, setDataset] = useState<SeasonDataset | null>(null);
   const [loadingError, setLoadingError] = useState<string | null>(null);
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState<boolean>(false);
+  const [isGoalAlertsModalOpen, setIsGoalAlertsModalOpen] = useState<boolean>(false);
   const [currentRound, setCurrentRound] = useState<number>(1);
 
   // Browser Native Unload & Hard Reload Protection (Safari & Chrome compatible)
@@ -98,6 +101,19 @@ const AppContent: React.FC = () => {
   const handleOpenNotice = () => {
     setIsNoticeModalOpen(true);
   };
+
+  const handleOpenGoalAlerts = () => {
+    setIsGoalAlertsModalOpen(true);
+  };
+
+  // Foreground goal-alert delivery: FCM doesn't auto-show a system
+  // notification while the tab is focused, so surface it as a Toast instead.
+  useEffect(() => {
+    const unsubscribe = onForegroundGoalAlert((title, body) => {
+      showToast(title, 'success', body);
+    });
+    return unsubscribe;
+  }, [showToast]);
 
   const teamsMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -202,6 +218,7 @@ const AppContent: React.FC = () => {
         toggleTheme={toggleTheme}
         season={dataset.meta.season}
         onOpenNotice={handleOpenNotice}
+        onOpenGoalAlerts={handleOpenGoalAlerts}
       />
 
       {/* Sofascore Live Match Ticker Strip */}
@@ -225,6 +242,13 @@ const AppContent: React.FC = () => {
       <SeasonNoticeModal
         isOpen={isNoticeModalOpen}
         onClose={handleCloseNotice}
+        dataset={dataset}
+      />
+
+      {/* Goal Alerts (Push Notification) Modal */}
+      <GoalAlertsModal
+        isOpen={isGoalAlertsModalOpen}
+        onClose={() => setIsGoalAlertsModalOpen(false)}
         dataset={dataset}
       />
     </div>
