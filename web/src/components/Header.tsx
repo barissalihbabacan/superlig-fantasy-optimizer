@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavTab } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -40,6 +40,22 @@ export const Header: React.FC<HeaderProps> = ({
   const { currentUser, login, logout, isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isUserMenuOpen]);
 
   const navItems: { id: NavTab; label: string; icon: React.ReactNode }[] = [
     { id: 'dashboard', label: 'Maç Merkezi', icon: <LayoutDashboard className="w-4 h-4" /> },
@@ -130,7 +146,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* User Auth Profile / Login */}
           {isAuthenticated && currentUser ? (
-            <div className="relative">
+            <div className="relative" ref={userMenuRef}>
               <button
                 id="user-profile-btn"
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -156,26 +172,31 @@ export const Header: React.FC<HeaderProps> = ({
               {isUserMenuOpen && (
                 <div
                   id="user-dropdown-menu"
-                  className="absolute right-0 mt-2 w-48 rounded-xl bg-[var(--bg-surface-elevated)] border border-[var(--border)] shadow-xl py-1.5 z-50 animate-fadeIn"
+                  className="absolute right-0 mt-2 w-52 rounded-xl bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] shadow-2xl py-2 z-50 animate-fadeIn"
+                  style={{
+                    backgroundColor: 'var(--bg-surface-elevated)',
+                  }}
                 >
-                  <div className="px-3 py-2 border-b border-[var(--border)]">
+                  <div className="px-3.5 py-2 border-b border-[var(--border)]">
                     <p className="text-xs font-bold text-[var(--text-primary)] truncate">
                       {currentUser.displayName || 'Kullanıcı'}
                     </p>
-                    <p className="text-[10px] text-[var(--text-muted)] truncate">
+                    <p className="text-[11px] text-[var(--text-muted)] truncate">
                       {currentUser.email}
                     </p>
                   </div>
-                  <button
-                    onClick={async () => {
-                      setIsUserMenuOpen(false);
-                      await logout();
-                    }}
-                    className="w-full text-left px-3 py-2 text-xs text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 transition-colors cursor-pointer"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span>Çıkış Yap</span>
-                  </button>
+                  <div className="p-1">
+                    <button
+                      onClick={async () => {
+                        setIsUserMenuOpen(false);
+                        await logout();
+                      }}
+                      className="w-full text-left px-3 py-2 text-xs font-medium text-rose-400 hover:bg-rose-500/15 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Çıkış Yap</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
