@@ -24,6 +24,7 @@ node_modules/
 
 # Agent / Tooling
 .claude/
+.agents/
 .firebase/
 
 # wasm-pack build çıktısı (crates/wasm-bindings'ten derlenir, commit edilmez)
