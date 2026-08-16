@@ -275,7 +275,9 @@ fn invalid_position_and_negative_statistics_are_rejected_by_json_deserialization
     let invalid_position = players.replace("\"Forward\"", "\"UnknownPosition\"");
     assert!(serde_json::from_str::<PlayerDataset>(&invalid_position).is_err());
 
-    let invalid_json = match_contents("example-match-001.json").replace("\"minutes\":90", "\"minutes\":-1").replace("\"minutes\": 90", "\"minutes\": -1");
+    let invalid_json = match_contents("example-match-001.json")
+        .replace("\"minutes\":90", "\"minutes\":-1")
+        .replace("\"minutes\": 90", "\"minutes\": -1");
     assert!(serde_json::from_str::<MatchDataset>(&invalid_json).is_err());
 }
 

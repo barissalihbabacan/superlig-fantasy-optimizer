@@ -589,8 +589,16 @@ fn write_test_matches(root: &std::path::Path) {
             }
         ]
     });
-    fs::write(root.join("matches/example-match-001.json"), serde_json::to_string_pretty(&match1).unwrap()).unwrap();
-    fs::write(root.join("matches/example-match-002.json"), serde_json::to_string_pretty(&match2).unwrap()).unwrap();
+    fs::write(
+        root.join("matches/example-match-001.json"),
+        serde_json::to_string_pretty(&match1).unwrap(),
+    )
+    .unwrap();
+    fs::write(
+        root.join("matches/example-match-002.json"),
+        serde_json::to_string_pretty(&match2).unwrap(),
+    )
+    .unwrap();
 }
 
 fn write_test_fixtures(root: &std::path::Path) {
