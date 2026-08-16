@@ -460,15 +460,7 @@ fn copy_dataset() -> std::path::PathBuf {
         )
         .unwrap();
     }
-    for file in ["example-match-001.json", "example-match-002.json"] {
-        fs::copy(
-            std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-                .join("data/2026-27/matches")
-                .join(file),
-            root.join("matches").join(file),
-        )
-        .unwrap();
-    }
+    write_test_matches(&root);
 
     for file in ["teams.json", "players.json"] {
         normalize_team_ids(&root.join(file));
@@ -478,6 +470,127 @@ fn copy_dataset() -> std::path::PathBuf {
         normalize_match(&root, file);
     }
     root
+}
+
+fn write_test_matches(root: &std::path::Path) {
+    let match1 = serde_json::json!({
+        "schema_version": 1,
+        "season": "2026-27",
+        "source": { "name": "Synthetic Fixture", "retrieved_at": "2026-08-10T21:00:00+03:00" },
+        "match_id": "example-match-001",
+        "status": "finished",
+        "score": {"home": 3, "away": 2},
+        "players": [
+            {
+                "player_id": "example-forward",
+                "team_id": "example-team-a",
+                "minutes": 90,
+                "goals": 2,
+                "assists": 0,
+                "saves": 0,
+                "penalty_saves": 0,
+                "penalty_misses": 0,
+                "goals_conceded": 0,
+                "yellow_cards": 0,
+                "red_cards": 0,
+                "own_goals": 0,
+                "clean_sheet": false,
+                "bonus_rank": 1
+            },
+            {
+                "player_id": "example-defender",
+                "team_id": "example-team-a",
+                "minutes": 90,
+                "goals": 1,
+                "assists": 0,
+                "saves": 0,
+                "penalty_saves": 0,
+                "penalty_misses": 0,
+                "goals_conceded": 2,
+                "yellow_cards": 0,
+                "red_cards": 0,
+                "own_goals": 0,
+                "clean_sheet": false,
+                "bonus_rank": 2
+            },
+            {
+                "player_id": "example-goalkeeper",
+                "team_id": "example-team-b",
+                "minutes": 90,
+                "goals": 0,
+                "assists": 0,
+                "saves": 4,
+                "penalty_saves": 0,
+                "penalty_misses": 0,
+                "goals_conceded": 3,
+                "yellow_cards": 0,
+                "red_cards": 0,
+                "own_goals": 0,
+                "clean_sheet": false,
+                "bonus_rank": 3
+            },
+            {
+                "player_id": "example-midfielder",
+                "team_id": "example-team-b",
+                "minutes": 90,
+                "goals": 2,
+                "assists": 0,
+                "saves": 0,
+                "penalty_saves": 0,
+                "penalty_misses": 0,
+                "goals_conceded": 0,
+                "yellow_cards": 0,
+                "red_cards": 0,
+                "own_goals": 0,
+                "clean_sheet": false,
+                "bonus_rank": null
+            }
+        ]
+    });
+    let match2 = serde_json::json!({
+        "schema_version": 1,
+        "season": "2026-27",
+        "source": { "name": "Synthetic Fixture", "retrieved_at": "2026-08-10T21:00:00+03:00" },
+        "match_id": "example-match-002",
+        "status": "finished",
+        "score": {"home": 1, "away": 0},
+        "players": [
+            {
+                "player_id": "example-goalkeeper",
+                "team_id": "example-team-b",
+                "minutes": 90,
+                "goals": 0,
+                "assists": 0,
+                "saves": 3,
+                "penalty_saves": 0,
+                "penalty_misses": 0,
+                "goals_conceded": 0,
+                "yellow_cards": 0,
+                "red_cards": 0,
+                "own_goals": 0,
+                "clean_sheet": true,
+                "bonus_rank": 1
+            },
+            {
+                "player_id": "example-forward-c",
+                "team_id": "example-team-c",
+                "minutes": 90,
+                "goals": 0,
+                "assists": 0,
+                "saves": 0,
+                "penalty_saves": 0,
+                "penalty_misses": 0,
+                "goals_conceded": 1,
+                "yellow_cards": 0,
+                "red_cards": 0,
+                "own_goals": 0,
+                "clean_sheet": false,
+                "bonus_rank": 2
+            }
+        ]
+    });
+    fs::write(root.join("matches/example-match-001.json"), serde_json::to_string_pretty(&match1).unwrap()).unwrap();
+    fs::write(root.join("matches/example-match-002.json"), serde_json::to_string_pretty(&match2).unwrap()).unwrap();
 }
 
 fn write_test_fixtures(root: &std::path::Path) {

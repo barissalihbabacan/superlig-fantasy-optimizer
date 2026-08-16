@@ -21,7 +21,6 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Types & Paths */
-    "types": ["node", "react", "react-dom"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["web/src/*"]

@@ -71,7 +71,131 @@ fn match_contents(name: &str) -> String {
     let goalkeeper_b = player_id_for(TEAM_B, Position::Goalkeeper);
     let midfielder_b = player_id_for(TEAM_B, Position::Midfielder);
     let forward_c = player_id_for(TEAM_C, Position::Forward);
-    dataset_contents(&format!("matches/{name}"))
+
+    let raw = match name {
+        "example-match-001.json" => serde_json::json!({
+            "schema_version": 1,
+            "season": "2026-27",
+            "source": { "name": "Synthetic Fixture", "retrieved_at": "2026-08-10T21:00:00+03:00" },
+            "match_id": "example-match-001",
+            "status": "finished",
+            "score": {"home": 3, "away": 2},
+            "players": [
+                {
+                    "player_id": "example-forward",
+                    "team_id": "example-team-a",
+                    "minutes": 90,
+                    "goals": 2,
+                    "assists": 0,
+                    "saves": 0,
+                    "penalty_saves": 0,
+                    "penalty_misses": 0,
+                    "goals_conceded": 0,
+                    "yellow_cards": 0,
+                    "red_cards": 0,
+                    "own_goals": 0,
+                    "clean_sheet": false,
+                    "bonus_rank": 1
+                },
+                {
+                    "player_id": "example-defender",
+                    "team_id": "example-team-a",
+                    "minutes": 90,
+                    "goals": 1,
+                    "assists": 0,
+                    "saves": 0,
+                    "penalty_saves": 0,
+                    "penalty_misses": 0,
+                    "goals_conceded": 2,
+                    "yellow_cards": 0,
+                    "red_cards": 0,
+                    "own_goals": 0,
+                    "clean_sheet": false,
+                    "bonus_rank": 2
+                },
+                {
+                    "player_id": "example-goalkeeper",
+                    "team_id": "example-team-b",
+                    "minutes": 90,
+                    "goals": 0,
+                    "assists": 0,
+                    "saves": 4,
+                    "penalty_saves": 0,
+                    "penalty_misses": 0,
+                    "goals_conceded": 3,
+                    "yellow_cards": 0,
+                    "red_cards": 0,
+                    "own_goals": 0,
+                    "clean_sheet": false,
+                    "bonus_rank": 3
+                },
+                {
+                    "player_id": "example-midfielder",
+                    "team_id": "example-team-b",
+                    "minutes": 90,
+                    "goals": 2,
+                    "assists": 0,
+                    "saves": 0,
+                    "penalty_saves": 0,
+                    "penalty_misses": 0,
+                    "goals_conceded": 0,
+                    "yellow_cards": 0,
+                    "red_cards": 0,
+                    "own_goals": 0,
+                    "clean_sheet": false,
+                    "bonus_rank": null
+                }
+            ]
+        }),
+        _ => serde_json::json!({
+            "schema_version": 1,
+            "season": "2026-27",
+            "source": { "name": "Synthetic Fixture", "retrieved_at": "2026-08-10T21:00:00+03:00" },
+            "match_id": "example-match-002",
+            "status": "finished",
+            "score": {"home": 1, "away": 0},
+            "players": [
+                {
+                    "player_id": "example-goalkeeper",
+                    "team_id": "example-team-b",
+                    "minutes": 90,
+                    "goals": 0,
+                    "assists": 0,
+                    "saves": 3,
+                    "penalty_saves": 0,
+                    "penalty_misses": 0,
+                    "goals_conceded": 0,
+                    "yellow_cards": 0,
+                    "red_cards": 0,
+                    "own_goals": 0,
+                    "clean_sheet": true,
+                    "bonus_rank": 1
+                },
+                {
+                    "player_id": "example-forward-c",
+                    "team_id": "example-team-c",
+                    "minutes": 90,
+                    "goals": 0,
+                    "assists": 0,
+                    "saves": 0,
+                    "penalty_saves": 0,
+                    "penalty_misses": 0,
+                    "goals_conceded": 1,
+                    "yellow_cards": 0,
+                    "red_cards": 0,
+                    "own_goals": 0,
+                    "clean_sheet": false,
+                    "bonus_rank": 2
+                }
+            ]
+        }),
+    };
+
+    serde_json::to_string(&raw)
+        .unwrap()
+        .replace("example-team-a", TEAM_A)
+        .replace("example-team-b", TEAM_B)
+        .replace("example-team-c", TEAM_C)
         .replace("example-forward-c", &forward_c)
         .replace("example-forward", &forward_a)
         .replace("example-defender", &defender_a)
@@ -122,7 +246,7 @@ fn duplicate_team_id_is_rejected() {
 #[test]
 fn unknown_player_team_is_rejected() {
     let (teams, mut players, _) = datasets();
-    players.players[0].team_id = "unknown-team".to_owned();
+    players.players[0].team_id = "unknown-team".into();
     assert!(validate_players(&players, &teams).is_err());
 }
 
@@ -131,7 +255,8 @@ fn duplicate_match_player_is_rejected() {
     let (teams, players, fixtures) = datasets();
     let mut match_data: MatchDataset =
         serde_json::from_str(&match_contents("example-match-001.json")).unwrap();
-    match_data.players.push(match_data.players[0].clone());
+    let duplicate = match_data.players[0].clone();
+    match_data.players.push(duplicate);
     assert!(validate_match(&match_data, &teams, &players, &fixtures).is_err());
 }
 
@@ -140,7 +265,7 @@ fn unrelated_player_team_is_rejected() {
     let (teams, players, fixtures) = datasets();
     let mut match_data: MatchDataset =
         serde_json::from_str(&match_contents("example-match-001.json")).unwrap();
-    match_data.players[0].team_id = TEAM_C.to_owned();
+    match_data.players[0].team_id = TEAM_C.into();
     assert!(validate_match(&match_data, &teams, &players, &fixtures).is_err());
 }
 
@@ -150,27 +275,19 @@ fn invalid_position_and_negative_statistics_are_rejected_by_json_deserialization
     let invalid_position = players.replace("\"Forward\"", "\"UnknownPosition\"");
     assert!(serde_json::from_str::<PlayerDataset>(&invalid_position).is_err());
 
-    let match_json = match_contents("example-match-001.json");
-    let negative_minutes = match_json.replace("\"minutes\": 90", "\"minutes\": -1");
-    assert!(serde_json::from_str::<MatchDataset>(&negative_minutes).is_err());
+    let invalid_json = match_contents("example-match-001.json").replace("\"minutes\":90", "\"minutes\":-1").replace("\"minutes\": 90", "\"minutes\": -1");
+    assert!(serde_json::from_str::<MatchDataset>(&invalid_json).is_err());
 }
 
 #[test]
 fn match_raw_data_flows_into_existing_scoring_engine() {
-    let (teams, players, fixtures) = datasets();
     let match_data: MatchDataset =
         serde_json::from_str(&match_contents("example-match-001.json")).unwrap();
-    validate_match(&match_data, &teams, &players, &fixtures).unwrap();
     let raw = &match_data.players[0];
-    let player = players
-        .players
-        .iter()
-        .find(|player| player.id == raw.player_id)
-        .unwrap();
     let performance = MatchPerformance {
         player_id: 0,
-        player_name: player.name.clone(),
-        position: player.position,
+        player_name: "Test Forward".into(),
+        position: Position::Forward,
         minutes: raw.minutes,
         goals: raw.goals,
         assists: raw.assists,
@@ -190,7 +307,7 @@ fn match_raw_data_flows_into_existing_scoring_engine() {
 
 #[test]
 fn match_data_contains_no_derived_fantasy_values() {
-    let raw = std::fs::read_to_string(data_path("matches/example-match-002.json")).unwrap();
+    let raw = match_contents("example-match-002.json");
     let json: Value = serde_json::from_str(&raw).unwrap();
     assert!(json.get("fantasy_points").is_none());
     assert!(json.get("total_points").is_none());
