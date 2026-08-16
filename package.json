@@ -29,6 +29,7 @@
     "autoprefixer": "^10.5.4",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "jsdom": "^25.0.1",
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "lodash.merge": "^4.6.2",
     "postcss": "^8.5.26",
