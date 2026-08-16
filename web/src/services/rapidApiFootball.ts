@@ -1,7 +1,13 @@
 /**
- * Free API Live Football Data (RapidAPI) Service
- * Official integration for legal, automated Süper Lig data fetching.
+ * Free API Live Football Data (RapidAPI) client.
  * Provider: https://rapidapi.com/Creativesdev/api/free-api-live-football-data
+ *
+ * Requests go through `functions/src/index.ts` (Firebase Hosting rewrite
+ * `/api/football/**`), which holds the shared RapidAPI key in Secret Manager
+ * and never sends it to the browser. A user can still optionally supply
+ * their own key (for their own, separate quota) via `saveRapidApiKey` — it is
+ * forwarded per-request to our own proxy, not sent directly to RapidAPI from
+ * the client.
  */
 
 export interface RapidApiConfig {
@@ -9,18 +15,13 @@ export interface RapidApiConfig {
   apiHost?: string;
 }
 
-const DEFAULT_API_HOST = 'free-api-live-football-data.p.rapidapi.com';
+const PROXY_BASE_PATH = '/api/football';
 
-// Local storage key for optional user-provided API key
+// Local storage key for an optional user-provided API key (their own quota).
 const RAPIDAPI_KEY_STORAGE = 'superlig_rapidapi_football_key';
 
 export const getSavedRapidApiKey = (): string => {
   if (typeof window === 'undefined') return '';
-  // Yalnızca kullanıcının kendi girdiği anahtar kullanılır. Bir build-time env
-  // değişkeni (ör. VITE_RAPIDAPI_KEY) burada okunmaz: Vite bu tür değişkenleri
-  // istemci bundle'ına düz metin olarak gömer, bu da paylaşılan/takım
-  // anahtarının devtools/network sekmesinden herkes tarafından görülebilmesi
-  // anlamına gelir.
   return localStorage.getItem(RAPIDAPI_KEY_STORAGE) || '';
 };
 
@@ -31,35 +32,24 @@ export const saveRapidApiKey = (key: string): void => {
 };
 
 /**
- * Generic fetcher for Free API Live Football Data
+ * Generic fetcher for Free API Live Football Data, via our own server-side proxy.
  */
 export async function fetchFootballData<T = any>(
   endpoint: string,
   params: Record<string, string | number> = {},
   customApiKey?: string
 ): Promise<{ success: boolean; data?: T; error?: string }> {
-  const apiKey = customApiKey || getSavedRapidApiKey();
-
-  if (!apiKey) {
-    return {
-      success: false,
-      error: 'RapidAPI Anahtarı bulunamadı. Lütfen ücretsiz RapidAPI anahtarınızı girin.',
-    };
-  }
+  const userKey = customApiKey || getSavedRapidApiKey();
 
   const query = new URLSearchParams();
   Object.entries(params).forEach(([k, v]) => query.append(k, String(v)));
 
-  const url = `https://${DEFAULT_API_HOST}/${endpoint}${query.toString() ? `?${query.toString()}` : ''}`;
+  const url = `${PROXY_BASE_PATH}/${endpoint}${query.toString() ? `?${query.toString()}` : ''}`;
 
   try {
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'x-rapidapi-key': apiKey,
-        'x-rapidapi-host': DEFAULT_API_HOST,
-        'Content-Type': 'application/json',
-      },
+      headers: userKey ? { 'x-user-rapidapi-key': userKey } : {},
     });
 
     if (!response.ok) {

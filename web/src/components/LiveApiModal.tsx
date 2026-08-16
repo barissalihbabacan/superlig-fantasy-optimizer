@@ -42,9 +42,9 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
     if (isOpen) {
       const currentKey = getSavedRapidApiKey();
       setApiKey(currentKey);
-      if (currentKey) {
-        handleQuickTest(currentKey, 'standings');
-      }
+      // Sunucu tarafındaki paylaşımlı anahtar sayesinde kişisel bir anahtar
+      // girilmemiş olsa da veriler çekilebilir; her zaman test et.
+      handleQuickTest(currentKey, 'standings');
     }
   }, [isOpen]);
 
@@ -155,7 +155,7 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
                   </span>
                 </div>
                 <p className="text-[11px] text-[var(--text-secondary)]">
-                  Süper Lig canlı skorları, puan durumu, maç olayları ve oyuncu reytingleri doğrudan RapidAPI uç noktalarından beslenir.
+                  Süper Lig canlı skorları, puan durumu, maç olayları ve oyuncu reytingleri sunucu tarafındaki bir vekil (proxy) üzerinden RapidAPI'den beslenir; anahtar hiçbir zaman tarayıcınıza gönderilmez.
                 </p>
               </div>
             </div>
@@ -166,7 +166,7 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1.5">
                 <Key className="w-3.5 h-3.5 text-[var(--color-brand)]" />
-                RapidAPI Anahtarınız (X-RapidAPI-Key)
+                İsteğe Bağlı: Kendi RapidAPI Anahtarınız
               </label>
               <a
                 href="https://rapidapi.com/Creativesdev/api/free-api-live-football-data"
@@ -196,6 +196,9 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
                 <span>{isSaved ? 'Kaydedildi!' : 'Kaydet'}</span>
               </button>
             </div>
+            <p className="text-[10px] text-[var(--text-muted)]">
+              Paylaşımlı kota dolarsa, kendi ücretsiz anahtarınızı girerek kesintisiz devam edebilirsiniz.
+            </p>
           </div>
 
           {/* Test & Trigger Actions */}

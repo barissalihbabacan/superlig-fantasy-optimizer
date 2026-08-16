@@ -30,4 +30,9 @@ node_modules/
 # wasm-pack build çıktısı (crates/wasm-bindings'ten derlenir, commit edilmez)
 web/wasm-pkg/
 
+# Firebase Functions derleme çıktısı ve yerel secret override'ları
+functions/lib/
+functions/.secret.local
+functions/*.local
+
 
