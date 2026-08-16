@@ -3,6 +3,7 @@ import { Fixture, SeasonDataset, Player } from '../types';
 import { getTeamBranding, getShortPosition, formatPrice, formatDateDDMMYYYY } from '../services/dataset';
 import { calculateMatchProbabilities } from '../services/matchPredictor';
 import { checkHighlightAvailability } from '../services/highlightChecker';
+import { CommunityChat } from '../components/CommunityChat';
 import {
   ArrowLeft,
   Calendar,
@@ -11,6 +12,7 @@ import {
   Trophy,
   Activity,
   Users,
+  MessageSquare,
   Play,
   Tv,
   ExternalLink,
@@ -42,7 +44,7 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
   dataset,
   onBack,
 }) => {
-  const [activeTab, setActiveTab] = useState<'fantasy' | 'stats' | 'lineup'>('fantasy');
+  const [activeTab, setActiveTab] = useState<'fantasy' | 'stats' | 'lineup' | 'chat'>('fantasy');
 
   const homeName = dataset.teams.find((t) => t.id === fixture.home_team_id)?.name || fixture.home_team_id;
   const awayName = dataset.teams.find((t) => t.id === fixture.away_team_id)?.name || fixture.away_team_id;
@@ -625,6 +627,17 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
           <Users className="w-3.5 h-3.5" />
           <span>{isFinished ? 'İlk 11\'ler & Kadrolar' : 'Muhtemel İlk 11\'ler (Maç Öncesi)'}</span>
         </button>
+
+        <button
+          id="match-tab-chat-btn"
+          onClick={() => setActiveTab('chat')}
+          className={`btn-sofa text-xs flex items-center gap-1.5 ${
+            activeTab === 'chat' ? 'btn-sofa-primary' : 'btn-sofa-secondary'
+          }`}
+        >
+          <MessageSquare className="w-3.5 h-3.5 text-[var(--color-brand)]" />
+          <span>Canlı Maç Sohbeti & Tribün</span>
+        </button>
       </div>
 
       {/* Tab 1: Fantasy / Pre-Match Ratings Table */}
@@ -856,6 +869,20 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Tab 4: Live Community Match Chat */}
+      {activeTab === 'chat' && (
+        <div id="match-detail-chat-tab" className="animate-fade-in space-y-4">
+          <CommunityChat
+            topicId={`match_${fixture.id}`}
+            title={`${homeName} - ${awayName} Canlı Maç Sohbeti`}
+            subtitle="Bu karşılaşma hakkında anlık pozisyonları, gol tahminlerini ve fantezi puanlarını canlı tartışın."
+            placeholder={`${homeName} - ${awayName} maçı hakkında yorumunu yaz...`}
+            emptyNotice={`Bu maç için henüz bir mesaj yazılmadı. ${homeName} ve ${awayName} taraftarlarına ilk yorumu sen yap!`}
+            className="h-[560px]"
+          />
         </div>
       )}
     </div>
