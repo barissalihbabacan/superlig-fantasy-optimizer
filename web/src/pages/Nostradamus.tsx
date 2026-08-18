@@ -284,7 +284,7 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
       </div>
 
       {/* 3 Quick Metric Cards */}
-      <div id="nostradamus-stats-bar" className="grid grid-cols-3 gap-3 text-center">
+      <div id="nostradamus-stats-bar" className="grid grid-cols-3 gap-3 text-center max-w-2xl mx-auto w-full">
         {/* İSABET */}
         <div id="nostradamus-stat-accuracy" className="sofa-card p-3 space-y-0.5">
           <div className="text-[10px] font-mono font-bold uppercase text-[var(--text-muted)] tracking-wider">
@@ -324,7 +324,7 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
       {/* Mathematical Simulation Model Notice Banner */}
       <div
         id="nostradamus-math-disclaimer-banner"
-        className="p-3.5 rounded-xl bg-indigo-950/20 border border-indigo-500/30 flex items-start gap-3 text-xs leading-relaxed text-slate-300 shadow-sm"
+        className="p-3.5 rounded-xl bg-indigo-950/20 border border-indigo-500/30 flex items-start gap-3 text-xs leading-relaxed text-slate-300 shadow-sm max-w-2xl mx-auto w-full"
       >
         <div className="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 mt-0.5 border border-indigo-500/30">
           <Calculator className="w-3.5 h-3.5" />
@@ -340,20 +340,17 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
       </div>
 
       {/* Match Cards Grouped by Match Day */}
-      <div id="nostradamus-fixtures-container" className="space-y-4">
+      <div id="nostradamus-fixtures-container" className="space-y-4 max-w-2xl mx-auto w-full">
         {fixturesByDay.map((group) => (
           <div key={group.label} className="space-y-2">
-            {/* Day Header */}
-            <div className="flex items-center justify-between text-xs font-mono font-extrabold text-[var(--text-muted)] px-1 pt-1">
-              <span className="flex items-center gap-1.5 uppercase text-[var(--color-brand)]">
-                <Calendar className="w-3.5 h-3.5" />
-                {group.label}
-              </span>
-              {group.dateStr && <span className="text-[11px] text-[var(--text-secondary)]">{group.dateStr}</span>}
+            {/* Day Header - Centered & Aligned with Cards */}
+            <div className="flex items-center gap-1.5 text-xs font-mono font-extrabold text-[var(--color-brand)] px-1 pt-1 uppercase">
+              <Calendar className="w-3.5 h-3.5" />
+              <span>{group.label}</span>
             </div>
 
             {/* Match Cards Single Column List */}
-            <div className="grid grid-cols-1 gap-3 max-w-2xl mx-auto w-full">
+            <div className="grid grid-cols-1 gap-3 w-full">
               {group.fixtures.map((fixture) => {
                 const homeName = teamsMap.get(fixture.home_team_id) || fixture.home_team_id;
                 const awayName = teamsMap.get(fixture.away_team_id) || fixture.away_team_id;
