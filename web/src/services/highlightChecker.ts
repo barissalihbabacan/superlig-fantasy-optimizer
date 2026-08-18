@@ -16,13 +16,29 @@ export const slugifyTeamName = (teamName: string): string => {
     .replace(/-+/g, '-');
 };
 
-// Known verified published highlights registry
-// A match highlight is ONLY marked verified once it is officially live on the broadcast servers
-const VERIFIED_PUBLISHED_HIGHLIGHTS = new Set<string>([
-  '2026-27-w01-01', // Galatasaray 2 - 2 Çorum FK (Verified 200 OK)
-  '2026-27-w01-02', // Konyaspor 0 - 1 Çaykur Rizespor (Verified 200 OK)
-  '2026-27-w01-05', // Kasımpaşa 1 - 1 Trabzonspor (Verified 200 OK)
-]);
+/**
+ * Generates canonical beIN SPORTS match highlight URL template based on match details
+ * Example: https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/genclerbirligi-2-1-fenerbahce-mac-ozeti
+ */
+export const generateBeinHighlightUrl = (
+  round: number,
+  homeName: string,
+  awayName: string,
+  homeScore: number,
+  awayScore: number,
+  season: string = '2026-2027'
+): string => {
+  const normalizedSeason = season.includes('/')
+    ? season.replace('/', '-')
+    : season.length === 7 && season.includes('-')
+      ? `${season.split('-')[0]}-20${season.split('-')[1]}`
+      : season;
+
+  const homeSlug = slugifyTeamName(homeName);
+  const awaySlug = slugifyTeamName(awayName);
+
+  return `https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/${normalizedSeason}/${round}/${homeSlug}-${homeScore}-${awayScore}-${awaySlug}-mac-ozeti`;
+};
 
 export interface HighlightCheckResult {
   isAvailable: boolean;
@@ -32,13 +48,13 @@ export interface HighlightCheckResult {
 }
 
 /**
- * Automatically inspects and resolves highlight availability for any match
- * without requiring manual user input.
+ * Automatically inspects and dynamically resolves highlight availability and canonical URL for any match
  */
 export const checkHighlightAvailability = (
   fixture: Fixture,
   homeName: string,
-  awayName: string
+  awayName: string,
+  season: string = '2026-2027'
 ): HighlightCheckResult => {
   const isFinished = fixture.status === 'finished';
   const hasScore = fixture.score !== undefined && fixture.score !== null;
@@ -47,8 +63,8 @@ export const checkHighlightAvailability = (
     `${homeName} ${awayName} maç özeti beIN SPORTS`
   )}`;
 
-  // If the match is not finished yet, highlights are not applicable
-  if (!isFinished || !hasScore) {
+  // If the match is not finished yet, highlights are unplayed
+  if (!isFinished || !hasScore || !fixture.score) {
     return {
       isAvailable: false,
       status: 'unplayed',
@@ -57,29 +73,22 @@ export const checkHighlightAvailability = (
     };
   }
 
-  // If fixture has an explicit verified highlights_url or is in the verified published list
-  const isExplicitlyVerified = Boolean(fixture.highlights_url) || VERIFIED_PUBLISHED_HIGHLIGHTS.has(fixture.id);
+  // Generate canonical direct URL dynamically with fallback to explicit URL
+  const directUrl =
+    fixture.highlights_url ||
+    generateBeinHighlightUrl(
+      fixture.round,
+      homeName,
+      awayName,
+      fixture.score.home,
+      fixture.score.away,
+      season
+    );
 
-  if (isExplicitlyVerified) {
-    const directUrl =
-      fixture.highlights_url ||
-      `https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/${fixture.round}/${slugifyTeamName(
-        homeName
-      )}-${fixture.score?.home}-${fixture.score?.away}-${slugifyTeamName(awayName)}-mac-ozeti`;
-
-    return {
-      isAvailable: true,
-      status: 'available',
-      url: directUrl,
-      youtubeSearchUrl,
-    };
-  }
-
-  // Automatic Fallback: Match is finished, but highlight publication is still pending from broadcaster
   return {
-    isAvailable: false,
-    status: 'pending',
-    url: null,
+    isAvailable: true,
+    status: 'available',
+    url: directUrl,
     youtubeSearchUrl,
   };
 };

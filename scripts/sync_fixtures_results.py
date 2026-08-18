@@ -179,9 +179,8 @@ def main():
 
                         # Match home and away teams
                         if match_home and match_away:
-                            # Verify if local status or score needs update
-                            current_score = local_f.get("score")
-                            if local_f.get("status") != "finished" or current_score != {"home": home_score_int, "away": away_score_int}:
+                            # Never overwrite already finished matches with external unverified API data
+                            if local_f.get("status") != "finished":
                                 local_f["status"] = "finished"
                                 local_f["score"] = {"home": home_score_int, "away": away_score_int}
                                 updated_count += 1

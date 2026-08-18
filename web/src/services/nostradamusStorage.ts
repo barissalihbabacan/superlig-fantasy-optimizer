@@ -44,6 +44,10 @@ const DEFAULT_RESULTS: MatchResultsStore = {
   '2026-27-w01-03': { status: 'finished', score: { home: 1, away: 1 } },
   '2026-27-w01-04': { status: 'finished', score: { home: 2, away: 1 } },
   '2026-27-w01-05': { status: 'finished', score: { home: 1, away: 1 } },
+  '2026-27-w01-06': { status: 'finished', score: { home: 1, away: 0 } },
+  '2026-27-w01-07': { status: 'finished', score: { home: 3, away: 0 } },
+  '2026-27-w01-08': { status: 'finished', score: { home: 2, away: 0 } },
+  '2026-27-w01-09': { status: 'finished', score: { home: 3, away: 3 } },
 };
 
 // --- IndexedDB Helper ---
