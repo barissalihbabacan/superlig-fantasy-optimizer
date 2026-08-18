@@ -13,7 +13,10 @@
       "away_team_id": "corum-fk",
       "kickoff": "2026-08-14T21:30:00+03:00",
       "status": "finished",
-      "score": { "home": 2, "away": 2 },
+      "score": {
+        "home": 2,
+        "away": 2
+      },
       "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/galatasaray-2-2-corumspor-mac-ozeti"
     },
     {
@@ -23,7 +26,10 @@
       "away_team_id": "caykur-rizespor",
       "kickoff": "2026-08-15T19:00:00+03:00",
       "status": "finished",
-      "score": { "home": 0, "away": 1 },
+      "score": {
+        "home": 0,
+        "away": 1
+      },
       "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/konyaspor-0-1-caykur-rizespor-mac-ozeti"
     },
     {
@@ -33,7 +39,10 @@
       "away_team_id": "alanyaspor",
       "kickoff": "2026-08-15T21:30:00+03:00",
       "status": "finished",
-      "score": { "home": 1, "away": 1 }
+      "score": {
+        "home": 1,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w01-04",
@@ -42,7 +51,10 @@
       "away_team_id": "fenerbahce",
       "kickoff": "2026-08-15T21:30:00+03:00",
       "status": "finished",
-      "score": { "home": 2, "away": 1 }
+      "score": {
+        "home": 2,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w01-05",
@@ -51,7 +63,10 @@
       "away_team_id": "trabzonspor",
       "kickoff": "2026-08-15T19:00:00+03:00",
       "status": "finished",
-      "score": { "home": 1, "away": 1 },
+      "score": {
+        "home": 1,
+        "away": 1
+      },
       "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/kasimpasa-1-1-trabzonspor-mac-ozeti"
     },
     {
@@ -61,7 +76,10 @@
       "away_team_id": "eyupspor",
       "kickoff": "2026-08-16T21:30:00+03:00",
       "status": "finished",
-      "score": { "home": 1, "away": 0 },
+      "score": {
+        "home": 1,
+        "away": 0
+      },
       "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/besiktas-1-0-eyupspor-mac-ozeti"
     },
     {
@@ -71,7 +89,10 @@
       "away_team_id": "erzurumspor-fk",
       "kickoff": "2026-08-16T21:30:00+03:00",
       "status": "finished",
-      "score": { "home": 3, "away": 0 },
+      "score": {
+        "home": 3,
+        "away": 0
+      },
       "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/amed-sportif-faaliyetler-3-0-erzurumspor-fk-mac-ozeti"
     },
     {
@@ -81,7 +102,10 @@
       "away_team_id": "kocaelispor",
       "kickoff": "2026-08-16T19:00:00+03:00",
       "status": "finished",
-      "score": { "home": 2, "away": 0 },
+      "score": {
+        "home": 2,
+        "away": 0
+      },
       "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/istanbul-basaksehir-2-0-kocaelispor-mac-ozeti"
     },
     {
@@ -91,7 +115,10 @@
       "away_team_id": "goztepe",
       "kickoff": "2026-08-17T21:30:00+03:00",
       "status": "finished",
-      "score": { "home": 3, "away": 3 },
+      "score": {
+        "home": 3,
+        "away": 3
+      },
       "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/samsunspor-3-3-goztepe-mac-ozeti"
     },
     {
@@ -99,7 +126,7 @@
       "round": 2,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-21T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -107,7 +134,7 @@
       "round": 2,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-22T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -115,7 +142,7 @@
       "round": 2,
       "home_team_id": "fenerbahce",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-22T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -123,7 +150,7 @@
       "round": 2,
       "home_team_id": "corum-fk",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-22T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -131,7 +158,7 @@
       "round": 2,
       "home_team_id": "eyupspor",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-23T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -139,7 +166,7 @@
       "round": 2,
       "home_team_id": "trabzonspor",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-23T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -147,7 +174,7 @@
       "round": 2,
       "home_team_id": "alanyaspor",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-23T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -155,7 +182,7 @@
       "round": 2,
       "home_team_id": "goztepe",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-24T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -163,7 +190,7 @@
       "round": 2,
       "home_team_id": "kocaelispor",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W02",
+      "kickoff": "2026-08-24T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -171,7 +198,7 @@
       "round": 3,
       "home_team_id": "genclerbirligi",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-28T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -179,7 +206,7 @@
       "round": 3,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-29T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -187,7 +214,7 @@
       "round": 3,
       "home_team_id": "galatasaray",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-29T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -195,7 +222,7 @@
       "round": 3,
       "home_team_id": "konyaspor",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-29T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -203,7 +230,7 @@
       "round": 3,
       "home_team_id": "eyupspor",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-30T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -211,7 +238,7 @@
       "round": 3,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-30T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -219,7 +246,7 @@
       "round": 3,
       "home_team_id": "samsunspor",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-30T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -227,7 +254,7 @@
       "round": 3,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-31T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -235,7 +262,7 @@
       "round": 3,
       "home_team_id": "besiktas",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W03",
+      "kickoff": "2026-08-31T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -243,7 +270,7 @@
       "round": 4,
       "home_team_id": "corum-fk",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-11T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -251,7 +278,7 @@
       "round": 4,
       "home_team_id": "trabzonspor",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-12T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -259,7 +286,7 @@
       "round": 4,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-12T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -267,7 +294,7 @@
       "round": 4,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-12T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -275,7 +302,7 @@
       "round": 4,
       "home_team_id": "kocaelispor",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-13T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -283,7 +310,7 @@
       "round": 4,
       "home_team_id": "fenerbahce",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-13T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -291,7 +318,7 @@
       "round": 4,
       "home_team_id": "kasimpasa",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-13T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -299,7 +326,7 @@
       "round": 4,
       "home_team_id": "goztepe",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-14T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -307,7 +334,7 @@
       "round": 4,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W04",
+      "kickoff": "2026-09-14T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -315,7 +342,7 @@
       "round": 5,
       "home_team_id": "galatasaray",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-18T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -323,7 +350,7 @@
       "round": 5,
       "home_team_id": "genclerbirligi",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-19T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -331,7 +358,7 @@
       "round": 5,
       "home_team_id": "alanyaspor",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-19T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -339,7 +366,7 @@
       "round": 5,
       "home_team_id": "eyupspor",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-19T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -347,7 +374,7 @@
       "round": 5,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-20T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -355,7 +382,7 @@
       "round": 5,
       "home_team_id": "samsunspor",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-20T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -363,7 +390,7 @@
       "round": 5,
       "home_team_id": "besiktas",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-20T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -371,7 +398,7 @@
       "round": 5,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-21T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -379,7 +406,7 @@
       "round": 5,
       "home_team_id": "konyaspor",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W05",
+      "kickoff": "2026-09-21T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -387,7 +414,7 @@
       "round": 6,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-25T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -395,7 +422,7 @@
       "round": 6,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-26T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -403,7 +430,7 @@
       "round": 6,
       "home_team_id": "kasimpasa",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-26T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -411,7 +438,7 @@
       "round": 6,
       "home_team_id": "trabzonspor",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-26T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -419,7 +446,7 @@
       "round": 6,
       "home_team_id": "fenerbahce",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-27T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -427,7 +454,7 @@
       "round": 6,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-27T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -435,7 +462,7 @@
       "round": 6,
       "home_team_id": "goztepe",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-27T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -443,7 +470,7 @@
       "round": 6,
       "home_team_id": "kocaelispor",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-28T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -451,7 +478,7 @@
       "round": 6,
       "home_team_id": "corum-fk",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W06",
+      "kickoff": "2026-09-28T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -459,7 +486,7 @@
       "round": 7,
       "home_team_id": "besiktas",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-02T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -467,7 +494,7 @@
       "round": 7,
       "home_team_id": "genclerbirligi",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-03T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -475,7 +502,7 @@
       "round": 7,
       "home_team_id": "eyupspor",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-03T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -483,7 +510,7 @@
       "round": 7,
       "home_team_id": "galatasaray",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-03T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -491,7 +518,7 @@
       "round": 7,
       "home_team_id": "konyaspor",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-04T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -499,7 +526,7 @@
       "round": 7,
       "home_team_id": "alanyaspor",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-04T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -507,7 +534,7 @@
       "round": 7,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-04T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -515,7 +542,7 @@
       "round": 7,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-05T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -523,7 +550,7 @@
       "round": 7,
       "home_team_id": "samsunspor",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W07",
+      "kickoff": "2026-10-05T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -531,7 +558,7 @@
       "round": 8,
       "home_team_id": "kasimpasa",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-16T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -539,7 +566,7 @@
       "round": 8,
       "home_team_id": "trabzonspor",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-17T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -547,7 +574,7 @@
       "round": 8,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-17T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -555,7 +582,7 @@
       "round": 8,
       "home_team_id": "genclerbirligi",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-17T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -563,7 +590,7 @@
       "round": 8,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-18T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -571,7 +598,7 @@
       "round": 8,
       "home_team_id": "corum-fk",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-18T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -579,7 +606,7 @@
       "round": 8,
       "home_team_id": "kocaelispor",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-18T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -587,7 +614,7 @@
       "round": 8,
       "home_team_id": "fenerbahce",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-19T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -595,7 +622,7 @@
       "round": 8,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W08",
+      "kickoff": "2026-10-19T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -603,7 +630,7 @@
       "round": 9,
       "home_team_id": "samsunspor",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-23T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -611,7 +638,7 @@
       "round": 9,
       "home_team_id": "eyupspor",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-24T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -619,7 +646,7 @@
       "round": 9,
       "home_team_id": "besiktas",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-24T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -627,7 +654,7 @@
       "round": 9,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-24T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -635,7 +662,7 @@
       "round": 9,
       "home_team_id": "goztepe",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-25T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -643,7 +670,7 @@
       "round": 9,
       "home_team_id": "konyaspor",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-25T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -651,7 +678,7 @@
       "round": 9,
       "home_team_id": "galatasaray",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-25T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -659,7 +686,7 @@
       "round": 9,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-26T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -667,7 +694,7 @@
       "round": 9,
       "home_team_id": "alanyaspor",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W09",
+      "kickoff": "2026-10-26T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -675,7 +702,7 @@
       "round": 10,
       "home_team_id": "genclerbirligi",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-10-30T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -683,7 +710,7 @@
       "round": 10,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-10-31T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -691,7 +718,7 @@
       "round": 10,
       "home_team_id": "kasimpasa",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-10-31T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -699,7 +726,7 @@
       "round": 10,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-10-31T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -707,7 +734,7 @@
       "round": 10,
       "home_team_id": "konyaspor",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-11-01T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -715,7 +742,7 @@
       "round": 10,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-11-01T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -723,7 +750,7 @@
       "round": 10,
       "home_team_id": "kocaelispor",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-11-01T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -731,7 +758,7 @@
       "round": 10,
       "home_team_id": "trabzonspor",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-11-02T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -739,7 +766,7 @@
       "round": 10,
       "home_team_id": "fenerbahce",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W10",
+      "kickoff": "2026-11-02T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -747,7 +774,7 @@
       "round": 11,
       "home_team_id": "galatasaray",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-06T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -755,7 +782,7 @@
       "round": 11,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-07T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -763,7 +790,7 @@
       "round": 11,
       "home_team_id": "goztepe",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-07T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -771,7 +798,7 @@
       "round": 11,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-07T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -779,7 +806,7 @@
       "round": 11,
       "home_team_id": "besiktas",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-08T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -787,7 +814,7 @@
       "round": 11,
       "home_team_id": "samsunspor",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-08T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -795,7 +822,7 @@
       "round": 11,
       "home_team_id": "corum-fk",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-08T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -803,7 +830,7 @@
       "round": 11,
       "home_team_id": "alanyaspor",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-09T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -811,7 +838,7 @@
       "round": 11,
       "home_team_id": "eyupspor",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W11",
+      "kickoff": "2026-11-09T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -819,7 +846,7 @@
       "round": 12,
       "home_team_id": "galatasaray",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-20T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -827,7 +854,7 @@
       "round": 12,
       "home_team_id": "kocaelispor",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-21T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -835,7 +862,7 @@
       "round": 12,
       "home_team_id": "konyaspor",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-21T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -843,7 +870,7 @@
       "round": 12,
       "home_team_id": "trabzonspor",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-21T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -851,7 +878,7 @@
       "round": 12,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-22T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -859,7 +886,7 @@
       "round": 12,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-22T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -867,7 +894,7 @@
       "round": 12,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-22T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -875,7 +902,7 @@
       "round": 12,
       "home_team_id": "kasimpasa",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-23T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -883,7 +910,7 @@
       "round": 12,
       "home_team_id": "genclerbirligi",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W12",
+      "kickoff": "2026-11-23T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -891,7 +918,7 @@
       "round": 13,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-27T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -899,7 +926,7 @@
       "round": 13,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-28T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -907,7 +934,7 @@
       "round": 13,
       "home_team_id": "eyupspor",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-28T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -915,7 +942,7 @@
       "round": 13,
       "home_team_id": "fenerbahce",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-28T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -923,7 +950,7 @@
       "round": 13,
       "home_team_id": "samsunspor",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-29T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -931,7 +958,7 @@
       "round": 13,
       "home_team_id": "alanyaspor",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-29T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -939,7 +966,7 @@
       "round": 13,
       "home_team_id": "besiktas",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-29T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -947,7 +974,7 @@
       "round": 13,
       "home_team_id": "goztepe",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-30T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -955,7 +982,7 @@
       "round": 13,
       "home_team_id": "corum-fk",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W13",
+      "kickoff": "2026-11-30T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -963,7 +990,7 @@
       "round": 14,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-04T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -971,7 +998,7 @@
       "round": 14,
       "home_team_id": "besiktas",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-05T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -979,7 +1006,7 @@
       "round": 14,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-05T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -987,7 +1014,7 @@
       "round": 14,
       "home_team_id": "genclerbirligi",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-05T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -995,7 +1022,7 @@
       "round": 14,
       "home_team_id": "trabzonspor",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-06T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1003,7 +1030,7 @@
       "round": 14,
       "home_team_id": "konyaspor",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-06T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1011,7 +1038,7 @@
       "round": 14,
       "home_team_id": "galatasaray",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-06T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1019,7 +1046,7 @@
       "round": 14,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-07T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1027,7 +1054,7 @@
       "round": 14,
       "home_team_id": "kasimpasa",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W14",
+      "kickoff": "2026-12-07T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1035,7 +1062,7 @@
       "round": 15,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-11T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1043,7 +1070,7 @@
       "round": 15,
       "home_team_id": "corum-fk",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-12T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1051,7 +1078,7 @@
       "round": 15,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-12T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1059,7 +1086,7 @@
       "round": 15,
       "home_team_id": "kocaelispor",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-12T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1067,7 +1094,7 @@
       "round": 15,
       "home_team_id": "goztepe",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-13T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1075,7 +1102,7 @@
       "round": 15,
       "home_team_id": "eyupspor",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-13T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1083,7 +1110,7 @@
       "round": 15,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-13T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1091,7 +1118,7 @@
       "round": 15,
       "home_team_id": "fenerbahce",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-14T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1099,7 +1126,7 @@
       "round": 15,
       "home_team_id": "alanyaspor",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W15",
+      "kickoff": "2026-12-14T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1107,7 +1134,7 @@
       "round": 16,
       "home_team_id": "kasimpasa",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-18T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1115,7 +1142,7 @@
       "round": 16,
       "home_team_id": "konyaspor",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-19T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1123,7 +1150,7 @@
       "round": 16,
       "home_team_id": "samsunspor",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-19T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1131,7 +1158,7 @@
       "round": 16,
       "home_team_id": "genclerbirligi",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-19T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1139,7 +1166,7 @@
       "round": 16,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-20T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1147,7 +1174,7 @@
       "round": 16,
       "home_team_id": "besiktas",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-20T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1155,7 +1182,7 @@
       "round": 16,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-20T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1163,7 +1190,7 @@
       "round": 16,
       "home_team_id": "galatasaray",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-21T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1171,7 +1198,7 @@
       "round": 16,
       "home_team_id": "trabzonspor",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W16",
+      "kickoff": "2026-12-21T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1179,7 +1206,7 @@
       "round": 17,
       "home_team_id": "fenerbahce",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-15T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1187,7 +1214,7 @@
       "round": 17,
       "home_team_id": "kocaelispor",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-16T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1195,7 +1222,7 @@
       "round": 17,
       "home_team_id": "alanyaspor",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-16T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1203,7 +1230,7 @@
       "round": 17,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-16T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1211,7 +1238,7 @@
       "round": 17,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-17T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1219,7 +1246,7 @@
       "round": 17,
       "home_team_id": "corum-fk",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-17T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1227,7 +1254,7 @@
       "round": 17,
       "home_team_id": "goztepe",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-17T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1235,7 +1262,7 @@
       "round": 17,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-18T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1243,7 +1270,7 @@
       "round": 17,
       "home_team_id": "eyupspor",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W17",
+      "kickoff": "2027-01-18T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1251,7 +1278,7 @@
       "round": 18,
       "home_team_id": "corum-fk",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-22T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1259,7 +1286,7 @@
       "round": 18,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-23T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1267,7 +1294,7 @@
       "round": 18,
       "home_team_id": "alanyaspor",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-23T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1275,7 +1302,7 @@
       "round": 18,
       "home_team_id": "fenerbahce",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-23T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1283,7 +1310,7 @@
       "round": 18,
       "home_team_id": "trabzonspor",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-24T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1291,7 +1318,7 @@
       "round": 18,
       "home_team_id": "eyupspor",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-24T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1299,7 +1326,7 @@
       "round": 18,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-24T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1307,7 +1334,7 @@
       "round": 18,
       "home_team_id": "kocaelispor",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-25T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1315,7 +1342,7 @@
       "round": 18,
       "home_team_id": "goztepe",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W18",
+      "kickoff": "2027-01-25T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1323,7 +1350,7 @@
       "round": 19,
       "home_team_id": "galatasaray",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-01-29T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1331,7 +1358,7 @@
       "round": 19,
       "home_team_id": "samsunspor",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-01-30T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1339,7 +1366,7 @@
       "round": 19,
       "home_team_id": "konyaspor",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-01-30T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1347,7 +1374,7 @@
       "round": 19,
       "home_team_id": "kasimpasa",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-01-30T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1355,7 +1382,7 @@
       "round": 19,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-01-31T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1363,7 +1390,7 @@
       "round": 19,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-01-31T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1371,7 +1398,7 @@
       "round": 19,
       "home_team_id": "besiktas",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-01-31T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1379,7 +1406,7 @@
       "round": 19,
       "home_team_id": "genclerbirligi",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-02-01T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1387,7 +1414,7 @@
       "round": 19,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W19",
+      "kickoff": "2027-02-01T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1395,7 +1422,7 @@
       "round": 20,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-05T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1403,7 +1430,7 @@
       "round": 20,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-06T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1411,7 +1438,7 @@
       "round": 20,
       "home_team_id": "goztepe",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-06T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1419,7 +1446,7 @@
       "round": 20,
       "home_team_id": "kocaelispor",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-06T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1427,7 +1454,7 @@
       "round": 20,
       "home_team_id": "alanyaspor",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-07T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1435,7 +1462,7 @@
       "round": 20,
       "home_team_id": "kasimpasa",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-07T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1443,7 +1470,7 @@
       "round": 20,
       "home_team_id": "fenerbahce",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-07T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1451,7 +1478,7 @@
       "round": 20,
       "home_team_id": "trabzonspor",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-08T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1459,7 +1486,7 @@
       "round": 20,
       "home_team_id": "corum-fk",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W20",
+      "kickoff": "2027-02-08T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1467,7 +1494,7 @@
       "round": 21,
       "home_team_id": "eyupspor",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-12T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1475,7 +1502,7 @@
       "round": 21,
       "home_team_id": "genclerbirligi",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-13T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1483,7 +1510,7 @@
       "round": 21,
       "home_team_id": "galatasaray",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-13T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1491,7 +1518,7 @@
       "round": 21,
       "home_team_id": "konyaspor",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-13T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1499,7 +1526,7 @@
       "round": 21,
       "home_team_id": "samsunspor",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-14T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1507,7 +1534,7 @@
       "round": 21,
       "home_team_id": "besiktas",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-14T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1515,7 +1542,7 @@
       "round": 21,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-14T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1523,7 +1550,7 @@
       "round": 21,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-15T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1531,7 +1558,7 @@
       "round": 21,
       "home_team_id": "alanyaspor",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W21",
+      "kickoff": "2027-02-15T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1539,7 +1566,7 @@
       "round": 22,
       "home_team_id": "kocaelispor",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-19T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1547,7 +1574,7 @@
       "round": 22,
       "home_team_id": "kasimpasa",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-20T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1555,7 +1582,7 @@
       "round": 22,
       "home_team_id": "goztepe",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-20T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1563,7 +1590,7 @@
       "round": 22,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-20T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1571,7 +1598,7 @@
       "round": 22,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-21T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1579,7 +1606,7 @@
       "round": 22,
       "home_team_id": "corum-fk",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-21T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1587,7 +1614,7 @@
       "round": 22,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-21T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1595,7 +1622,7 @@
       "round": 22,
       "home_team_id": "fenerbahce",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-22T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1603,7 +1630,7 @@
       "round": 22,
       "home_team_id": "trabzonspor",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W22",
+      "kickoff": "2027-02-22T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1611,7 +1638,7 @@
       "round": 23,
       "home_team_id": "samsunspor",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-02-26T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1619,7 +1646,7 @@
       "round": 23,
       "home_team_id": "besiktas",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-02-27T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1627,7 +1654,7 @@
       "round": 23,
       "home_team_id": "konyaspor",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-02-27T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1635,7 +1662,7 @@
       "round": 23,
       "home_team_id": "galatasaray",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-02-27T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1643,7 +1670,7 @@
       "round": 23,
       "home_team_id": "eyupspor",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-02-28T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1651,7 +1678,7 @@
       "round": 23,
       "home_team_id": "genclerbirligi",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-02-28T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1659,7 +1686,7 @@
       "round": 23,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-02-28T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1667,7 +1694,7 @@
       "round": 23,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-03-01T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1675,7 +1702,7 @@
       "round": 23,
       "home_team_id": "alanyaspor",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W23",
+      "kickoff": "2027-03-01T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1683,7 +1710,7 @@
       "round": 24,
       "home_team_id": "kocaelispor",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-05T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1691,7 +1718,7 @@
       "round": 24,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-06T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1699,7 +1726,7 @@
       "round": 24,
       "home_team_id": "goztepe",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-06T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1707,7 +1734,7 @@
       "round": 24,
       "home_team_id": "kasimpasa",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-06T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1715,7 +1742,7 @@
       "round": 24,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-07T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1723,7 +1750,7 @@
       "round": 24,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-07T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1731,7 +1758,7 @@
       "round": 24,
       "home_team_id": "corum-fk",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-07T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1739,7 +1766,7 @@
       "round": 24,
       "home_team_id": "fenerbahce",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-08T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1747,7 +1774,7 @@
       "round": 24,
       "home_team_id": "trabzonspor",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W24",
+      "kickoff": "2027-03-08T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1755,7 +1782,7 @@
       "round": 25,
       "home_team_id": "samsunspor",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-12T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1763,7 +1790,7 @@
       "round": 25,
       "home_team_id": "besiktas",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-13T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1771,7 +1798,7 @@
       "round": 25,
       "home_team_id": "eyupspor",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-13T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1779,7 +1806,7 @@
       "round": 25,
       "home_team_id": "galatasaray",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-13T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1787,7 +1814,7 @@
       "round": 25,
       "home_team_id": "konyaspor",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-14T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1795,7 +1822,7 @@
       "round": 25,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-14T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1803,7 +1830,7 @@
       "round": 25,
       "home_team_id": "goztepe",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-14T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1811,7 +1838,7 @@
       "round": 25,
       "home_team_id": "alanyaspor",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-15T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1819,7 +1846,7 @@
       "round": 25,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W25",
+      "kickoff": "2027-03-15T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1827,7 +1854,7 @@
       "round": 26,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-19T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1835,7 +1862,7 @@
       "round": 26,
       "home_team_id": "kasimpasa",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-20T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1843,7 +1870,7 @@
       "round": 26,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-20T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1851,7 +1878,7 @@
       "round": 26,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-20T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1859,7 +1886,7 @@
       "round": 26,
       "home_team_id": "corum-fk",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-21T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1867,7 +1894,7 @@
       "round": 26,
       "home_team_id": "genclerbirligi",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-21T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1875,7 +1902,7 @@
       "round": 26,
       "home_team_id": "fenerbahce",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-21T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1883,7 +1910,7 @@
       "round": 26,
       "home_team_id": "trabzonspor",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-22T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1891,7 +1918,7 @@
       "round": 26,
       "home_team_id": "kocaelispor",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W26",
+      "kickoff": "2027-03-22T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1899,7 +1926,7 @@
       "round": 27,
       "home_team_id": "alanyaspor",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-02T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1907,7 +1934,7 @@
       "round": 27,
       "home_team_id": "samsunspor",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-03T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1915,7 +1942,7 @@
       "round": 27,
       "home_team_id": "besiktas",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-03T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1923,7 +1950,7 @@
       "round": 27,
       "home_team_id": "eyupspor",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-03T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1931,7 +1958,7 @@
       "round": 27,
       "home_team_id": "galatasaray",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-04T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1939,7 +1966,7 @@
       "round": 27,
       "home_team_id": "corum-fk",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-04T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1947,7 +1974,7 @@
       "round": 27,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-04T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1955,7 +1982,7 @@
       "round": 27,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-05T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1963,7 +1990,7 @@
       "round": 27,
       "home_team_id": "goztepe",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W27",
+      "kickoff": "2027-04-05T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1971,7 +1998,7 @@
       "round": 28,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-09T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1979,7 +2006,7 @@
       "round": 28,
       "home_team_id": "kasimpasa",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-10T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1987,7 +2014,7 @@
       "round": 28,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-10T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -1995,7 +2022,7 @@
       "round": 28,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-10T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2003,7 +2030,7 @@
       "round": 28,
       "home_team_id": "genclerbirligi",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-11T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2011,7 +2038,7 @@
       "round": 28,
       "home_team_id": "konyaspor",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-11T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2019,7 +2046,7 @@
       "round": 28,
       "home_team_id": "fenerbahce",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-11T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2027,7 +2054,7 @@
       "round": 28,
       "home_team_id": "trabzonspor",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-12T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2035,7 +2062,7 @@
       "round": 28,
       "home_team_id": "kocaelispor",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W28",
+      "kickoff": "2027-04-12T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2043,7 +2070,7 @@
       "round": 29,
       "home_team_id": "samsunspor",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-16T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2051,7 +2078,7 @@
       "round": 29,
       "home_team_id": "fenerbahce",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-17T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2059,7 +2086,7 @@
       "round": 29,
       "home_team_id": "besiktas",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-17T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2067,7 +2094,7 @@
       "round": 29,
       "home_team_id": "eyupspor",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-17T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2075,7 +2102,7 @@
       "round": 29,
       "home_team_id": "corum-fk",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-18T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2083,7 +2110,7 @@
       "round": 29,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-18T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2091,7 +2118,7 @@
       "round": 29,
       "home_team_id": "goztepe",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-18T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2099,7 +2126,7 @@
       "round": 29,
       "home_team_id": "alanyaspor",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-19T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2107,7 +2134,7 @@
       "round": 29,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W29",
+      "kickoff": "2027-04-19T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2115,7 +2142,7 @@
       "round": 30,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-23T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2123,7 +2150,7 @@
       "round": 30,
       "home_team_id": "kasimpasa",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-24T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2131,7 +2158,7 @@
       "round": 30,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-24T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2139,7 +2166,7 @@
       "round": 30,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-24T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2147,7 +2174,7 @@
       "round": 30,
       "home_team_id": "genclerbirligi",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-25T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2155,7 +2182,7 @@
       "round": 30,
       "home_team_id": "konyaspor",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-25T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2163,7 +2190,7 @@
       "round": 30,
       "home_team_id": "galatasaray",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-25T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2171,7 +2198,7 @@
       "round": 30,
       "home_team_id": "trabzonspor",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-26T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2179,7 +2206,7 @@
       "round": 30,
       "home_team_id": "kocaelispor",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W30",
+      "kickoff": "2027-04-26T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2187,7 +2214,7 @@
       "round": 31,
       "home_team_id": "kocaelispor",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-04-30T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2195,7 +2222,7 @@
       "round": 31,
       "home_team_id": "samsunspor",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-05-01T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2203,7 +2230,7 @@
       "round": 31,
       "home_team_id": "fenerbahce",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-05-01T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2211,7 +2238,7 @@
       "round": 31,
       "home_team_id": "eyupspor",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-05-01T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2219,7 +2246,7 @@
       "round": 31,
       "home_team_id": "corum-fk",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-05-02T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2227,7 +2254,7 @@
       "round": 31,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-05-02T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2235,7 +2262,7 @@
       "round": 31,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-05-02T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2243,7 +2270,7 @@
       "round": 31,
       "home_team_id": "alanyaspor",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-05-03T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2251,7 +2278,7 @@
       "round": 31,
       "home_team_id": "goztepe",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W31",
+      "kickoff": "2027-05-03T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2259,7 +2286,7 @@
       "round": 32,
       "home_team_id": "kasimpasa",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-07T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2267,7 +2294,7 @@
       "round": 32,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-08T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2275,7 +2302,7 @@
       "round": 32,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-08T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2283,7 +2310,7 @@
       "round": 32,
       "home_team_id": "genclerbirligi",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-08T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2291,7 +2318,7 @@
       "round": 32,
       "home_team_id": "konyaspor",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-09T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2299,7 +2326,7 @@
       "round": 32,
       "home_team_id": "galatasaray",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-09T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2307,7 +2334,7 @@
       "round": 32,
       "home_team_id": "besiktas",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-09T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2315,7 +2342,7 @@
       "round": 32,
       "home_team_id": "trabzonspor",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-10T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2323,7 +2350,7 @@
       "round": 32,
       "home_team_id": "samsunspor",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W32",
+      "kickoff": "2027-05-10T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2331,7 +2358,7 @@
       "round": 33,
       "home_team_id": "fenerbahce",
       "away_team_id": "kasimpasa",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-14T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2339,7 +2366,7 @@
       "round": 33,
       "home_team_id": "eyupspor",
       "away_team_id": "konyaspor",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-15T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2347,7 +2374,7 @@
       "round": 33,
       "home_team_id": "gaziantep-fk",
       "away_team_id": "samsunspor",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-15T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2355,7 +2382,7 @@
       "round": 33,
       "home_team_id": "corum-fk",
       "away_team_id": "genclerbirligi",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-15T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2363,7 +2390,7 @@
       "round": 33,
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "istanbul-basaksehir",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-16T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2371,7 +2398,7 @@
       "round": 33,
       "home_team_id": "caykur-rizespor",
       "away_team_id": "besiktas",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-16T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2379,7 +2406,7 @@
       "round": 33,
       "home_team_id": "goztepe",
       "away_team_id": "amed-sportif-faaliyetler",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-16T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2387,7 +2414,7 @@
       "round": 33,
       "home_team_id": "alanyaspor",
       "away_team_id": "galatasaray",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-17T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2395,7 +2422,7 @@
       "round": 33,
       "home_team_id": "kocaelispor",
       "away_team_id": "trabzonspor",
-      "kickoff": "2026-27-W33",
+      "kickoff": "2027-05-17T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2403,7 +2430,7 @@
       "round": 34,
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "fenerbahce",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-21T21:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2411,7 +2438,7 @@
       "round": 34,
       "home_team_id": "kasimpasa",
       "away_team_id": "kocaelispor",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-22T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2419,7 +2446,7 @@
       "round": 34,
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "alanyaspor",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-22T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2427,7 +2454,7 @@
       "round": 34,
       "home_team_id": "genclerbirligi",
       "away_team_id": "caykur-rizespor",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-22T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2435,7 +2462,7 @@
       "round": 34,
       "home_team_id": "galatasaray",
       "away_team_id": "gaziantep-fk",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-23T16:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2443,7 +2470,7 @@
       "round": 34,
       "home_team_id": "konyaspor",
       "away_team_id": "corum-fk",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-23T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2451,7 +2478,7 @@
       "round": 34,
       "home_team_id": "besiktas",
       "away_team_id": "goztepe",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-23T21:30:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2459,7 +2486,7 @@
       "round": 34,
       "home_team_id": "trabzonspor",
       "away_team_id": "erzurumspor-fk",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-24T19:00:00+03:00",
       "status": "scheduled"
     },
     {
@@ -2467,7 +2494,7 @@
       "round": 34,
       "home_team_id": "samsunspor",
       "away_team_id": "eyupspor",
-      "kickoff": "2026-27-W34",
+      "kickoff": "2027-05-24T21:30:00+03:00",
       "status": "scheduled"
     }
   ]
