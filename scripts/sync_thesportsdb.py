@@ -71,29 +71,30 @@ def save_fixtures(data):
             os.remove(tmp_path)
         raise
 
-def fetch_thesportsdb_v2_events(api_key: str):
-    """TheSportsDB v2 API çağrısı: X-API-KEY header ile season schedule sorgular"""
-    url = f"{THESPORTSDB_V2_BASE}/schedule/season/{TURKISH_SUPER_LIG_ID}/{SEASON}"
-    req = urllib.request.Request(url, headers={
-        "X-API-KEY": api_key,
-        "User-Agent": "SuperLigFantasyOptimizer/1.0",
-        "Accept": "application/json"
-    })
-    try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            raw = resp.read().decode("utf-8")
-            data = json.loads(raw)
-            return data.get("schedule", []) or data.get("events", []) or data.get("results", [])
-    except urllib.error.HTTPError as e:
-        # Fallback to events season v1 endpoint if v2 requires paid key
-        if e.code in (400, 401, 403):
-            print(f"[!] TheSportsDB v2 yetkilendirme ({e.code}). Açık endpoint ile sorgulanıyor...")
-            fallback_url = f"https://www.thesportsdb.com/api/v1/json/{api_key}/eventsseason.php?id={TURKISH_SUPER_LIG_ID}&s={SEASON}"
-            req_fb = urllib.request.Request(fallback_url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req_fb, timeout=15) as resp_fb:
-                data_fb = json.loads(resp_fb.read().decode("utf-8"))
-                return data_fb.get("events", []) or []
-        raise
+def fetch_thesportsdb_events(api_key: str):
+    """TheSportsDB üzerinden Süper Lig karşılaşma ve skorlarını sorgular"""
+    # 1. Özel anahtar varsa v2 REST header ile dene
+    if api_key not in ("123", "3", "2", "1") and len(api_key) > 5:
+        url = f"{THESPORTSDB_V2_BASE}/schedule/season/{TURKISH_SUPER_LIG_ID}/{SEASON}"
+        req = urllib.request.Request(url, headers={
+            "X-API-KEY": api_key,
+            "User-Agent": "SuperLigFantasyOptimizer/1.0",
+            "Accept": "application/json"
+        })
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                raw = resp.read().decode("utf-8")
+                data = json.loads(raw)
+                return data.get("schedule", []) or data.get("events", []) or data.get("results", [])
+        except urllib.error.HTTPError:
+            pass
+
+    # 2. Public / Developer Açık API Endpoint (Key: 123)
+    url = f"https://www.thesportsdb.com/api/v1/json/{api_key}/eventsseason.php?id={TURKISH_SUPER_LIG_ID}&s={SEASON}"
+    req = urllib.request.Request(url, headers={"User-Agent": "SuperLigFantasyOptimizer/1.0"})
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+        return data.get("events", []) or []
 
 def main():
     print("=" * 65)
@@ -115,7 +116,7 @@ def main():
     print(f"[*] TheSportsDB v2 üzerinden {SEASON} sezonu sorgulanıyor...")
 
     try:
-        events = fetch_thesportsdb_v2_events(api_key)
+        events = fetch_thesportsdb_events(api_key)
         print(f"[+] TheSportsDB'den {len(events)} karşılaşma verisi alındı.")
     except Exception as e:
         print(f"[-] TheSportsDB API sorgusu başarısız: {e}")
