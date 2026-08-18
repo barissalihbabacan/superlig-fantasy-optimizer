@@ -10,7 +10,6 @@ import {
   PredictionType,
 } from '../services/nostradamusStorage';
 import { calculateMatchProbabilities } from '../services/matchPredictor';
-import { useToast } from '../components/Toast';
 import {
   Brain,
   HelpCircle,
@@ -32,7 +31,6 @@ interface NostradamusProps {
 }
 
 export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixture }) => {
-  const { showToast } = useToast();
   const [selectedRound, setSelectedRound] = useState<number>(1);
   const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
 
@@ -65,13 +63,6 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
     }
     setPredictions(updated);
     saveWeeklyPredictions(selectedRound, updated);
-
-    if (isRemoving) {
-      showToast('Kupon Seçimi Kaldırıldı', 'info', 'Tahmin seçiminiz kupondan çıkarıldı.');
-    } else {
-      const pickLabel = pick === '1' ? 'Ev Sahibi (MS 1)' : pick === 'X' ? 'Beraberlik (X)' : 'Deplasman (MS 2)';
-      showToast('✓ Tahmin Kupona Eklendi', 'success', `${pickLabel} seçimi IndexedDB & LocalStorage'a kaydedildi.`);
-    }
   };
 
   const currentRoundFixtures = useMemo(() => {
@@ -109,18 +100,12 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
 
     setPredictions(updated);
     saveWeeklyPredictions(selectedRound, updated);
-    showToast(
-      '📐 Matematiksel Tahminler Kupona Dolduruldu',
-      'info',
-      'Kadro güçleri ve ev avantajı formülleriyle en yüksek olasılıklı sonuçlar seçildi.'
-    );
   };
 
   // Reset predictions for current round
   const handleResetPredictions = () => {
     setPredictions({});
     saveWeeklyPredictions(selectedRound, {});
-    showToast('🔄 Kupon Sıfırlandı', 'warning', `${selectedRound}. Hafta tahmin seçimleriniz temizlendi.`);
   };
 
   // Determine actual outcome for a match if finished

@@ -7,8 +7,6 @@ import { MatchTicker } from './components/MatchTicker';
 import { Footer } from './components/Footer';
 import { SeasonNoticeModal } from './components/SeasonNoticeModal';
 import { GoalAlertsModal } from './components/GoalAlertsModal';
-import { ToastProvider, useToast } from './components/Toast';
-import { onForegroundGoalAlert } from './services/pushNotifications';
 
 import { Dashboard } from './pages/Dashboard';
 import { Players } from './pages/Players';
@@ -21,8 +19,7 @@ import { MatchDetail } from './pages/MatchDetail';
 
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
-const AppContent: React.FC = () => {
-  const { showToast } = useToast();
+export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [activeFixture, setActiveFixture] = useState<Fixture | null>(null);
 
@@ -40,7 +37,6 @@ const AppContent: React.FC = () => {
   // Browser Native Unload & Hard Reload Protection (Safari & Chrome compatible)
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      // Standard browser confirmation prompt for Safari / Chrome / Firefox
       e.preventDefault();
       e.returnValue = '';
       return '';
@@ -61,23 +57,12 @@ const AppContent: React.FC = () => {
       if (!hasSeenNotice) {
         setIsNoticeModalOpen(true);
       }
-
-      // Show bottom-right protection toast after load / hard reset
-      const timer = setTimeout(() => {
-        showToast(
-          '🛡️ Verileriniz Güvende',
-          'success',
-          'Kupon ve optimizasyon seçimleriniz IndexedDB & LocalStorage korumasıyla yüklendi.'
-        );
-      }, 700);
-
-      return () => clearTimeout(timer);
     } catch (err: unknown) {
       console.error(err);
       const message = err instanceof Error ? err.message : 'Dataset yüklenemedi.';
       setLoadingError(message);
     }
-  }, [showToast]);
+  }, []);
 
   // Sync theme attribute on <html> element
   useEffect(() => {
@@ -106,15 +91,6 @@ const AppContent: React.FC = () => {
   const handleOpenGoalAlerts = () => {
     setIsGoalAlertsModalOpen(true);
   };
-
-  // Foreground goal-alert delivery: FCM doesn't auto-show a system
-  // notification while the tab is focused, so surface it as a Toast instead.
-  useEffect(() => {
-    const unsubscribe = onForegroundGoalAlert((title, body) => {
-      showToast(title, 'success', body);
-    });
-    return unsubscribe;
-  }, [showToast]);
 
   const teamsMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -257,13 +233,5 @@ const AppContent: React.FC = () => {
         dataset={dataset}
       />
     </div>
-  );
-};
-
-export const App: React.FC = () => {
-  return (
-    <ToastProvider>
-      <AppContent />
-    </ToastProvider>
   );
 };

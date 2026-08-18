@@ -4,7 +4,6 @@ import { Pitch } from '../components/Pitch';
 import { runOptimizer, OptimizationResult } from '../services/optimizer';
 import { initOptimizerWasm, cancelOptimization } from '../services/optimizerWasm';
 import { formatPrice, getTeamBranding, getShortPosition } from '../services/dataset';
-import { useToast } from '../components/Toast';
 import {
   Zap,
   Sliders,
@@ -18,7 +17,6 @@ interface OptimizerProps {
 }
 
 export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
-  const { showToast } = useToast();
   const budget = 10000; // Strictly 100.0M TL according to official Süper Lig Fantasy rules
   const [formation, setFormation] = useState<FormationType>('3-5-2');
   const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
@@ -46,17 +44,8 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
     try {
       const optRes = await runOptimizer(dataset.players, dataset.projections, budget, formation);
       setResult(optRes);
-      showToast(
-        '⚡ Kadro Optimize Edildi',
-        'optimizer',
-        `${optRes.formation} dizilişinde ${formatPrice(optRes.totalPrice)} bütçeyle kadro hazırlandı.`
-      );
     } catch (error) {
-      showToast(
-        'Optimizasyon Hatası',
-        'warning',
-        error instanceof Error ? error.message : String(error)
-      );
+      console.error('Optimizasyon Hatası:', error);
     } finally {
       setIsOptimizing(false);
     }
@@ -65,7 +54,6 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
   const handleCancelClick = () => {
     cancelOptimization();
     setIsOptimizing(false);
-    showToast('Optimizasyon İptal Edildi', 'warning', 'Hesaplama durduruldu.');
   };
 
   return (
@@ -78,255 +66,218 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
             Kadro Optimizer'ı
           </h2>
         </div>
-        <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-          100.0M ₺ bütçe ve takım kısıtları altında matematiksel olarak en yüksek expected points getiren kadroyu belirler.
+        <p className="text-xs text-[var(--text-secondary)] mt-1">
+          Resmi kurallara uygun (100.0M ₺ bütçe, maksimum 3 oyuncu/takım) en yüksek beklenen puanı (xP) veren ilk 11 ve kaptan seçimini hesaplar.
         </p>
       </div>
 
-      {/* Main 2-Column Grid (Full Fluid Width) */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        {/* Left Column: Controls & Squad Breakdown (4 cols) */}
-        <div id="optimizer-controls-column" className="lg:col-span-4 w-full flex flex-col justify-between h-full space-y-4">
-          <div className="space-y-4">
-            {/* Controls Card */}
-            <div id="optimizer-settings-card" className="sofa-card p-4 space-y-4">
-              <div className="flex items-center gap-2 text-xs font-extrabold uppercase text-[var(--text-secondary)] pb-2 border-b border-[var(--border)]">
-                <Sliders className="w-3.5 h-3.5 text-[var(--color-brand)]" />
-                <span>Optimizasyon Ayarları</span>
-              </div>
-
-              {/* Fixed Official League Budget */}
-              <div className="space-y-1 p-2.5 rounded bg-[var(--bg-surface)] border border-[var(--border)]">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-[var(--text-secondary)]">Resmi Kadro Bütçesi</span>
-                  <span id="optimizer-budget-display" className="font-mono font-black text-sm text-[var(--color-brand)]">
-                    100.0M ₺
-                  </span>
-                </div>
-                <div className="text-[10px] text-[var(--text-muted)] font-mono">
-                  Süper Lig Fantasy kuralları gereği maksimum bütçe 100.0M ₺ ile sınırlıdır.
-                </div>
-              </div>
-
-              {/* Formations Grid */}
-              <div className="space-y-2">
-                <span className="text-xs font-bold text-[var(--text-secondary)] block">
-                  Diziliş / Formasyon
-                </span>
-                <div id="optimizer-formation-presets" className="grid grid-cols-3 gap-1.5">
-                  {formations.map((fmt) => (
-                    <button
-                      key={fmt}
-                      id={`formation-select-btn-${fmt}`}
-                      onClick={() => setFormation(fmt)}
-                      className={`py-1.5 px-2 rounded text-xs font-mono font-bold border transition-all ${
-                        formation === fmt
-                          ? 'bg-[var(--color-brand)] text-black border-[var(--color-brand)]'
-                          : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border)] hover:text-white'
-                      }`}
-                    >
-                      {fmt}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Optimize Trigger */}
-              <button
-                id="optimizer-submit-btn"
-                onClick={handleOptimizeClick}
-                disabled={isOptimizing}
-                className="w-full btn-sofa btn-sofa-primary text-xs py-2.5 shadow font-extrabold"
+      {/* Control Configuration Bar */}
+      <div id="optimizer-control-bar" className="sofa-card p-4 sm:p-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Formation Selector */}
+            <div className="flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-[var(--color-brand)]" />
+              <label htmlFor="formation-select" className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono">
+                Diziliş:
+              </label>
+              <select
+                id="formation-select"
+                value={formation}
+                onChange={(e) => setFormation(e.target.value as FormationType)}
+                className="form-select-sofa font-mono text-xs font-bold"
               >
-                {isOptimizing ? 'Hesaplanıyor...' : '⚡ Optimize Kadro Oluştur'}
+                {formations.map((f) => (
+                  <option key={f} value={f}>
+                    {f === 'Auto' ? '⚡ Otomatik En İyisi' : f}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Locked Constraints Badge */}
+            <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] bg-[var(--bg-surface)] px-3 py-1.5 rounded-lg border border-[var(--border)]">
+              <Shield className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Bütçe: <strong>100.0M ₺</strong> · Takım Limiti: <strong>Max 3</strong></span>
+            </div>
+          </div>
+
+          {/* Action Trigger Buttons */}
+          <div className="flex items-center gap-2">
+            {isOptimizing && (
+              <button
+                id="optimizer-cancel-btn"
+                onClick={handleCancelClick}
+                className="btn-sofa btn-sofa-secondary bg-rose-950/40 text-rose-300 border-rose-500/30 hover:bg-rose-900/60 text-xs px-3 py-2 flex items-center gap-1.5 font-bold"
+              >
+                <XCircle className="w-4 h-4" />
+                <span>İptal Et</span>
               </button>
-
-              {isOptimizing && (
-                <div id="optimizer-computing-notice" className="space-y-2">
-                  <p className="text-[10px] text-[var(--text-muted)] font-mono leading-relaxed">
-                    Oyuncu puanları arasındaki fark azken (ör. sezon başında gerçek maç verisi
-                    henüz yokken) bu hesaplama birkaç dakika sürebilir. Sekme kilitlenmez,
-                    dilediğiniz zaman iptal edebilirsiniz.
-                  </p>
-                  <button
-                    id="optimizer-cancel-btn"
-                    onClick={handleCancelClick}
-                    className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded text-xs font-bold border border-[var(--border)] text-[var(--text-secondary)] hover:text-white hover:border-red-500/50 transition-all"
-                  >
-                    <XCircle className="w-3.5 h-3.5" />
-                    İptal Et
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Result Metrics Card */}
-            {result && (
-              <div id="optimizer-result-metrics" className="sofa-card p-4 space-y-3 border-emerald-500/30 bg-emerald-950/10">
-                <div className="flex items-center gap-1.5 text-xs font-extrabold text-emerald-400">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Kadro Başarıyla Oluşturuldu</span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                  <div className="p-2.5 rounded bg-[var(--bg-card)] border border-[var(--border)]">
-                    <div className="text-[10px] text-[var(--text-muted)] uppercase">Toplam Maliyet</div>
-                    <div id="optimizer-total-cost" className="font-black text-base text-[var(--text-primary)]">
-                      {formatPrice(result.totalPrice)}
-                    </div>
-                    <div className="text-[10px] text-emerald-400 mt-0.5">
-                      Kalan: {formatPrice(budget - result.totalPrice)}
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 rounded bg-[var(--bg-card)] border border-[var(--border)]">
-                    <div className="text-[10px] text-[var(--text-muted)] uppercase">Tahmini Puan</div>
-                    <div id="optimizer-expected-pts" className="font-black text-base text-[var(--color-brand)]">
-                      {result.totalPoints.toFixed(1)} pts
-                    </div>
-                    <div className="text-[10px] text-[var(--text-muted)] mt-0.5">
-                      Formasyon: {result.formation}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Captain Pick Info */}
-                {result.captain && (
-                  <div id="optimizer-captain-badge" className="p-2 rounded bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-amber-400 text-black text-[10px] font-black flex items-center justify-center">
-                        C
-                      </span>
-                      <span className="font-bold text-[var(--text-primary)]">
-                        {result.captain.name}
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-mono text-amber-400 font-bold">2x Puan Kaptanı</span>
-                  </div>
-                )}
-              </div>
             )}
+
+            <button
+              id="optimizer-calculate-btn"
+              onClick={handleOptimizeClick}
+              disabled={isOptimizing}
+              className="btn-sofa btn-sofa-primary text-xs px-5 py-2 flex items-center gap-2 font-bold shadow-lg shadow-[var(--color-brand)]/10"
+            >
+              {isOptimizing ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  <span>Optimizasyon Hesaplanıyor...</span>
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4 fill-current" />
+                  <span>En İyi Kadroyu Oluştur</span>
+                </>
+              )}
+            </button>
           </div>
-
-          {/* Optimizer Rules Reminder (Aligned and Height-Balanced with Pitch Bottom) */}
-          <div id="optimizer-rules-box" className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] text-xs text-[var(--text-muted)] flex flex-col justify-between flex-1 mt-4">
-            <div className="space-y-3">
-              <div className="font-extrabold text-xs uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-2 pb-2 border-b border-[var(--border)]">
-                <Shield className="w-4 h-4 text-[var(--color-brand)]" />
-                <span>Resmi Lig Kuralları & Kısıtları</span>
-              </div>
-
-              <div className="space-y-2.5 text-xs">
-                <div className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] mt-1.5 flex-shrink-0" />
-                  <span className="text-[var(--text-secondary)]"><strong className="text-[var(--text-primary)]">Kadro Büyüklüğü:</strong> 11 Asıl + 4 Yedek olmak üzere 15 oyuncu seçilir.</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] mt-1.5 flex-shrink-0" />
-                  <span className="text-[var(--text-secondary)]"><strong className="text-[var(--text-primary)]">Kulüp Limiti:</strong> Aynı kulüpten en fazla 3 futbolcu alınabilir.</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] mt-1.5 flex-shrink-0" />
-                  <span className="text-[var(--text-secondary)]"><strong className="text-[var(--text-primary)]">Bütçe Tavanı:</strong> Toplam kadro değeri 100.0M ₺ limitini aşamaz.</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
-                  <span className="text-[var(--text-secondary)]"><strong className="text-[var(--text-primary)]">Kaptan (C):</strong> Kaptan seçilen oyuncunun getireceği puan 2 kat sayılır.</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-[var(--border)] text-[10px] font-mono text-[var(--text-muted)] flex items-center justify-between mt-3">
-              <span>Puanlama & Kısıt Motoru</span>
-              <span className="text-emerald-400 font-bold">Doğrulanmış</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Pitch & Lineup Table (8 cols) */}
-        <div id="optimizer-pitch-column" className="lg:col-span-8 w-full h-full flex flex-col space-y-4">
-          <Pitch
-            formation={result?.formation || formation}
-            lineup={result?.startingXI}
-            bench={result?.bench}
-            captainId={result?.captain?.id}
-            viceCaptainId={result?.viceCaptain?.id}
-          />
-
-          {/* Squad Roster Table if generated */}
-          {result && (
-            <div id="optimizer-squad-table-container" className="sofa-card overflow-hidden">
-              <div className="sofa-card-header">
-                <span className="text-xs font-extrabold uppercase text-[var(--text-secondary)]">
-                  İlk 11 ve Yedek Kadro Listesi
-                </span>
-                <span className="text-[10px] font-mono text-[var(--text-muted)]">
-                  15 Oyuncu
-                </span>
-              </div>
-
-              <div className="sofa-table-wrapper border-none rounded-none">
-                <table id="optimizer-lineup-table" className="sofa-table">
-                  <thead>
-                    <tr>
-                      <th>Mevki</th>
-                      <th>Oyuncu</th>
-                      <th>Kulüp</th>
-                      <th>Fiyat</th>
-                      <th className="text-right">Rol</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {result.startingXI.map((player) => {
-                      const brand = getTeamBranding(player.team_id);
-                      const isCaptain = player.id === result.captain?.id;
-                      const isVice = player.id === result.viceCaptain?.id;
-
-                      return (
-                        <tr key={player.id} id={`lineup-row-${player.id}`}>
-                          <td>
-                            <span className="font-mono font-bold text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-subtle)]">
-                              {getShortPosition(player.position)}
-                            </span>
-                          </td>
-                          <td className="font-bold text-[var(--text-primary)]">
-                            {player.name}
-                          </td>
-                          <td>
-                            <span className="flex items-center gap-1.5 font-medium">
-                              <span
-                                className="w-2 h-2 rounded-full"
-                                style={{ background: brand.primaryColor }}
-                              />
-                              {brand.code}
-                            </span>
-                          </td>
-                          <td className="font-mono text-[var(--color-brand)]">
-                            {formatPrice(player.price)}
-                          </td>
-                          <td className="text-right font-mono font-bold text-xs">
-                            {isCaptain ? (
-                              <span className="px-1.5 py-0.5 rounded bg-amber-400 text-black text-[10px]">
-                                Kaptan (C)
-                              </span>
-                            ) : isVice ? (
-                              <span className="px-1.5 py-0.5 rounded bg-slate-200 text-black text-[10px]">
-                                Y. Kaptan (VC)
-                              </span>
-                            ) : (
-                              <span className="text-[10px] text-[var(--text-muted)]">İlk 11</span>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Optimization Results Section */}
+      {result ? (
+        <div id="optimizer-results-section" className="space-y-4">
+          {/* Summary Stat Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="sofa-card p-3.5">
+              <div className="text-[10px] font-mono font-bold uppercase text-[var(--text-muted)]">Toplam Beklenen Puan</div>
+              <div className="text-xl sm:text-2xl font-mono font-black text-emerald-400 mt-1">
+                {result.totalPoints.toFixed(1)} <span className="text-xs font-normal text-[var(--text-muted)]">xP</span>
+              </div>
+            </div>
+
+            <div className="sofa-card p-3.5">
+              <div className="text-[10px] font-mono font-bold uppercase text-[var(--text-muted)]">Toplam Kadro Maliyeti</div>
+              <div className="text-xl sm:text-2xl font-mono font-black text-[var(--text-primary)] mt-1">
+                {formatPrice(result.totalPrice)}
+              </div>
+            </div>
+
+            <div className="sofa-card p-3.5">
+              <div className="text-[10px] font-mono font-bold uppercase text-[var(--text-muted)]">Kalan Bütçe</div>
+              <div className="text-xl sm:text-2xl font-mono font-black text-[var(--color-brand)] mt-1">
+                {formatPrice(budget - result.totalPrice)}
+              </div>
+            </div>
+
+            <div className="sofa-card p-3.5">
+              <div className="text-[10px] font-mono font-bold uppercase text-[var(--text-muted)]">Seçilen Diziliş</div>
+              <div className="text-xl sm:text-2xl font-mono font-black text-[var(--text-primary)] mt-1">
+                {result.formation}
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive Tactical Pitch Visualization */}
+          <Pitch
+            formation={result.formation}
+            lineup={result.startingXI}
+            bench={result.bench}
+            captainId={result.captain?.id}
+            viceCaptainId={result.viceCaptain?.id}
+          />
+
+          {/* Lineup Detail Table */}
+          <div className="sofa-card overflow-hidden">
+            <div className="p-3.5 bg-[var(--bg-surface)] border-b border-[var(--border)] flex items-center justify-between">
+              <h3 className="font-extrabold text-xs uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Optimize Edilmiş 11 Kişilik Kadro Listesi</span>
+              </h3>
+              <span className="text-xs font-mono text-[var(--text-muted)]">
+                Kaptan: <strong className="text-[var(--color-brand)]">{result.captain?.name}</strong> (2x xP)
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[var(--border)] bg-[var(--bg-surface)] text-[var(--text-muted)] font-mono uppercase text-[10px]">
+                    <th className="py-2.5 px-3">Poz</th>
+                    <th className="py-2.5 px-3">Oyuncu</th>
+                    <th className="py-2.5 px-3">Takım</th>
+                    <th className="py-2.5 px-3 text-right">Fiyat</th>
+                    <th className="py-2.5 px-3 text-right">Beklenen Puan (xP)</th>
+                    <th className="py-2.5 px-3 text-center">Rol</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--border)] font-mono">
+                  {result.startingXI.map((player) => {
+                    const isCaptain = player.id === result.captain?.id;
+                    const isVice = player.id === result.viceCaptain?.id;
+                    const teamName = dataset.teams.find((t) => t.id === player.team_id)?.name || player.team_id;
+                    const teamBrand = getTeamBranding(player.team_id);
+                    const rawXp = dataset.projections.get(player.id)?.expected_points || 0;
+                    const effectiveXp = isCaptain ? rawXp * 2 : rawXp;
+
+                    return (
+                      <tr
+                        key={player.id}
+                        className={`hover:bg-[var(--bg-card-hover)] transition-colors ${
+                          isCaptain ? 'bg-[var(--color-brand)]/5' : ''
+                        }`}
+                      >
+                        <td className="py-2 px-3">
+                          <span className="px-1.5 py-0.5 rounded font-bold text-[10px] bg-[var(--bg-surface)] border border-[var(--border)]">
+                            {getShortPosition(player.position)}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3 font-sans font-bold text-[var(--text-primary)]">
+                          {player.name}
+                        </td>
+                        <td className="py-2 px-3">
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className="w-2 h-2 rounded-full flex-shrink-0"
+                              style={{ background: teamBrand.primaryColor }}
+                            />
+                            <span className="text-[var(--text-secondary)] font-sans">{teamName}</span>
+                          </div>
+                        </td>
+                        <td className="py-2 px-3 text-right font-bold text-[var(--text-primary)]">
+                          {formatPrice(player.price)}
+                        </td>
+                        <td className="py-2 px-3 text-right font-black text-emerald-400">
+                          {effectiveXp.toFixed(1)} {isCaptain && <span className="text-[10px] text-[var(--color-brand)] font-bold">(2x)</span>}
+                        </td>
+                        <td className="py-2 px-3 text-center">
+                          {isCaptain ? (
+                            <span className="px-2 py-0.5 rounded-full bg-[var(--color-brand)] text-black font-black text-[10px] shadow-xs">
+                              KAPTAN (C)
+                            </span>
+                          ) : isVice ? (
+                            <span className="px-2 py-0.5 rounded-full bg-[var(--bg-surface)] text-[var(--text-secondary)] border border-[var(--border)] font-bold text-[10px]">
+                              YEDEK (VC)
+                            </span>
+                          ) : (
+                            <span className="text-[var(--text-muted)] text-[10px]">İlk 11</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Empty State */
+        <div className="sofa-card p-12 text-center space-y-3">
+          <div className="w-12 h-12 rounded-full bg-[var(--color-brand)]/10 text-[var(--color-brand)] flex items-center justify-center mx-auto">
+            <Zap className="w-6 h-6" />
+          </div>
+          <h3 className="font-extrabold text-base text-[var(--text-primary)]">
+            Henüz Kadro Hesaplanmadı
+          </h3>
+          <p className="text-xs text-[var(--text-muted)] max-w-md mx-auto">
+            Yukarıdaki <strong>"En İyi Kadroyu Oluştur"</strong> butonuna tıklayarak matematiksel optimizasyon motorunu çalıştırın.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
