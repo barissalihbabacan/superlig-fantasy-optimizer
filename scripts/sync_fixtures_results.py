@@ -153,6 +153,8 @@ def main():
         print(f"[+] API'den {len(api_matches)} maç verisi alındı.")
 
         updated_count = 0
+        for m in api_matches:
+            status_info = m.get("status", {})
             # Only process if API explicitly marks this match as finished and belongs to 2026-27 season
             utc_time = status_info.get("utcTime", "")
             if utc_time and utc_time < "2026-08-01":
