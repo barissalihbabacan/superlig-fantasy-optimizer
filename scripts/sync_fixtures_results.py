@@ -2,6 +2,7 @@
 """
 Automated Süper Lig Match Results & Fixtures Syncer
 Synchronizes live and completed match results with data/2026-27/fixtures.json
+Supports API-Football (v3.football.api-sports.io) and RapidAPI
 """
 
 import os
@@ -11,8 +12,8 @@ import tempfile
 import urllib.request
 import urllib.error
 
-API_HOST = "free-api-live-football-data.p.rapidapi.com"
-SUPER_LIG_ID = "71"
+APISPORTS_HOST = "v3.football.api-sports.io"
+SUPER_LIG_LEAGUE_ID = "203"
 FIXTURES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "2026-27", "fixtures.json")
 
 # Team name / ID mapping
@@ -50,11 +51,9 @@ TEAM_NAME_TO_ID = {
 }
 
 class FetchError(Exception):
-    """RapidAPI isteği (ağ, HTTP veya beklenmeyen yanıt şekli) başarısız olduğunda fırlatılır."""
-
+    """API isteği (ağ, HTTP veya beklenmeyen yanıt şekli) başarısız olduğunda fırlatılır."""
 
 REQUIRED_FIXTURE_FIELDS = ("id", "home_team_id", "away_team_id", "kickoff", "status")
-
 
 def load_local_fixtures_data():
     if not os.path.exists(FIXTURES_PATH):
@@ -63,9 +62,7 @@ def load_local_fixtures_data():
     with open(FIXTURES_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def sanity_check_fixtures(data):
-    """Diske yazmadan önce temel yapı kontrolü; tam referential-integrity doğrulaması CI'da `sf data validate` ile yapılır."""
     fixtures = data.get("fixtures")
     if not isinstance(fixtures, list) or not fixtures:
         raise ValueError("fixtures alanı boş veya liste değil.")
@@ -75,7 +72,6 @@ def sanity_check_fixtures(data):
             raise ValueError(
                 f"Fikstür kaydında eksik alan(lar): {missing} -> {fixture.get('id', '?')}"
             )
-
 
 def save_local_fixtures_data(full_data):
     sanity_check_fixtures(full_data)
@@ -91,12 +87,10 @@ def save_local_fixtures_data(full_data):
         raise
     print(f"[+] Successfully saved updated fixtures to {FIXTURES_PATH}")
 
-
-def fetch_rapidapi_matches(api_key: str):
-    url = f"https://{API_HOST}/football-get-all-matches-by-league?leagueid={SUPER_LIG_ID}"
+def fetch_apisports_fixtures(api_key: str, season: int = 2026):
+    url = f"https://{APISPORTS_HOST}/fixtures?league={SUPER_LIG_LEAGUE_ID}&season={season}"
     req = urllib.request.Request(url, headers={
-        "x-rapidapi-key": api_key,
-        "x-rapidapi-host": API_HOST,
+        "x-apisports-key": api_key,
         "Content-Type": "application/json"
     })
     try:
@@ -104,36 +98,34 @@ def fetch_rapidapi_matches(api_key: str):
             raw = resp.read().decode("utf-8")
     except urllib.error.HTTPError as e:
         if e.code == 429:
-            raise FetchError(f"RapidAPI rate limit aşıldı (HTTP 429): {e}") from e
-        raise FetchError(f"RapidAPI HTTP hatası ({e.code}): {e}") from e
+            raise FetchError(f"API-Sports rate limit aşıldı (HTTP 429): {e}") from e
+        raise FetchError(f"API-Sports HTTP hatası ({e.code}): {e}") from e
     except urllib.error.URLError as e:
-        raise FetchError(f"RapidAPI bağlantı hatası: {e}") from e
+        raise FetchError(f"API-Sports bağlantı hatası: {e}") from e
 
     try:
         data = json.loads(raw)
     except json.JSONDecodeError as e:
-        raise FetchError(f"RapidAPI geçersiz JSON döndürdü: {e}") from e
+        raise FetchError(f"API-Sports geçersiz JSON döndürdü: {e}") from e
 
-    matches = data.get("response", {}).get("matches")
-    if matches is None:
-        raise FetchError(f"RapidAPI beklenmeyen yanıt şekli döndürdü: {str(data)[:200]}")
-    return matches
+    response_items = data.get("response", [])
+    return response_items
 
 def main():
     print("=" * 65)
-    print("🔄 Süper Lig Maç Sonuçları Senkronizasyon Servisi")
+    print("🔄 Süper Lig Maç Sonuçları Senkronizasyon Servisi (API-Sports v3)")
     print("=" * 65)
 
-    api_key = os.environ.get("RAPIDAPI_KEY", "").strip()
+    api_key = os.environ.get("APISPORTS_KEY", "").strip() or os.environ.get("RAPIDAPI_KEY", "").strip()
     if not api_key:
-        print("[!] RAPIDAPI_KEY tanımlı değil. Ortam değişkenlerinden veya .env dosyasından okuma deneniyor...")
         env_path = os.path.join(os.path.dirname(__file__), "..", ".env")
         if os.path.exists(env_path):
             with open(env_path, "r", encoding="utf-8") as f:
                 for line in f:
-                    if line.startswith("RAPIDAPI_KEY="):
+                    if line.startswith("APISPORTS_KEY=") or line.startswith("RAPIDAPI_KEY="):
                         api_key = line.split("=", 1)[1].strip().strip('"').strip("'")
-                        break
+                        if api_key:
+                            break
 
     full_data = load_local_fixtures_data()
     if not full_data or "fixtures" not in full_data:
@@ -144,35 +136,31 @@ def main():
     print(f"[i] Yerel sistemde {len(fixtures)} karşılaşma kayıtlı.")
 
     if api_key:
-        print(f"[*] RapidAPI üzerinden güncel maç sonuçları sorgulanıyor...")
+        print(f"[*] API-Sports üzerinden 2026-27 sezonu maç sonuçları sorgulanıyor...")
         try:
-            api_matches = fetch_rapidapi_matches(api_key)
+            api_fixtures = fetch_apisports_fixtures(api_key, season=2026)
+            print(f"[+] API-Sports'tan {len(api_fixtures)} karşılaşma verisi alındı.")
         except FetchError as e:
-            print(f"[-] RapidAPI senkronizasyonu başarısız oldu: {e}")
+            print(f"[-] API-Sports sorgusu başarısız: {e}")
             sys.exit(1)
-        print(f"[+] API'den {len(api_matches)} maç verisi alındı.")
 
         updated_count = 0
-        for m in api_matches:
-            status_info = m.get("status", {})
-            # Only process if API explicitly marks this match as finished and belongs to 2026-27 season
-            utc_time = status_info.get("utcTime", "")
-            if utc_time and utc_time < "2026-08-01":
-                continue
+        for item in api_fixtures:
+            fixture_info = item.get("fixture", {})
+            status_info = fixture_info.get("status", {})
+            teams_info = item.get("teams", {})
+            goals_info = item.get("goals", {})
 
-            if status_info.get("finished") and not status_info.get("cancelled"):
-                home_name = (m.get("home", {}).get("name") or "").lower()
-                away_name = (m.get("away", {}).get("name") or "").lower()
-                home_score = m.get("home", {}).get("score")
-                away_score = m.get("away", {}).get("score")
+            # Only process if fixture is completed
+            if status_info.get("short") in ("FT", "AET", "PEN"):
+                home_name = (teams_info.get("home", {}).get("name") or "").lower()
+                away_name = (teams_info.get("away", {}).get("name") or "").lower()
+                home_score = goals_info.get("home")
+                away_score = goals_info.get("away")
 
                 if home_score is not None and away_score is not None:
-                    try:
-                        home_score_int = int(home_score)
-                        away_score_int = int(away_score)
-                    except (TypeError, ValueError):
-                        print(f"  -> [ATLANDI] Geçersiz skor verisi: {home_name} {home_score} - {away_score} {away_name}")
-                        continue
+                    home_score_int = int(home_score)
+                    away_score_int = int(away_score)
 
                     for local_f in fixtures:
                         local_home = local_f.get("home_team_id", "")
@@ -181,9 +169,8 @@ def main():
                         match_home = any(k in home_name for k, v in TEAM_NAME_TO_ID.items() if v == local_home)
                         match_away = any(k in away_name for k, v in TEAM_NAME_TO_ID.items() if v == local_away)
 
-                        # Match home and away teams
                         if match_home and match_away:
-                            # Never overwrite already finished matches with external unverified API data
+                            # Only update if match is not already marked as finished
                             if local_f.get("status") != "finished":
                                 local_f["status"] = "finished"
                                 local_f["score"] = {"home": home_score_int, "away": away_score_int}
@@ -194,9 +181,9 @@ def main():
             save_local_fixtures_data(full_data)
             print(f"[✅] Toplam {updated_count} maç sonucu başarıyla senkronize edildi.")
         else:
-            print("[i] Yeni sonuç bulunmadı veya mevcut veriler zaten güncel.")
+            print("[i] Yerel fikstür ve maç sonuçları güncel.")
     else:
-        print("[!] RAPIDAPI_KEY bulunamadı. Yerel veriler korundu.")
+        print("[!] APISPORTS_KEY bulunamadı. Yerel veriler korundu.")
 
 if __name__ == "__main__":
     main()
