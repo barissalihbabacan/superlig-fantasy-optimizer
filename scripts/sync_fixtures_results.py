@@ -177,15 +177,11 @@ def main():
                         match_home = any(k in home_name for k, v in TEAM_NAME_TO_ID.items() if v == local_home)
                         match_away = any(k in away_name for k, v in TEAM_NAME_TO_ID.items() if v == local_away)
 
-                        # Match must belong to Round 1 and must only be updated if kickoff time is actually reached
-                        if match_home and match_away and local_f.get("round") == 1:
-                            kickoff_str = local_f.get("kickoff", "")
-                            # If match is scheduled in the future, DO NOT touch it
-                            if "2026-08-16" in kickoff_str or "2026-08-17" in kickoff_str:
-                                # Skip future scheduled matches to avoid historical season overrides
-                                continue
-
-                            if local_f.get("status") != "finished" or local_f.get("score") != {"home": home_score_int, "away": away_score_int}:
+                        # Match home and away teams
+                        if match_home and match_away:
+                            # Verify if local status or score needs update
+                            current_score = local_f.get("score")
+                            if local_f.get("status") != "finished" or current_score != {"home": home_score_int, "away": away_score_int}:
                                 local_f["status"] = "finished"
                                 local_f["score"] = {"home": home_score_int, "away": away_score_int}
                                 updated_count += 1

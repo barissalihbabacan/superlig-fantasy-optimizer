@@ -75,7 +75,9 @@
       "home_team_id": "besiktas",
       "away_team_id": "eyupspor",
       "kickoff": "2026-08-16T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": { "home": 1, "away": 0 },
+      "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/besiktas-1-0-eyupspor-mac-ozeti"
     },
     {
       "id": "2026-27-w01-07",
@@ -83,7 +85,9 @@
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "erzurumspor-fk",
       "kickoff": "2026-08-16T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": { "home": 3, "away": 0 },
+      "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/amed-sportif-faaliyetler-3-0-erzurumspor-fk-mac-ozeti"
     },
     {
       "id": "2026-27-w01-08",
@@ -91,7 +95,9 @@
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "kocaelispor",
       "kickoff": "2026-08-16T19:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": { "home": 2, "away": 0 },
+      "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/istanbul-basaksehir-2-0-kocaelispor-mac-ozeti"
     },
     {
       "id": "2026-27-w01-09",
@@ -99,7 +105,9 @@
       "home_team_id": "samsunspor",
       "away_team_id": "goztepe",
       "kickoff": "2026-08-17T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": { "home": 3, "away": 3 },
+      "highlights_url": "https://beinsports.com.tr/mac-ozetleri-goller/super-lig/ozet/2026-2027/1/samsunspor-3-3-goztepe-mac-ozeti"
     },
     {
       "id": "2026-27-w02-01",
