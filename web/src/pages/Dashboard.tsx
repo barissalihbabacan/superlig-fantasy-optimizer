@@ -82,7 +82,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   ];
 
   return (
-    <div id="dashboard-page-container" className="space-y-3.5 animate-fadeIn">
+    <div id="dashboard-page-container" className="space-y-2.5 animate-fadeIn">
       {/* Featured Matches Carousel (Haftaya Göre Dinamik) */}
       {currentSlideFixture && (
         <div
@@ -270,7 +270,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       )}
 
       {/* Main 2-Column Sports Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-3.5 items-stretch -mt-0.5 sm:-mt-1">
         {/* Left Column: Gameweek 1 Fixtures Schedule (7 cols) */}
         <div id="gameweek-fixtures-section" className="lg:col-span-7 flex flex-col space-y-2">
           <div className="flex items-center justify-between pb-0.5 flex-shrink-0">
