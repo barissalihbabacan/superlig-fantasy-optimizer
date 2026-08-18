@@ -36,7 +36,7 @@ export const MatchTicker: React.FC<MatchTickerProps> = ({
   };
 
   return (
-    <div id="match-ticker-container" className="w-full bg-[var(--bg-surface)] border-b border-[var(--border)] overflow-hidden mb-3 sm:mb-3.5 shadow-sm">
+    <div id="match-ticker-container" className="w-full bg-[var(--bg-surface)] border-b border-[var(--border)] overflow-hidden mb-0 shadow-sm">
       <div className="app-container py-2 flex items-center gap-2 sm:gap-3">
         {/* Round Selector Badge with Interactive Prev/Next Controls */}
         <div id="match-ticker-round-badge" className="flex items-center gap-1 flex-shrink-0 pr-2 sm:pr-3 border-r border-[var(--border)] z-10 bg-[var(--bg-surface)]">

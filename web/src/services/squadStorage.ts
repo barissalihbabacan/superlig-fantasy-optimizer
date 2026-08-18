@@ -11,6 +11,9 @@ export interface SavedSquadData {
   savedAt: string;
 }
 
+// In-memory fallback
+let memoryBackup: SavedSquadData | null = null;
+
 // --- IndexedDB Helper ---
 const openIDB = (): Promise<IDBDatabase | null> => {
   return new Promise((resolve) => {
@@ -47,9 +50,13 @@ export const saveOptimizedSquad = async (
     savedAt: new Date().toISOString(),
   };
 
+  memoryBackup = data;
+
   // 1. Save to LocalStorage (synchronous backup)
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
   } catch (e) {
     console.warn('LocalStorage squad write error:', e);
   }
@@ -87,23 +94,29 @@ export const loadOptimizedSquad = async (): Promise<SavedSquadData | null> => {
 
   // 2. Fallback to LocalStorage
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && parsed.result) {
-        return parsed as SavedSquadData;
+    if (typeof localStorage !== 'undefined') {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.result) {
+          return parsed as SavedSquadData;
+        }
       }
     }
   } catch (e) {
     console.warn('LocalStorage squad read error:', e);
   }
 
-  return null;
+  // 3. Fallback to in-memory
+  return memoryBackup;
 };
 
 export const clearOptimizedSquad = async (): Promise<void> => {
+  memoryBackup = null;
   try {
-    localStorage.removeItem(STORAGE_KEY);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(STORAGE_KEY);
+    }
     const db = await openIDB();
     if (db) {
       const tx = db.transaction(IDB_STORE, 'readwrite');

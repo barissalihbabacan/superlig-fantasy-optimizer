@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
 import { saveOptimizedSquad, loadOptimizedSquad, clearOptimizedSquad } from './squadStorage';
 import { OptimizationResult } from './optimizer';
@@ -5,10 +6,10 @@ import { OptimizationResult } from './optimizer';
 describe('squadStorage', () => {
   const mockResult: OptimizationResult = {
     startingXI: [
-      { id: 'p1', name: 'Muslera', team_id: 'galatasaray', position: 'Goalkeeper', price: 600, status: 'available' },
+      { id: 'p1', name: 'Muslera', team_id: 'galatasaray', position: 'Goalkeeper', price: 600 },
     ],
     bench: [],
-    captain: { id: 'p1', name: 'Muslera', team_id: 'galatasaray', position: 'Goalkeeper', price: 600, status: 'available' },
+    captain: { id: 'p1', name: 'Muslera', team_id: 'galatasaray', position: 'Goalkeeper', price: 600 },
     viceCaptain: null,
     totalPrice: 600,
     totalPoints: 8.5,

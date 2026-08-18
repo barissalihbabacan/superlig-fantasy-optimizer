@@ -4,12 +4,14 @@ import { Pitch } from '../components/Pitch';
 import { runOptimizer, OptimizationResult } from '../services/optimizer';
 import { initOptimizerWasm, cancelOptimization } from '../services/optimizerWasm';
 import { formatPrice, getTeamBranding, getShortPosition } from '../services/dataset';
+import { saveOptimizedSquad, loadOptimizedSquad, clearOptimizedSquad } from '../services/squadStorage';
 import {
   Zap,
   Sliders,
   CheckCircle2,
   Shield,
   XCircle,
+  RotateCcw,
 } from 'lucide-react';
 
 interface OptimizerProps {
@@ -34,9 +36,17 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
     '5-2-3',
   ];
 
-  // Kullanıcı butona basmadan önce wasm worker'ını ısıt.
+  // Kullanıcı butona basmadan önce wasm worker'ını ısıt ve IndexedDB'deki kayıtlı kadroyu yükle
   useEffect(() => {
     initOptimizerWasm();
+    loadOptimizedSquad().then((saved) => {
+      if (saved && saved.result) {
+        setResult(saved.result);
+        if (saved.formation) {
+          setFormation(saved.formation);
+        }
+      }
+    });
   }, []);
 
   const handleOptimizeClick = async () => {
@@ -44,6 +54,7 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
     try {
       const optRes = await runOptimizer(dataset.players, dataset.projections, budget, formation);
       setResult(optRes);
+      await saveOptimizedSquad(optRes, formation);
     } catch (error) {
       console.error('Optimizasyon Hatası:', error);
     } finally {
@@ -54,6 +65,11 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
   const handleCancelClick = () => {
     cancelOptimization();
     setIsOptimizing(false);
+  };
+
+  const handleResetClick = async () => {
+    setResult(null);
+    await clearOptimizedSquad();
   };
 
   return (
@@ -112,6 +128,18 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
               >
                 <XCircle className="w-4 h-4" />
                 <span>İptal Et</span>
+              </button>
+            )}
+
+            {result && !isOptimizing && (
+              <button
+                id="optimizer-reset-btn"
+                onClick={handleResetClick}
+                title="Kayıtlı kadroyu sıfırla"
+                className="btn-sofa btn-sofa-secondary text-xs px-3 py-2 flex items-center gap-1.5 font-bold text-[var(--text-secondary)] hover:text-white"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Sıfırla</span>
               </button>
             )}
 
