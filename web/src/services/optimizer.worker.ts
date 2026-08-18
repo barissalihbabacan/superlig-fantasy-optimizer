@@ -9,6 +9,7 @@
  * worker'a taşınır ve iptal edilebilir hale getirilir (bkz. optimizerWasm.ts).
  */
 import init, { optimizeSquad } from '../../wasm-pkg/sfo_wasm.js';
+import wasmUrl from '../../wasm-pkg/sfo_wasm_bg.wasm?url';
 
 interface OptimizeRequest {
   id: number;
@@ -43,9 +44,10 @@ const ctx = self as unknown as {
 let readyPromise: Promise<void> | null = null;
 
 function ensureReady(): Promise<void> {
-  const promise = readyPromise ?? init().then(() => undefined);
-  readyPromise = promise;
-  return promise;
+  if (!readyPromise) {
+    readyPromise = init({ module_or_path: wasmUrl }).then(() => undefined);
+  }
+  return readyPromise;
 }
 
 ctx.onmessage = async (event) => {

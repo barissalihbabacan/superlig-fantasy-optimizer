@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { SeasonDataset, Fixture } from '../types';
-import { getTeamBranding } from '../services/dataset';
+import { getTeamBranding, getCurrentActiveRound } from '../services/dataset';
 import {
   loadAllPredictions,
   saveWeeklyPredictions,
@@ -31,13 +31,14 @@ interface NostradamusProps {
 }
 
 export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixture }) => {
-  const [selectedRound, setSelectedRound] = useState<number>(1);
+  const [selectedRound, setSelectedRound] = useState<number>(() => getCurrentActiveRound(dataset.fixtures));
   const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
 
   // Predictions state loaded directly from localStorage
   const [predictions, setPredictions] = useState<WeeklyPredictions>(() => {
+    const initRound = getCurrentActiveRound(dataset.fixtures);
     const all = loadAllPredictions();
-    return all[1] || {};
+    return all[initRound] || {};
   });
 
   // Results overrides loaded from localStorage
@@ -351,8 +352,8 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
               {group.dateStr && <span className="text-[11px] text-[var(--text-secondary)]">{group.dateStr}</span>}
             </div>
 
-            {/* Match Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {/* Match Cards Single Column List */}
+            <div className="grid grid-cols-1 gap-3 max-w-2xl mx-auto w-full">
               {group.fixtures.map((fixture) => {
                 const homeName = teamsMap.get(fixture.home_team_id) || fixture.home_team_id;
                 const awayName = teamsMap.get(fixture.away_team_id) || fixture.away_team_id;

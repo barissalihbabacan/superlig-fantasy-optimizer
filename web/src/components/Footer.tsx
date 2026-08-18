@@ -3,7 +3,7 @@ import { Mail, Github, FileText } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer id="main-footer" className="mt-4 border-t border-[var(--border)] bg-[var(--bg-surface)] py-3 sm:py-3.5 text-xs text-[var(--text-secondary)]">
+    <footer id="main-footer" className="mt-0 border-t border-[var(--border)] bg-[var(--bg-surface)] py-3 sm:py-3.5 text-xs text-[var(--text-secondary)]">
       <div className="app-container flex flex-col md:flex-row items-center justify-between gap-2.5">
         <div id="footer-brand" className="flex items-center gap-2 font-bold text-[var(--text-primary)]">
           <div className="w-5 h-5 rounded bg-[var(--color-brand)] text-[#0c1017] flex items-center justify-center font-black text-[10px]">
