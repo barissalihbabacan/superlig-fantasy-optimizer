@@ -10,6 +10,7 @@ import {
   ProjectionsDataset,
   SeasonDataset,
   ProjectionItem,
+  Fixture,
 } from '../types';
 
 export interface TeamBranding {
@@ -289,5 +290,34 @@ export function formatDateDDMMYYYY(isoString?: string): string {
   const mm = String(date.getMonth() + 1).padStart(2, '0');
   const yyyy = date.getFullYear();
   return `${dd}-${mm}-${yyyy}`;
+}
+
+/**
+ * Automatically determines the current active match round from fixture statuses.
+ * Returns the earliest round that contains unfinished ('scheduled' or 'live') matches.
+ */
+export function getCurrentActiveRound(fixtures: Fixture[]): number {
+  if (!fixtures || fixtures.length === 0) return 1;
+
+  const roundMap = new Map<number, { total: number; finished: number }>();
+  for (const f of fixtures) {
+    const r = f.round || 1;
+    const current = roundMap.get(r) || { total: 0, finished: 0 };
+    current.total += 1;
+    if (f.status === 'finished') {
+      current.finished += 1;
+    }
+    roundMap.set(r, current);
+  }
+
+  const sortedRounds = Array.from(roundMap.keys()).sort((a, b) => a - b);
+  for (const r of sortedRounds) {
+    const stat = roundMap.get(r);
+    if (stat && stat.finished < stat.total) {
+      return r;
+    }
+  }
+
+  return sortedRounds[sortedRounds.length - 1] || 1;
 }
 

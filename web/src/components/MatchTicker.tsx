@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Fixture } from '../types';
 import { getTeamBranding } from '../services/dataset';
 
@@ -13,27 +14,63 @@ interface MatchTickerProps {
 export const MatchTicker: React.FC<MatchTickerProps> = ({
   fixtures,
   selectedRound,
+  onSelectRound,
   onSelectFixture,
 }) => {
+  const maxRound = 34;
   const currentRoundFixtures = fixtures.filter((f) => f.round === selectedRound);
 
   // Duplicate items for a perfectly smooth, infinite marquee scroll loop
   const loopFixtures = [...currentRoundFixtures, ...currentRoundFixtures];
 
+  const handlePrevRound = () => {
+    if (onSelectRound) {
+      onSelectRound(selectedRound > 1 ? selectedRound - 1 : maxRound);
+    }
+  };
+
+  const handleNextRound = () => {
+    if (onSelectRound) {
+      onSelectRound(selectedRound < maxRound ? selectedRound + 1 : 1);
+    }
+  };
+
   return (
     <div id="match-ticker-container" className="w-full bg-[var(--bg-surface)] border-b border-[var(--border)] overflow-hidden mb-3 sm:mb-3.5 shadow-sm">
-      <div className="app-container py-2 flex items-center gap-3">
-        {/* Fixed Round Selector Pill */}
-        <div id="match-ticker-round-badge" className="flex items-center gap-1.5 flex-shrink-0 pr-3 border-r border-[var(--border)] z-10 bg-[var(--bg-surface)]">
+      <div className="app-container py-2 flex items-center gap-2 sm:gap-3">
+        {/* Round Selector Badge with Interactive Prev/Next Controls */}
+        <div id="match-ticker-round-badge" className="flex items-center gap-1 flex-shrink-0 pr-2 sm:pr-3 border-r border-[var(--border)] z-10 bg-[var(--bg-surface)]">
+          {onSelectRound && (
+            <button
+              id="match-ticker-prev-round"
+              onClick={handlePrevRound}
+              className="p-0.5 rounded hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+              title="Önceki Hafta"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+          )}
+
           <span className="w-2 h-2 rounded-full bg-[var(--color-brand)] animate-pulse" />
-          <span className="text-[10px] font-mono font-black uppercase text-[var(--color-brand)] bg-[var(--color-brand)]/10 px-2 py-0.5 rounded tracking-wider">
+          <span className="text-[10px] font-mono font-black uppercase text-[var(--color-brand)] bg-[var(--color-brand)]/10 px-2 py-0.5 rounded tracking-wider whitespace-nowrap">
             {selectedRound}. Hafta
           </span>
+
+          {onSelectRound && (
+            <button
+              id="match-ticker-next-round"
+              onClick={handleNextRound}
+              className="p-0.5 rounded hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+              title="Sonraki Hafta"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         {/* Automatic Sliding Marquee Container */}
         <div id="match-ticker-viewport" className="flex-1 overflow-hidden ticker-mask relative py-0.5">
-          <div id="match-ticker-track" className="ticker-marquee-track">
+          <div key={`ticker-track-round-${selectedRound}`} id="match-ticker-track" className="ticker-marquee-track">
             {loopFixtures.map((fixture, idx) => {
               const homeBrand = getTeamBranding(fixture.home_team_id);
               const awayBrand = getTeamBranding(fixture.away_team_id);

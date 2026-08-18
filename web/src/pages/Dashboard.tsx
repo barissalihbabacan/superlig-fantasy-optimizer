@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SeasonDataset, NavTab, Fixture } from '../types';
-import { formatPrice, getTeamBranding, formatDateDDMMYYYY } from '../services/dataset';
+import { formatPrice, getTeamBranding, formatDateDDMMYYYY, getCurrentActiveRound } from '../services/dataset';
 import {
   Trophy,
   Calendar,
@@ -14,31 +14,62 @@ import {
 
 interface DashboardProps {
   dataset: SeasonDataset;
+  selectedRound?: number;
+  onSelectRound?: (round: number) => void;
   setActiveTab: (tab: NavTab) => void;
   onSelectFixture: (fixture: Fixture) => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab, onSelectFixture }) => {
-  const week1Fixtures = dataset.fixtures.filter((f) => f.round === 1);
+export const Dashboard: React.FC<DashboardProps> = ({
+  dataset,
+  selectedRound,
+  onSelectRound,
+  setActiveTab,
+  onSelectFixture,
+}) => {
+  const autoActiveRound = getCurrentActiveRound(dataset.fixtures);
+  const activeRound = selectedRound ?? autoActiveRound;
+  const activeRoundFixtures = dataset.fixtures.filter((f) => f.round === activeRound);
+  const maxRound = 34;
+
   const [carouselIndex, setCarouselIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
+  // Reset index when round changes
+  useEffect(() => {
+    setCarouselIndex(0);
+  }, [activeRound]);
+
   // Autoplay carousel slides every 6 seconds if not hovered
   useEffect(() => {
-    if (isPaused || week1Fixtures.length <= 1) return;
+    if (isPaused || activeRoundFixtures.length <= 1) return;
     const interval = setInterval(() => {
-      setCarouselIndex((prev) => (prev < week1Fixtures.length - 1 ? prev + 1 : 0));
+      setCarouselIndex((prev) => (prev < activeRoundFixtures.length - 1 ? prev + 1 : 0));
     }, 6000);
     return () => clearInterval(interval);
-  }, [isPaused, week1Fixtures.length]);
+  }, [isPaused, activeRoundFixtures.length]);
 
-  const currentSlideFixture = week1Fixtures[carouselIndex] || week1Fixtures[0];
+  const currentSlideFixture = activeRoundFixtures[carouselIndex] || activeRoundFixtures[0];
   const homeName = dataset.teams.find((t) => t.id === currentSlideFixture?.home_team_id)?.name || currentSlideFixture?.home_team_id;
   const awayName = dataset.teams.find((t) => t.id === currentSlideFixture?.away_team_id)?.name || currentSlideFixture?.away_team_id;
   const homeBrand = getTeamBranding(currentSlideFixture?.home_team_id || '');
   const awayBrand = getTeamBranding(currentSlideFixture?.away_team_id || '');
   const isFinished = currentSlideFixture?.status === 'finished';
   const hasScore = currentSlideFixture?.score !== undefined && currentSlideFixture?.score !== null;
+
+  const handlePrevRound = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onSelectRound) {
+      onSelectRound(activeRound > 1 ? activeRound - 1 : maxRound);
+    }
+  };
+
+  const handleNextRound = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onSelectRound) {
+      onSelectRound(activeRound < maxRound ? activeRound + 1 : 1);
+    }
+  };
 
   // Top performers from the played matches in Week 1
   const topPerformers = [
@@ -52,7 +83,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab, onS
 
   return (
     <div id="dashboard-page-container" className="space-y-3.5 animate-fadeIn">
-      {/* Featured Matches Carousel (1. Hafta Karşılaşmaları) */}
+      {/* Featured Matches Carousel (Haftaya Göre Dinamik) */}
       {currentSlideFixture && (
         <div
           id="featured-match-carousel"
@@ -60,19 +91,45 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab, onS
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {/* Header Bar with Slide Navigator */}
+          {/* Header Bar with Round Selector & Slide Navigator */}
           <div className="px-4 py-2 bg-[var(--bg-surface)] border-b border-[var(--border)] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${isFinished ? 'bg-emerald-500 animate-pulse' : 'bg-blue-400'}`} />
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-brand)]">
-                Öne Çıkan Maç · 1. Hafta ({carouselIndex + 1}/{week1Fixtures.length})
+              
+              {/* Round Switcher Pill in Carousel */}
+              <div className="flex items-center gap-1 bg-[var(--bg-card)] px-2 py-0.5 rounded border border-[var(--border)]">
+                {onSelectRound && (
+                  <button
+                    onClick={handlePrevRound}
+                    className="text-[var(--text-muted)] hover:text-white transition-colors"
+                    title="Önceki Hafta"
+                  >
+                    <ChevronLeft className="w-3 h-3" />
+                  </button>
+                )}
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-brand)]">
+                  {activeRound}. Hafta
+                </span>
+                {onSelectRound && (
+                  <button
+                    onClick={handleNextRound}
+                    className="text-[var(--text-muted)] hover:text-white transition-colors"
+                    title="Sonraki Hafta"
+                  >
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+
+              <span className="text-xs text-[var(--text-muted)] font-mono hidden sm:inline">
+                ({carouselIndex + 1}/{activeRoundFixtures.length})
               </span>
             </div>
 
             {/* Carousel Controls & Pagination Dots */}
             <div className="flex items-center gap-2">
               <div className="hidden sm:flex items-center gap-1">
-                {week1Fixtures.map((_, i) => (
+                {activeRoundFixtures.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCarouselIndex(i)}
@@ -91,7 +148,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab, onS
                   id="carousel-prev-btn"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setCarouselIndex((prev) => (prev > 0 ? prev - 1 : week1Fixtures.length - 1));
+                    setCarouselIndex((prev) => (prev > 0 ? prev - 1 : activeRoundFixtures.length - 1));
                   }}
                   className="p-1 rounded bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-white"
                   title="Önceki Maç"
@@ -102,7 +159,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab, onS
                   id="carousel-next-btn"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setCarouselIndex((prev) => (prev < week1Fixtures.length - 1 ? prev + 1 : 0));
+                    setCarouselIndex((prev) => (prev < activeRoundFixtures.length - 1 ? prev + 1 : 0));
                   }}
                   className="p-1 rounded bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-white"
                   title="Sonraki Maç"
@@ -220,7 +277,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab, onS
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-[var(--color-brand)]" />
               <h3 className="font-extrabold text-sm uppercase tracking-wider text-[var(--text-primary)]">
-                1. Hafta Maç Takvimi
+                {activeRound}. Hafta Maç Takvimi
               </h3>
             </div>
             <button
@@ -233,7 +290,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ dataset, setActiveTab, onS
           </div>
 
           <div id="gameweek-fixtures-list" className="sofa-card divide-y divide-[var(--border)] overflow-hidden flex-1 flex flex-col justify-between">
-            {week1Fixtures.map((fixture) => {
+            {activeRoundFixtures.map((fixture) => {
               const fHomeName = dataset.teams.find((t) => t.id === fixture.home_team_id)?.name || fixture.home_team_id;
               const fAwayName = dataset.teams.find((t) => t.id === fixture.away_team_id)?.name || fixture.away_team_id;
               const fHomeBrand = getTeamBranding(fixture.home_team_id);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { NavTab, SeasonDataset, Fixture } from './types';
-import { loadSeasonDataset } from './services/dataset';
+import { loadSeasonDataset, getCurrentActiveRound } from './services/dataset';
 
 import { Header } from './components/Header';
 import { MatchTicker } from './components/MatchTicker';
@@ -17,9 +17,7 @@ import { Fixtures } from './pages/Fixtures';
 import { Optimizer } from './pages/Optimizer';
 import { Rules } from './pages/Rules';
 import { Nostradamus } from './pages/Nostradamus';
-import { Tribun } from './pages/Tribun';
 import { MatchDetail } from './pages/MatchDetail';
-import { AuthProvider } from './contexts/AuthContext';
 
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
@@ -57,6 +55,7 @@ const AppContent: React.FC = () => {
     try {
       const data = loadSeasonDataset();
       setDataset(data);
+      setCurrentRound(getCurrentActiveRound(data.fixtures));
 
       const hasSeenNotice = localStorage.getItem('sf_seen_season_notice_2026_27');
       if (!hasSeenNotice) {
@@ -144,6 +143,8 @@ const AppContent: React.FC = () => {
         return (
           <Dashboard
             dataset={dataset}
+            selectedRound={currentRound}
+            onSelectRound={setCurrentRound}
             setActiveTab={handleTabChange}
             onSelectFixture={(f) => setActiveFixture(f)}
           />
@@ -163,8 +164,6 @@ const AppContent: React.FC = () => {
         return <Optimizer dataset={dataset} />;
       case 'rules':
         return <Rules />;
-      case 'tribun':
-        return <Tribun dataset={dataset} />;
       case 'nostradamus':
         return (
           <Nostradamus
@@ -176,12 +175,14 @@ const AppContent: React.FC = () => {
         return (
           <Dashboard
             dataset={dataset}
+            selectedRound={currentRound}
+            onSelectRound={setCurrentRound}
             setActiveTab={handleTabChange}
             onSelectFixture={(f) => setActiveFixture(f)}
           />
         );
     }
-  }, [activeTab, activeFixture, dataset]);
+  }, [activeTab, activeFixture, dataset, currentRound]);
 
   if (loadingError) {
     return (
@@ -261,10 +262,8 @@ const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
-    </AuthProvider>
+    <ToastProvider>
+      <AppContent />
+    </ToastProvider>
   );
 };

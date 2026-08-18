@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { SeasonDataset, Fixture } from '../types';
-import { getTeamBranding, formatDateDDMMYYYY } from '../services/dataset';
+import { getTeamBranding, formatDateDDMMYYYY, getCurrentActiveRound } from '../services/dataset';
 import {
   Search,
   ChevronLeft,
@@ -18,7 +18,7 @@ interface FixturesProps {
 
 export const Fixtures: React.FC<FixturesProps> = ({ dataset, onSelectFixture }) => {
   const [activeView, setActiveView] = useState<'fixtures' | 'standings'>('fixtures');
-  const [selectedRound, setSelectedRound] = useState<number>(1);
+  const [selectedRound, setSelectedRound] = useState<number>(() => getCurrentActiveRound(dataset.fixtures));
   const [teamSearch, setTeamSearch] = useState<string>('');
 
   const teamMap = useMemo(() => {
@@ -178,27 +178,27 @@ export const Fixtures: React.FC<FixturesProps> = ({ dataset, onSelectFixture }) 
 
         {/* Round Navigation Bar (Only for Fixtures view) */}
         {activeView === 'fixtures' && (
-          <div id="round-navigation-controls" className="flex items-center gap-1.5 self-start sm:self-auto">
+          <div id="round-navigation-controls" className="flex items-center gap-1 self-start sm:self-auto">
             <button
               id="prev-round-btn"
               onClick={() => setSelectedRound((prev) => Math.max(1, (prev === 0 ? 1 : prev) - 1))}
               disabled={selectedRound <= 1}
-              className="btn-sofa btn-sofa-secondary px-2.5 py-1 text-xs disabled:opacity-30"
+              className="p-1 h-6 rounded bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-white disabled:opacity-30 flex items-center justify-center transition-colors"
               title="Önceki Hafta"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
-            <div id="current-round-display" className="px-3 py-1 rounded bg-[var(--bg-card)] border border-[var(--border)] font-mono text-xs font-bold text-[var(--text-primary)]">
+            <div id="current-round-display" className="px-2.5 h-6 rounded bg-[var(--bg-card)] border border-[var(--border)] font-mono text-[11px] font-bold text-[var(--text-primary)] flex items-center justify-center tracking-wide shadow-xs">
               {selectedRound === 0 ? 'Tüm Haftalar' : `${selectedRound}. HAFTA`}
             </div>
             <button
               id="next-round-btn"
               onClick={() => setSelectedRound((prev) => Math.min(34, (prev === 0 ? 1 : prev) + 1))}
               disabled={selectedRound >= 34}
-              className="btn-sofa btn-sofa-secondary px-2.5 py-1 text-xs disabled:opacity-30"
+              className="p-1 h-6 rounded bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-white disabled:opacity-30 flex items-center justify-center transition-colors"
               title="Sonraki Hafta"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         )}
