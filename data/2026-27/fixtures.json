@@ -127,7 +127,11 @@
       "home_team_id": "erzurumspor-fk",
       "away_team_id": "galatasaray",
       "kickoff": "2026-08-21T21:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 0,
+        "away": 4
+      }
     },
     {
       "id": "2026-27-w02-02",
