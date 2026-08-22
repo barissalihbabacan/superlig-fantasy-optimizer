@@ -139,7 +139,11 @@
       "home_team_id": "caykur-rizespor",
       "away_team_id": "samsunspor",
       "kickoff": "2026-08-22T16:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 0,
+        "away": 2
+      }
     },
     {
       "id": "2026-27-w02-03",
@@ -147,7 +151,11 @@
       "home_team_id": "fenerbahce",
       "away_team_id": "konyaspor",
       "kickoff": "2026-08-22T19:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 4,
+        "away": 2
+      }
     },
     {
       "id": "2026-27-w02-04",
@@ -155,7 +163,11 @@
       "home_team_id": "corum-fk",
       "away_team_id": "kasimpasa",
       "kickoff": "2026-08-22T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 0,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w02-05",
