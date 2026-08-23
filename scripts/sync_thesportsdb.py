@@ -235,6 +235,10 @@ def main():
             match_away = any(k in away_name for k, v in TEAM_NAME_TO_ID.items() if v == local_away)
 
             if match_home and match_away:
+                # Do not downgrade a finished match if remote API hasn't entered results yet
+                if local_f.get("status") == "finished" and new_status == "scheduled":
+                    continue
+
                 target_score = {"home": h_score, "away": a_score} if (has_score and new_status in ("finished", "live")) else None
                 
                 status_changed = local_f.get("status") != new_status

@@ -175,7 +175,11 @@
       "home_team_id": "eyupspor",
       "away_team_id": "gaziantep-fk",
       "kickoff": "2026-08-23T16:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 0,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w02-06",
