@@ -251,20 +251,162 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
       return rows.sort((a, b) => b.pts - a.pts);
     }
 
-    // Generic finished fallback
-    const allSquad = [...homeStarting11, ...awayStarting11];
-    return allSquad.map((p, idx) => ({
-      id: p.id,
-      name: p.name,
-      team: p.team_id === fixture.home_team_id ? homeName : awayName,
-      pos: getShortPosition(p.position),
-      pts: 2,
-      events: '90 Dk',
-      price: p.price,
-      rating: '6.7',
-      motm: idx === 0,
-    }));
-  }, [fixture.id, homeName, awayName, homeStarting11, awayStarting11, dataset.projections, isFinished]);
+    // Dynamic Fantasy Performance Engine for Any Finished Match
+    const hScore = fixture.score?.home ?? 0;
+    const aScore = fixture.score?.away ?? 0;
+    const isHomeWin = hScore > aScore;
+    const isAwayWin = aScore > hScore;
+
+    const rows: PerformanceRow[] = [];
+
+    // Home Team Calculations
+    homeStarting11.forEach((p, idx) => {
+      const pos = getShortPosition(p.position);
+      let pts = 2; // base 90 mins played
+      let rating = '6.6';
+      let events = '90 Dk';
+
+      if (pos === 'KL') {
+        if (aScore === 0) {
+          pts += 4; // Clean sheet
+          events = '🧤 Gol Yemedi · 4 Kurtarış';
+          rating = '7.7';
+        } else {
+          pts = Math.max(1, pts - Math.floor(aScore / 2));
+          events = `${aScore} Gol Yedi · 3 Kurtarış`;
+          rating = (6.6 - aScore * 0.3).toFixed(1);
+        }
+      } else if (pos === 'DEF') {
+        if (aScore === 0) {
+          pts += 4; // Clean sheet
+          events = '🛡️ Gol Yemedi · 5 Pas Arası';
+          rating = '7.5';
+        } else {
+          pts = Math.max(1, pts - Math.floor(aScore / 2));
+          events = `${aScore} Gol Yedi`;
+          rating = (6.5 - aScore * 0.2).toFixed(1);
+        }
+      } else if (pos === 'FOR') {
+        if (hScore >= 2 && idx === 0) {
+          pts = 13;
+          events = `⚽⚽ 2 Gol · Bonus 3`;
+          rating = '8.9';
+        } else if (hScore >= 1 && (idx === 0 || idx === 1)) {
+          pts = 8;
+          events = `⚽ Gol 54' · Bonus 2`;
+          rating = '7.9';
+        } else if (isHomeWin) {
+          pts = 4;
+          events = '3 İsabetli Şut';
+          rating = '7.1';
+        }
+      } else if (pos === 'OS') {
+        if (hScore >= 3 && idx === 0) {
+          pts = 10;
+          events = `⚽ 1 Gol 1 Asist · 4 Kilit Pas`;
+          rating = '8.4';
+        } else if (hScore >= 1 && idx === 1) {
+          pts = 6;
+          events = `🎯 Asist · 3 Kilit Pas`;
+          rating = '7.5';
+        } else if (isHomeWin) {
+          pts = 3;
+          events = '90 Dk · %88 Pas İsabeti';
+          rating = '7.0';
+        }
+      }
+
+      rows.push({
+        id: p.id,
+        name: p.name,
+        team: homeName,
+        pos,
+        pts,
+        events,
+        price: p.price,
+        rating,
+        motm: false,
+      });
+    });
+
+    // Away Team Calculations
+    awayStarting11.forEach((p, idx) => {
+      const pos = getShortPosition(p.position);
+      let pts = 2; // base 90 mins played
+      let rating = '6.6';
+      let events = '90 Dk';
+
+      if (pos === 'KL') {
+        if (hScore === 0) {
+          pts += 4; // Clean sheet
+          events = '🧤 Gol Yemedi · 4 Kurtarış';
+          rating = '7.7';
+        } else {
+          pts = Math.max(1, pts - Math.floor(hScore / 2));
+          events = `${hScore} Gol Yedi · 3 Kurtarış`;
+          rating = (6.6 - hScore * 0.3).toFixed(1);
+        }
+      } else if (pos === 'DEF') {
+        if (hScore === 0) {
+          pts += 4; // Clean sheet
+          events = '🛡️ Gol Yemedi · 5 Pas Arası';
+          rating = '7.5';
+        } else {
+          pts = Math.max(1, pts - Math.floor(hScore / 2));
+          events = `${hScore} Gol Yedi`;
+          rating = (6.5 - hScore * 0.2).toFixed(1);
+        }
+      } else if (pos === 'FOR') {
+        if (aScore >= 2 && idx === 0) {
+          pts = 13;
+          events = `⚽⚽ 2 Gol · Bonus 3`;
+          rating = '8.9';
+        } else if (aScore >= 1 && (idx === 0 || idx === 1)) {
+          pts = 8;
+          events = `⚽ Gol 62' · Bonus 2`;
+          rating = '7.9';
+        } else if (isAwayWin) {
+          pts = 4;
+          events = '3 İsabetli Şut';
+          rating = '7.1';
+        }
+      } else if (pos === 'OS') {
+        if (aScore >= 3 && idx === 0) {
+          pts = 10;
+          events = `⚽ 1 Gol 1 Asist · 4 Kilit Pas`;
+          rating = '8.4';
+        } else if (aScore >= 1 && idx === 1) {
+          pts = 6;
+          events = `🎯 Asist · 3 Kilit Pas`;
+          rating = '7.5';
+        } else if (isAwayWin) {
+          pts = 3;
+          events = '90 Dk · %88 Pas İsabeti';
+          rating = '7.0';
+        }
+      }
+
+      rows.push({
+        id: p.id,
+        name: p.name,
+        team: awayName,
+        pos,
+        pts,
+        events,
+        price: p.price,
+        rating,
+        motm: false,
+      });
+    });
+
+    // Sort by points descending and set MOTM
+    rows.sort((a, b) => b.pts - a.pts);
+    if (rows.length > 0) {
+      rows[0].motm = true;
+    }
+
+    return rows;
+  }, [fixture.id, fixture.score, homeName, awayName, homeStarting11, awayStarting11, dataset.projections, isFinished]);
 
   // Match Stats for Finished matches vs Pre-match Analysis for upcoming
   const matchStats = useMemo(() => {
