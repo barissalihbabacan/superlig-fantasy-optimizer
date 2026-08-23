@@ -75,6 +75,7 @@ export const MatchTicker: React.FC<MatchTickerProps> = ({
               const homeBrand = getTeamBranding(fixture.home_team_id);
               const awayBrand = getTeamBranding(fixture.away_team_id);
               const isFinished = fixture.status === 'finished';
+              const isLive = fixture.status === 'live';
               const hasScore = fixture.score !== undefined && fixture.score !== null;
 
               return (
@@ -82,7 +83,11 @@ export const MatchTicker: React.FC<MatchTickerProps> = ({
                   key={`${fixture.id}-${idx}`}
                   id={`ticker-match-${fixture.id}-${idx < currentRoundFixtures.length ? 'primary' : 'clone'}`}
                   onClick={() => onSelectFixture && onSelectFixture(fixture)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--color-brand)] hover:bg-[var(--bg-card-hover)] transition-colors flex-shrink-0 text-left cursor-pointer select-none"
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded bg-[var(--bg-card)] border transition-colors flex-shrink-0 text-left cursor-pointer select-none ${
+                    isLive
+                      ? 'border-rose-500/50 bg-rose-500/5 hover:border-rose-500'
+                      : 'border-[var(--border)] hover:border-[var(--color-brand)] hover:bg-[var(--bg-card-hover)]'
+                  }`}
                   title={`${homeBrand.code} vs ${awayBrand.code} - Maç Detayı`}
                 >
                   {/* Home Code & Color Tag */}
@@ -97,8 +102,12 @@ export const MatchTicker: React.FC<MatchTickerProps> = ({
                   </div>
 
                   {/* Score or VS */}
-                  {isFinished && hasScore ? (
-                    <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-[var(--bg-app)] font-mono font-black text-xs text-[var(--text-primary)] border border-[var(--border)]">
+                  {(isFinished || isLive) && hasScore ? (
+                    <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded font-mono font-black text-xs border ${
+                      isLive 
+                        ? 'bg-rose-500/10 text-rose-300 border-rose-500/30 animate-pulse'
+                        : 'bg-[var(--bg-app)] text-[var(--text-primary)] border-[var(--border)]'
+                    }`}>
                       <span>{fixture.score?.home}</span>
                       <span className="text-[var(--text-muted)] font-normal">-</span>
                       <span>{fixture.score?.away}</span>
@@ -121,7 +130,12 @@ export const MatchTicker: React.FC<MatchTickerProps> = ({
                   </div>
 
                   {/* Status Tag */}
-                  {isFinished ? (
+                  {isLive ? (
+                    <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 font-mono border border-rose-500/30 animate-pulse flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+                      CANLI
+                    </span>
+                  ) : isFinished ? (
                     <span className="text-[9px] font-extrabold uppercase px-1 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono border border-emerald-500/20">
                       MS
                     </span>

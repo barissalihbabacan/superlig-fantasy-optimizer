@@ -55,6 +55,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const homeBrand = getTeamBranding(currentSlideFixture?.home_team_id || '');
   const awayBrand = getTeamBranding(currentSlideFixture?.away_team_id || '');
   const isFinished = currentSlideFixture?.status === 'finished';
+  const isLive = currentSlideFixture?.status === 'live';
   const hasScore = currentSlideFixture?.score !== undefined && currentSlideFixture?.score !== null;
 
   const handlePrevRound = (e: React.MouseEvent) => {
@@ -201,7 +202,25 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
               {/* Scoreline or Time Center (Fixed 56px height) */}
               <div className="h-[56px] flex flex-col items-center justify-center text-center">
-                {isFinished && hasScore ? (
+                {isLive && hasScore ? (
+                  <>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 animate-pulse">
+                      <span className="font-mono font-black text-xl sm:text-2xl text-rose-300">
+                        {currentSlideFixture.score?.home}
+                      </span>
+                      <span className="font-mono text-sm text-rose-400">:</span>
+                      <span className="font-mono font-black text-xl sm:text-2xl text-rose-300">
+                        {currentSlideFixture.score?.away}
+                      </span>
+                    </div>
+                    <div className="mt-1">
+                      <span className="sofa-badge bg-rose-500/20 text-rose-400 border border-rose-500/30 font-mono text-[9px] py-0.2 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+                        CANLI OYNANIYOR
+                      </span>
+                    </div>
+                  </>
+                ) : isFinished && hasScore ? (
                   <>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-strong)]">
                       <span className="font-mono font-black text-xl sm:text-2xl text-[var(--text-primary)]">
@@ -296,13 +315,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
               const fHomeBrand = getTeamBranding(fixture.home_team_id);
               const fAwayBrand = getTeamBranding(fixture.away_team_id);
               const fIsFinished = fixture.status === 'finished';
+              const fIsLive = fixture.status === 'live';
 
               return (
                 <div
                   key={fixture.id}
                   id={`dashboard-fixture-item-${fixture.id}`}
                   onClick={() => onSelectFixture(fixture)}
-                  className="p-2 sm:px-3.5 flex items-center justify-between hover:bg-[var(--bg-card-hover)] cursor-pointer transition-colors flex-1"
+                  className={`p-2 sm:px-3.5 flex items-center justify-between hover:bg-[var(--bg-card-hover)] cursor-pointer transition-colors flex-1 ${
+                    fIsLive ? 'bg-rose-500/5 border-l-2 border-rose-500' : ''
+                  }`}
                 >
                   {/* Home Team */}
                   <div className="flex-1 flex items-center gap-2 min-w-0">
@@ -317,7 +339,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
                   {/* Score / Time Box */}
                   <div className="px-2.5 flex-shrink-0 text-center min-w-[76px]">
-                    {fIsFinished && fixture.score ? (
+                    {fIsLive && fixture.score ? (
+                      <div className="flex flex-col items-center">
+                        <div className="font-mono font-black text-xs sm:text-sm px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/30 leading-tight animate-pulse">
+                          {fixture.score.home} - {fixture.score.away}
+                        </div>
+                        <span className="text-[10px] font-mono text-rose-400 font-extrabold mt-0.5 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+                          CANLI
+                        </span>
+                      </div>
+                    ) : fIsFinished && fixture.score ? (
                       <div className="flex flex-col items-center">
                         <div className="font-mono font-black text-xs sm:text-sm px-2 py-0.5 rounded bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border)] leading-tight">
                           {fixture.score.home} - {fixture.score.away}

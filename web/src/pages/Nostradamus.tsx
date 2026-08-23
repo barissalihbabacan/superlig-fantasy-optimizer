@@ -360,8 +360,7 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
                 const override = resultsOverrides[fixture.id];
                 const isFinished = override?.status === 'finished' || fixture.status === 'finished';
                 const currentScore = override?.score || fixture.score;
-                // Live match simulation for Week 1 matches
-                const isLive = override?.status === 'live' || ['2026-27-w01-03', '2026-27-w01-04'].includes(fixture.id);
+                const isLive = override?.status === 'live' || fixture.status === 'live';
                 const isLocked = isFinished || isLive;
 
                 const actualOutcome = getActualOutcome(fixture);

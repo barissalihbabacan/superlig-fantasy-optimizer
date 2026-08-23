@@ -264,6 +264,7 @@ export const Fixtures: React.FC<FixturesProps> = ({ dataset, onSelectFixture }) 
                 const homeBrand = getTeamBranding(fixture.home_team_id);
                 const awayBrand = getTeamBranding(fixture.away_team_id);
                 const isFinished = fixture.status === 'finished';
+                const isLive = fixture.status === 'live';
                 const hasScore = fixture.score !== undefined && fixture.score !== null;
 
                 return (
@@ -271,7 +272,9 @@ export const Fixtures: React.FC<FixturesProps> = ({ dataset, onSelectFixture }) 
                     key={fixture.id}
                     id={`fixture-card-${fixture.id}`}
                     onClick={() => onSelectFixture(fixture)}
-                    className="sofa-card p-3.5 flex flex-col justify-between hover:bg-[var(--bg-card-hover)] cursor-pointer transition-colors space-y-3"
+                    className={`sofa-card p-3.5 flex flex-col justify-between hover:bg-[var(--bg-card-hover)] cursor-pointer transition-colors space-y-3 ${
+                      isLive ? 'border-rose-500/40 bg-rose-950/10 shadow-md' : ''
+                    }`}
                   >
                     {/* Header row */}
                     <div className="flex items-center justify-between text-[11px] pb-2 border-b border-[var(--border)]">
@@ -279,7 +282,12 @@ export const Fixtures: React.FC<FixturesProps> = ({ dataset, onSelectFixture }) 
                         {fixture.round}. Hafta
                       </span>
 
-                      {isFinished ? (
+                      {isLive ? (
+                        <span className="sofa-badge bg-rose-500/20 text-rose-400 border border-rose-500/30 font-mono animate-pulse flex items-center gap-1.5 font-bold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+                          CANLI
+                        </span>
+                      ) : isFinished ? (
                         <span className="sofa-badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 font-mono">
                           <CheckCircle2 className="w-3 h-3" />
                           Maç Sonucu (MS)
@@ -315,7 +323,11 @@ export const Fixtures: React.FC<FixturesProps> = ({ dataset, onSelectFixture }) 
 
                       {/* Score or VS */}
                       <div className="col-span-1 text-center flex items-center justify-center">
-                        {isFinished && hasScore ? (
+                        {isLive && hasScore ? (
+                          <div className="font-mono font-black text-base sm:text-lg px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/30 animate-pulse">
+                            {fixture.score?.home} - {fixture.score?.away}
+                          </div>
+                        ) : isFinished && hasScore ? (
                           <div className="font-mono font-black text-base sm:text-lg px-2 py-0.5 rounded bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-strong)]">
                             {fixture.score?.home} - {fixture.score?.away}
                           </div>

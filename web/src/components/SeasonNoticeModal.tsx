@@ -1,7 +1,7 @@
 import React from 'react';
 import { SeasonDataset } from '../types';
 import { getTeamBranding, getCurrentActiveRound } from '../services/dataset';
-import { AlertTriangle, CheckCircle, Calendar, Trophy, Sparkles, X, Clock } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Calendar, Trophy, Sparkles, X, Clock, Radio } from 'lucide-react';
 
 interface SeasonNoticeModalProps {
   isOpen: boolean;
@@ -14,8 +14,9 @@ export const SeasonNoticeModal: React.FC<SeasonNoticeModalProps> = ({ isOpen, on
 
   const currentRound = dataset?.fixtures ? getCurrentActiveRound(dataset.fixtures) : 1;
   const currentRoundFixtures = dataset?.fixtures.filter((f) => f.round === currentRound) || [];
+  const liveMatches = currentRoundFixtures.filter((f) => f.status === 'live' && f.score);
   const finishedMatches = currentRoundFixtures.filter((f) => f.status === 'finished' && f.score);
-  const remainingMatches = currentRoundFixtures.filter((f) => f.status !== 'finished');
+  const remainingMatches = currentRoundFixtures.filter((f) => f.status === 'scheduled');
 
   return (
     <div id="season-notice-modal-overlay" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
@@ -50,7 +51,55 @@ export const SeasonNoticeModal: React.FC<SeasonNoticeModalProps> = ({ isOpen, on
           </div>
         </div>
 
-        {/* Dynamic Finished Matches Feed (If any finished in active round) */}
+        {/* Live Matches Feed (If any match is live right now) */}
+        {liveMatches.length > 0 && (
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-xs font-mono text-[var(--text-muted)] px-1">
+              <span className="font-extrabold text-rose-400 flex items-center gap-1.5 animate-pulse">
+                <Radio className="w-3.5 h-3.5" />
+                Şu An Canlı Oynananlar ({liveMatches.length})
+              </span>
+              <span className="text-rose-400 font-bold">Canlı Skor</span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-1.5">
+              {liveMatches.map((f) => {
+                const homeName = dataset?.teams.find((t) => t.id === f.home_team_id)?.name || f.home_team_id;
+                const awayName = dataset?.teams.find((t) => t.id === f.away_team_id)?.name || f.away_team_id;
+                const homeBrand = getTeamBranding(f.home_team_id);
+                const awayBrand = getTeamBranding(f.away_team_id);
+
+                return (
+                  <div
+                    key={f.id}
+                    className="grid grid-cols-12 items-center p-2 sm:px-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs"
+                  >
+                    {/* Home Team (5 cols) */}
+                    <div className="col-span-5 flex items-center gap-2 min-w-0">
+                      <span className="w-1.5 h-3.5 rounded-full flex-shrink-0" style={{ background: homeBrand.primaryColor }} />
+                      <span className="font-bold text-[var(--text-primary)] truncate">{homeName}</span>
+                    </div>
+
+                    {/* Score (2 cols, perfectly centered) */}
+                    <div className="col-span-2 flex items-center justify-center">
+                      <div className="font-mono font-black text-xs sm:text-sm px-2 py-0.5 rounded bg-[var(--bg-card)] border border-rose-500/40 text-rose-300 w-16 text-center animate-pulse">
+                        {f.score?.home} - {f.score?.away}
+                      </div>
+                    </div>
+
+                    {/* Away Team (5 cols) */}
+                    <div className="col-span-5 flex items-center gap-2 min-w-0 justify-end text-right">
+                      <span className="font-bold text-[var(--text-primary)] truncate">{awayName}</span>
+                      <span className="w-1.5 h-3.5 rounded-full flex-shrink-0" style={{ background: awayBrand.primaryColor }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Finished Matches Feed */}
         {finishedMatches.length > 0 && (
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs font-mono text-[var(--text-muted)] px-1">
@@ -103,16 +152,20 @@ export const SeasonNoticeModal: React.FC<SeasonNoticeModalProps> = ({ isOpen, on
           <p className="font-semibold text-amber-300 flex items-center gap-1.5">
             <Calendar className="w-4 h-4 flex-shrink-0" />
             <span>
-              2026/27 Sezonu — {currentRound}. Hafta Karşılaşmaları {remainingMatches.length === 0 ? 'Tamamlandı' : 'Devam Ediyor'}
+              2026/27 Sezonu — {currentRound}. Hafta Karşılaşmaları {liveMatches.length > 0 ? '🔴 Canlı Oynanıyor' : remainingMatches.length === 0 ? 'Tamamlandı' : 'Devam Ediyor'}
             </span>
           </p>
           <p>
-            {finishedMatches.length > 0 ? (
+            {liveMatches.length > 0 ? (
+              <>
+                Şu anda <span className="text-rose-400 font-bold">{liveMatches.length} karşılaşma canlı</span> olarak oynanıyor. Skorlar anlık takip edilebilir.
+              </>
+            ) : finishedMatches.length > 0 ? (
               <>
                 Oynanan <span className="text-white font-bold">{finishedMatches.length} karşılaşmanın</span> resmi maç sonuçları ve oyuncu puanları sisteme işlendi.{' '}
                 {remainingMatches.length > 0 ? (
                   <>
-                    Kalan <span className="text-white font-bold">{remainingMatches.length} karşılaşma</span> tamamlandıkça puan projeksiyonları anlık güncellenecektir.
+                    Kalan <span className="text-white font-bold">{remainingMatches.length} karşılaşma</span> tamamlandıkça puan projeksiyonları güncellenecektir.
                   </>
                 ) : (
                   <>Haftanın tüm karşılaşmaları tamamlandı.</>

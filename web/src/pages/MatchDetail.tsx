@@ -49,6 +49,7 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
   const homeBrand = getTeamBranding(fixture.home_team_id);
   const awayBrand = getTeamBranding(fixture.away_team_id);
   const isFinished = fixture.status === 'finished';
+  const isLive = fixture.status === 'live';
   const hasScore = fixture.score !== undefined && fixture.score !== null;
 
   // Automated highlight verification & URL resolver
@@ -399,7 +400,19 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
 
             {/* Score Center */}
             <div className="flex flex-col items-center justify-center text-center">
-              {isFinished && hasScore ? (
+              {isLive && hasScore ? (
+                <>
+                  <div className="flex items-center gap-3 sm:gap-4 font-mono font-black text-4xl sm:text-6xl text-rose-300 tracking-tight animate-pulse">
+                    <span>{fixture.score?.home}</span>
+                    <span className="text-rose-400 text-3xl sm:text-4xl font-light">:</span>
+                    <span>{fixture.score?.away}</span>
+                  </div>
+                  <div className="mt-2.5 px-3.5 py-1 rounded bg-rose-500/20 text-rose-400 text-xs font-mono font-extrabold uppercase tracking-wider border border-rose-500/30 flex items-center gap-1.5 animate-pulse">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                    CANLI OYNANIYOR
+                  </div>
+                </>
+              ) : isFinished && hasScore ? (
                 <>
                   <div className="flex items-center gap-3 sm:gap-4 font-mono font-black text-4xl sm:text-6xl text-[var(--text-primary)] tracking-tight">
                     <span>{fixture.score?.home}</span>
