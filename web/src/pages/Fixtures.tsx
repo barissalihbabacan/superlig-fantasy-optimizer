@@ -255,8 +255,8 @@ export const Fixtures: React.FC<FixturesProps> = ({ dataset, onSelectFixture }) 
             </div>
           </div>
 
-          {/* Match Cards List */}
-          <div id="fixtures-grid-list" className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+          {/* Match Cards List (Tek Sütun / Single Column) */}
+          <div id="fixtures-grid-list" className="grid grid-cols-1 gap-2.5">
             {filteredFixtures.length > 0 ? (
               filteredFixtures.map((fixture) => {
                 const homeName = teamMap.get(fixture.home_team_id) || fixture.home_team_id;
@@ -370,7 +370,7 @@ export const Fixtures: React.FC<FixturesProps> = ({ dataset, onSelectFixture }) 
                 );
               })
             ) : (
-              <div id="fixtures-empty-state" className="col-span-2 sofa-card p-8 text-center text-xs text-[var(--text-muted)]">
+              <div id="fixtures-empty-state" className="col-span-1 sofa-card p-8 text-center text-xs text-[var(--text-muted)]">
                 Arama kriterine uygun fikstür bulunamadı.
               </div>
             )}
