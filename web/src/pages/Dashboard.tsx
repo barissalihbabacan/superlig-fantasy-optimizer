@@ -88,11 +88,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
     if (activeRound === 2) {
       return [
         { id: 'victor-james-osimhen', name: 'Victor Osimhen', team: 'Galatasaray', pos: 'FOR', pts: 15, price: 1200, stats: '2 Gol 1 Asist · Maçın Adamı' },
+        { id: 'mohamed-salah-hamed-mahrous-ghaly', name: 'Mohamed Salah', team: 'Trabzonspor', pos: 'OS', pts: 14, price: 1200, stats: '2 Gol · Maçın Adamı' },
         { id: 'vedat-muriqi', name: 'Vedat Muriqi', team: 'Fenerbahçe', pos: 'FOR', pts: 12, price: 900, stats: '2 Gol · Maçın Adamı' },
         { id: 'marco-asensio-willemsen', name: 'Marco Asensio', team: 'Fenerbahçe', pos: 'OS', pts: 10, price: 1000, stats: '1 Gol 1 Asist' },
         { id: 'gabriel-davi-gomes-sara', name: 'Gabriel Sara', team: 'Galatasaray', pos: 'OS', pts: 10, price: 700, stats: '2 Asist · 4 Kilit Pas' },
         { id: 'olivier-ntcham', name: 'Olivier Ntcham', team: 'Samsunspor', pos: 'OS', pts: 9, price: 650, stats: '1 Gol · Bonus 3' },
-        { id: 'mamadou-fall', name: 'Mamadou Fall', team: 'Kasımpaşa', pos: 'FOR', pts: 9, price: 600, stats: '1 Gol (Galibiyet Golü)' },
       ];
     }
 

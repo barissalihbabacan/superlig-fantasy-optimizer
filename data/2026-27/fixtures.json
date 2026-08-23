@@ -183,7 +183,11 @@
       "home_team_id": "trabzonspor",
       "away_team_id": "istanbul-basaksehir",
       "kickoff": "2026-08-23T19:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 2,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w02-07",
@@ -206,7 +210,7 @@
       "status": "live",
       "score": {
         "home": 0,
-        "away": 0
+        "away": 1
       }
     },
     {
