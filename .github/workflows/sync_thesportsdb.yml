@@ -3,8 +3,10 @@ name: 🔄 TheSportsDB Süper Lig Maç Sonuçları Senkronizasyonu
 on:
   workflow_dispatch: # GitHub Actions sekmesinden tek tıkla anında çalıştırma
   schedule:
-    # Maç günleri (Cuma, Cts, Pzr, Pzt) 16:00 - 22:00 UTC arası her saat başı ve gece kapanışta çalışır
-    - cron: '0 16,17,18,19,20,21,22 * * 0,1,5,6'
+    # Maç günleri (Cuma, Cts, Pzr, Pzt) 15:00 - 22:00 UTC (18:00 - 01:00 TSİ) arası her 5 dakikada bir çalışır
+    - cron: '*/5 15-22 * * 0,1,5,6'
+    # Hafta içi genel kontrol: Günde 2 kez
+    - cron: '0 9,15 * * 2,3,4'
 
 jobs:
   sync-thesportsdb:
