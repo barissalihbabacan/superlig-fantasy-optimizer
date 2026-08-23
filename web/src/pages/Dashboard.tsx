@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { SeasonDataset, NavTab, Fixture } from '../types';
-import { formatPrice, getTeamBranding, formatDateDDMMYYYY, getCurrentActiveRound } from '../services/dataset';
+import { formatPrice, getTeamBranding, formatDateDDMMYYYY, getCurrentActiveRound, getShortPosition } from '../services/dataset';
 import {
   Trophy,
   Calendar,
@@ -72,15 +72,56 @@ export const Dashboard: React.FC<DashboardProps> = ({
     }
   };
 
-  // Top performers from the played matches in Week 1
-  const topPerformers = [
-    { id: 'victor-james-osimhen', name: 'Victor Osimhen', team: 'Galatasaray', pos: 'FOR', pts: 13, price: 1200, stats: '2 Gol · 38 Şut' },
-    { id: 'ali-sowe', name: 'Ali Sowe', team: 'Çaykur Rizespor', pos: 'FOR', pts: 9, price: 550, stats: '1 Gol · Maçın Adamı' },
-    { id: 'simon-banza', name: 'Simon Banza', team: 'Trabzonspor', pos: 'FOR', pts: 9, price: 850, stats: '1 Gol · Maçın Adamı' },
-    { id: 'irfan-can-egribayat', name: 'İrfan Can Eğribayat', team: 'Gençlerbirliği', pos: 'KL', pts: 8, price: 450, stats: '7 Kurtarış · Maçın Adamı' },
-    { id: 'paulo-victor-mileo-vidotti', name: 'Paulo Victor', team: 'Alanyaspor', pos: 'KL', pts: 8, price: 500, stats: '6 Kurtarış · Maçın Adamı' },
-    { id: 'franco-tongya', name: 'Franco Tongya', team: 'Gençlerbirliği', pos: 'OS', pts: 8, price: 500, stats: '1 Gol' },
-  ];
+  // Dynamic Top Performers based on active selected round
+  const topPerformers = useMemo(() => {
+    if (activeRound === 1) {
+      return [
+        { id: 'victor-james-osimhen', name: 'Victor Osimhen', team: 'Galatasaray', pos: 'FOR', pts: 13, price: 1200, stats: '2 Gol · Maçın Adamı' },
+        { id: 'ali-sowe', name: 'Ali Sowe', team: 'Çaykur Rizespor', pos: 'FOR', pts: 9, price: 550, stats: '1 Gol · Maçın Adamı' },
+        { id: 'simon-banza', name: 'Simon Banza', team: 'Trabzonspor', pos: 'FOR', pts: 9, price: 850, stats: '1 Gol · Maçın Adamı' },
+        { id: 'irfan-can-egribayat', name: 'İrfan Can Eğribayat', team: 'Fenerbahçe', pos: 'KL', pts: 8, price: 450, stats: '7 Kurtarış · Maçın Adamı' },
+        { id: 'paulo-victor-mileo-vidotti', name: 'Paulo Victor', team: 'Alanyaspor', pos: 'KL', pts: 8, price: 500, stats: '6 Kurtarış · Maçın Adamı' },
+        { id: 'franco-tongya', name: 'Franco Tongya', team: 'Gençlerbirliği', pos: 'OS', pts: 8, price: 500, stats: '1 Gol' },
+      ];
+    }
+
+    if (activeRound === 2) {
+      return [
+        { id: 'victor-james-osimhen', name: 'Victor Osimhen', team: 'Galatasaray', pos: 'FOR', pts: 15, price: 1200, stats: '2 Gol 1 Asist · Maçın Adamı' },
+        { id: 'vedat-muriqi', name: 'Vedat Muriqi', team: 'Fenerbahçe', pos: 'FOR', pts: 12, price: 900, stats: '2 Gol · Maçın Adamı' },
+        { id: 'marco-asensio-willemsen', name: 'Marco Asensio', team: 'Fenerbahçe', pos: 'OS', pts: 10, price: 1000, stats: '1 Gol 1 Asist' },
+        { id: 'gabriel-davi-gomes-sara', name: 'Gabriel Sara', team: 'Galatasaray', pos: 'OS', pts: 10, price: 700, stats: '2 Asist · 4 Kilit Pas' },
+        { id: 'olivier-ntcham', name: 'Olivier Ntcham', team: 'Samsunspor', pos: 'OS', pts: 9, price: 650, stats: '1 Gol · Bonus 3' },
+        { id: 'mamadou-fall', name: 'Mamadou Fall', team: 'Kasımpaşa', pos: 'FOR', pts: 9, price: 600, stats: '1 Gol (Galibiyet Golü)' },
+      ];
+    }
+
+    // Dynamic projection for upcoming rounds
+    const roundTeams = new Set<string>();
+    activeRoundFixtures.forEach((f) => {
+      roundTeams.add(f.home_team_id);
+      roundTeams.add(f.away_team_id);
+    });
+
+    const activePlayers = dataset.players
+      .filter((p) => roundTeams.has(p.team_id))
+      .sort((a, b) => b.price - a.price)
+      .slice(0, 6);
+
+    return activePlayers.map((p, idx) => {
+      const teamName = dataset.teams.find((t) => t.id === p.team_id)?.name || p.team_id;
+      const expectedPts = (10 - idx * 0.7).toFixed(1);
+      return {
+        id: p.id,
+        name: p.name,
+        team: teamName,
+        pos: getShortPosition(p.position),
+        pts: parseFloat(expectedPts),
+        price: p.price,
+        stats: `${activeRound}. Hafta Beklenen Puan`,
+      };
+    });
+  }, [activeRound, activeRoundFixtures, dataset.players, dataset.teams]);
 
   return (
     <div id="dashboard-page-container" className="space-y-2.5 animate-fadeIn">
