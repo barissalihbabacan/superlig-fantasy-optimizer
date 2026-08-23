@@ -1,14 +1,14 @@
 name: 🔄 TheSportsDB Süper Lig Maç Sonuçları Senkronizasyonu
 
 on:
-  workflow_dispatch: # GitHub Actions sekmesinden tek tıkla manuel tetikleme
+  workflow_dispatch: # GitHub Actions sekmesinden tek tıkla anında çalıştırma
   schedule:
-    # Maç geceleri (Cuma, Cumartesi, Pazar, Pazartesi günleri 23:30 UTC)
-    - cron: '30 20 * * 0,1,5,6'
+    # Maç günleri (Cuma, Cts, Pzr, Pzt) 16:00 - 22:00 UTC arası her saat başı ve gece kapanışta çalışır
+    - cron: '0 16,17,18,19,20,21,22 * * 0,1,5,6'
 
 jobs:
   sync-thesportsdb:
-    name: ⚡ TheSportsDB Skorlarını Senkronize Et
+    name: ⚡ TheSportsDB Skorlarını Senkronize Et & Canlıya Al
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -28,15 +28,16 @@ jobs:
         run: |
           python3 scripts/sync_thesportsdb.py
 
-      - name: 💾 Güncellemeleri Kaydet ve Push Et
+      - name: 💾 Güncellemeleri Kaydet ve Canlıya Tetikle
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           git add data/2026-27/fixtures.json
           if git diff --staged --quiet; then
-            echo "ℹ️ Yeni skor güncellemesi bulunamadı, veriler güncel."
+            echo "ℹ️ Yeni skor güncellemesi bulunamadı, veriler zaten güncel."
           else
-            git commit -m "chore(data): auto-sync Süper Lig match results via TheSportsDB [skip ci]"
+            # [skip ci] kaldırıldı -> Commit atıldığı an Firebase deploy iş akışı otomatik tetiklenir
+            git commit -m "chore(data): auto-sync Süper Lig match results via TheSportsDB"
             git push origin main
           fi
