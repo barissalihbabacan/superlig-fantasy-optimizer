@@ -198,6 +198,7 @@ export const App: React.FC = () => {
         theme={theme}
         toggleTheme={toggleTheme}
         season={dataset.meta.season}
+        currentRound={currentRound}
         onOpenNotice={handleOpenNotice}
         onOpenGoalAlerts={handleOpenGoalAlerts}
       />

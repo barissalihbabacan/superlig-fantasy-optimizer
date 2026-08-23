@@ -22,6 +22,7 @@ interface HeaderProps {
   theme: 'dark' | 'light';
   toggleTheme: () => void;
   season: string;
+  currentRound?: number;
   onOpenNotice?: () => void;
   onOpenGoalAlerts?: () => void;
 }
@@ -32,6 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
   theme,
   toggleTheme,
   season,
+  currentRound,
   onOpenNotice,
   onOpenGoalAlerts,
 }) => {
@@ -110,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="Sezon Durum Uyarısı"
             >
               <Info className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">1. Hafta</span>
+              <span className="hidden sm:inline">{currentRound || 1}. Hafta</span>
             </button>
           )}
 
