@@ -101,7 +101,7 @@ def main():
     print("🔄 TheSportsDB v2 Süper Lig Maç Sonuçları Senkronizasyonu")
     print("=" * 65)
 
-    api_key = os.environ.get("THESPORTSDB_KEY", "").strip() or "3"
+    api_key = os.environ.get("THESPORTSDB_KEY", "").strip() or "123"
     env_path = os.path.join(os.path.dirname(__file__), "..", ".env")
     if os.path.exists(env_path):
         with open(env_path, "r", encoding="utf-8") as f:
@@ -127,30 +127,58 @@ def main():
         home_name = (ev.get("strHomeTeam") or ev.get("strEvent", "").split(" vs ")[0] or "").lower()
         away_name = (ev.get("strAwayTeam") or (ev.get("strEvent", "").split(" vs ")[1] if " vs " in ev.get("strEvent", "") else "") or "").lower()
         
+        raw_status = (ev.get("strStatus") or "").upper().strip()
         home_score = ev.get("intHomeScore")
         away_score = ev.get("intAwayScore")
 
-        if home_score is not None and away_score is not None and str(home_score).strip() != "" and str(away_score).strip() != "":
-            h_score = int(home_score)
-            a_score = int(away_score)
+        # Map TheSportsDB match status
+        if raw_status in ("FT", "AET", "PEN", "MATCH FINISHED", "FINISHED"):
+            new_status = "finished"
+        elif raw_status in ("1H", "HT", "2H", "ET", "BT", "P", "LIVE", "IN PROGRESS"):
+            new_status = "live"
+        elif raw_status in ("PST", "POSTPONED", "CANCELLED", "CANC", "ABD", "ABANDONED", "SUSP", "SUSPENDED"):
+            new_status = "postponed"
+        else:
+            new_status = "scheduled"
 
-            for local_f in fixtures:
-                local_home = local_f.get("home_team_id", "")
-                local_away = local_f.get("away_team_id", "")
+        has_score = (
+            home_score is not None 
+            and away_score is not None 
+            and str(home_score).strip() != "" 
+            and str(away_score).strip() != ""
+        )
 
-                match_home = any(k in home_name for k, v in TEAM_NAME_TO_ID.items() if v == local_home)
-                match_away = any(k in away_name for k, v in TEAM_NAME_TO_ID.items() if v == local_away)
+        h_score = int(home_score) if has_score else None
+        a_score = int(away_score) if has_score else None
 
-                if match_home and match_away:
-                    if local_f.get("status") != "finished" or local_f.get("score") != {"home": h_score, "away": a_score}:
-                        local_f["status"] = "finished"
-                        local_f["score"] = {"home": h_score, "away": a_score}
-                        updated_count += 1
-                        print(f"  -> [GÜNCELLENDİ] {local_home} {h_score} - {a_score} {local_away}")
+        for local_f in fixtures:
+            local_home = local_f.get("home_team_id", "")
+            local_away = local_f.get("away_team_id", "")
+
+            match_home = any(k in home_name for k, v in TEAM_NAME_TO_ID.items() if v == local_home)
+            match_away = any(k in away_name for k, v in TEAM_NAME_TO_ID.items() if v == local_away)
+
+            if match_home and match_away:
+                target_score = {"home": h_score, "away": a_score} if (has_score and new_status in ("finished", "live")) else None
+                
+                status_changed = local_f.get("status") != new_status
+                score_changed = local_f.get("score") != target_score
+
+                if status_changed or score_changed:
+                    local_f["status"] = new_status
+                    if target_score:
+                        local_f["score"] = target_score
+                    elif "score" in local_f and new_status == "scheduled":
+                        del local_f["score"]
+                    
+                    updated_count += 1
+                    status_badge = f"[{new_status.upper()}]"
+                    score_badge = f"{h_score} - {a_score}" if has_score else "Skor Yok"
+                    print(f"  -> {status_badge} {local_home} {score_badge} {local_away}")
 
     if updated_count > 0:
         save_fixtures(data)
-        print(f"[✅] Toplam {updated_count} maç sonucu başarıyla güncellendi.")
+        print(f"[✅] Toplam {updated_count} maç durumu başarıyla güncellendi.")
     else:
         print("[i] Yerel fikstür zaten güncel.")
 

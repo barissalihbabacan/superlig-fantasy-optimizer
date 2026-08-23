@@ -191,7 +191,7 @@
       "home_team_id": "alanyaspor",
       "away_team_id": "besiktas",
       "kickoff": "2026-08-23T21:30:00+03:00",
-      "status": "finished",
+      "status": "live",
       "score": {
         "home": 0,
         "away": 0
@@ -203,7 +203,7 @@
       "home_team_id": "goztepe",
       "away_team_id": "genclerbirligi",
       "kickoff": "2026-08-24T19:00:00+03:00",
-      "status": "finished",
+      "status": "live",
       "score": {
         "home": 0,
         "away": 0
