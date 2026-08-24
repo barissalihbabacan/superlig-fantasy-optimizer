@@ -223,7 +223,11 @@
       "home_team_id": "kocaelispor",
       "away_team_id": "amed-sportif-faaliyetler",
       "kickoff": "2026-08-24T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 2,
+        "away": 0
+      }
     },
     {
       "id": "2026-27-w03-01",
