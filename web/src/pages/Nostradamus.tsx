@@ -10,6 +10,7 @@ import {
   PredictionType,
 } from '../services/nostradamusStorage';
 import { calculateMatchProbabilities } from '../services/matchPredictor';
+import { trackPredictionSaved, trackPredictionReset } from '../services/analytics';
 import {
   Brain,
   HelpCircle,
@@ -64,6 +65,11 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
     }
     setPredictions(updated);
     saveWeeklyPredictions(selectedRound, updated);
+    trackPredictionSaved({
+      round: selectedRound,
+      predictionCount: Object.keys(updated).length,
+      totalMatches: currentRoundFixtures.length,
+    });
   };
 
   const currentRoundFixtures = useMemo(() => {
@@ -101,12 +107,18 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
 
     setPredictions(updated);
     saveWeeklyPredictions(selectedRound, updated);
+    trackPredictionSaved({
+      round: selectedRound,
+      predictionCount: Object.keys(updated).length,
+      totalMatches: currentRoundFixtures.length,
+    });
   };
 
   // Reset predictions for current round
   const handleResetPredictions = () => {
     setPredictions({});
     saveWeeklyPredictions(selectedRound, {});
+    trackPredictionReset({ round: selectedRound });
   };
 
   // Determine actual outcome for a match if finished

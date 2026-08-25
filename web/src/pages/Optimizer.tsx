@@ -5,6 +5,7 @@ import { runOptimizer, OptimizationResult } from '../services/optimizer';
 import { initOptimizerWasm, cancelOptimization } from '../services/optimizerWasm';
 import { formatPrice, getTeamBranding, getShortPosition } from '../services/dataset';
 import { saveOptimizedSquad, loadOptimizedSquad, clearOptimizedSquad } from '../services/squadStorage';
+import { trackOptimizerRun, trackOptimizerReset } from '../services/analytics';
 import {
   Zap,
   Sliders,
@@ -55,6 +56,12 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
       const optRes = await runOptimizer(dataset.players, dataset.projections, budget, formation);
       setResult(optRes);
       await saveOptimizedSquad(optRes, formation);
+      trackOptimizerRun({
+        formation: optRes.formation || formation,
+        budget,
+        totalPoints: optRes.totalPoints,
+        captainName: optRes.captain?.name,
+      });
     } catch (error) {
       console.error('Optimizasyon Hatası:', error);
     } finally {
@@ -70,6 +77,7 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
   const handleResetClick = async () => {
     setResult(null);
     await clearOptimizedSquad();
+    trackOptimizerReset();
   };
 
   return (

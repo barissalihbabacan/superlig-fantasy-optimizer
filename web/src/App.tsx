@@ -6,6 +6,11 @@ import { Header } from './components/Header';
 import { MatchTicker } from './components/MatchTicker';
 import { Footer } from './components/Footer';
 import { SeasonNoticeModal } from './components/SeasonNoticeModal';
+import {
+  trackTabChange,
+  trackThemeToggle,
+  trackMatchDetailViewed,
+} from './services/analytics';
 
 import { Dashboard } from './pages/Dashboard';
 import { Players } from './pages/Players';
@@ -50,6 +55,7 @@ export const App: React.FC = () => {
       const data = loadSeasonDataset();
       setDataset(data);
       setCurrentRound(getCurrentActiveRound(data.fixtures));
+      trackTabChange('dashboard');
 
       const hasSeenNotice = localStorage.getItem('sf_seen_season_notice_2026_27');
       if (!hasSeenNotice) {
@@ -69,12 +75,27 @@ export const App: React.FC = () => {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setTheme((prev) => {
+      const nextTheme = prev === 'dark' ? 'light' : 'dark';
+      trackThemeToggle(nextTheme);
+      return nextTheme;
+    });
   };
 
   const handleTabChange = (tab: NavTab) => {
     setActiveTab(tab);
     setActiveFixture(null); // Return to main page view when switching tabs
+    trackTabChange(tab);
+  };
+
+  const handleSelectFixture = (f: Fixture) => {
+    setActiveFixture(f);
+    trackMatchDetailViewed({
+      fixtureId: f.id,
+      homeTeam: f.home_team_id,
+      awayTeam: f.away_team_id,
+      round: f.round,
+    });
   };
 
   const handleCloseNotice = () => {
@@ -116,7 +137,7 @@ export const App: React.FC = () => {
             selectedRound={currentRound}
             onSelectRound={setCurrentRound}
             setActiveTab={handleTabChange}
-            onSelectFixture={(f) => setActiveFixture(f)}
+            onSelectFixture={handleSelectFixture}
           />
         );
       case 'players':
@@ -127,7 +148,7 @@ export const App: React.FC = () => {
         return (
           <Fixtures
             dataset={dataset}
-            onSelectFixture={(f) => setActiveFixture(f)}
+            onSelectFixture={handleSelectFixture}
           />
         );
       case 'optimizer':
@@ -138,7 +159,7 @@ export const App: React.FC = () => {
         return (
           <Nostradamus
             dataset={dataset}
-            onSelectFixture={(f) => setActiveFixture(f)}
+            onSelectFixture={handleSelectFixture}
           />
         );
       default:
@@ -148,7 +169,7 @@ export const App: React.FC = () => {
             selectedRound={currentRound}
             onSelectRound={setCurrentRound}
             setActiveTab={handleTabChange}
-            onSelectFixture={(f) => setActiveFixture(f)}
+            onSelectFixture={handleSelectFixture}
           />
         );
     }
