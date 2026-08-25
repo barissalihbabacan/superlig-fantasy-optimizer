@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://superlig-fantasy-optimizer.web.app"><img src="https://img.shields.io/badge/Canlı%20Demo-Firebase%20App-00d563?style=for-the-badge&logo=google-chrome&logoColor=black" alt="Canlı Demo"></a>
-  <a href="https://buymeacoffee.com/barissalihbabacan"><img src="https://img.shields.io/badge/Destekle-Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee"></a>
+  <a href="https://buymeacoffee.com/barissalihv"><img src="https://img.shields.io/badge/Destekle-Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee"></a>
   <a href="https://github.com/barissalihbabacan/superlig-fantasy-optimizer/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/barissalihbabacan/superlig-fantasy-optimizer/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI%20Build" alt="CI Durumu"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/Lisans-MIT-blue.svg?style=for-the-badge" alt="Lisans"></a>
 </p>

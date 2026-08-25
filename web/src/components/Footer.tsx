@@ -34,7 +34,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal }) => {
 
           <a
             id="footer-support-link"
-            href="https://buymeacoffee.com/barissalihbabacan"
+            href="https://buymeacoffee.com/barissalihv"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-amber-400 hover:text-amber-300 transition-colors font-medium"
