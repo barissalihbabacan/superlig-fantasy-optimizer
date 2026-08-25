@@ -242,7 +242,16 @@ export const LegalModal: React.FC<LegalModalProps> = ({
 
               <section className="space-y-1.5">
                 <h4 className="font-bold text-[var(--text-primary)] text-sm">
-                  5. İletişim
+                  5. Harici Bağlantılar
+                </h4>
+                <p>
+                  Uygulama içerisinde yer alan harici bağlantılar (GitHub, Buy Me a Coffee vb.) üçüncü taraf platformlara yönlendirmekte olup, bu platformların veri işleme ve gizlilik uygulamaları kendi bağımsız politikalarına tabidir.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-bold text-[var(--text-primary)] text-sm">
+                  6. İletişim
                 </h4>
                 <p>
                   Gizlilik uygulamalarımızla ilgili her türlü soru için <strong>barissalihbabacan@gmail.com</strong> adresi üzerinden iletişime geçebilirsiniz.
