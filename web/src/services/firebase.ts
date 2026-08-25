@@ -159,3 +159,30 @@ export const sendChatMessage = async (
     createdAt: serverTimestamp(),
   });
 };
+
+export interface FeatureSuggestion {
+  title: string;
+  suggestion: string;
+  contact?: string;
+}
+
+/**
+ * Submit user feature suggestion directly to Firestore
+ */
+export const submitFeatureSuggestion = async (data: FeatureSuggestion): Promise<void> => {
+  const cleanTitle = data.title.trim();
+  const cleanSuggestion = data.suggestion.trim();
+  if (!cleanTitle || !cleanSuggestion) {
+    throw new Error('Başlık ve öneri alanı zorunludur.');
+  }
+
+  const suggestionsRef = collection(db, 'feature_suggestions');
+  await addDoc(suggestionsRef, {
+    title: cleanTitle,
+    suggestion: cleanSuggestion,
+    contact: data.contact?.trim() || null,
+    createdAt: serverTimestamp(),
+    status: 'pending',
+    source: 'web_app',
+  });
+};

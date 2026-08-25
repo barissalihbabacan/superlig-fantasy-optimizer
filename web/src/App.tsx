@@ -8,6 +8,7 @@ import { Footer } from './components/Footer';
 import { SeasonNoticeModal } from './components/SeasonNoticeModal';
 import { LegalModal, LegalTab } from './components/LegalModal';
 import { FeedbackButton } from './components/FeedbackButton';
+import { FeedbackModal } from './components/FeedbackModal';
 import {
   trackTabChange,
   trackThemeToggle,
@@ -38,6 +39,7 @@ export const App: React.FC = () => {
   const [loadingError, setLoadingError] = useState<string | null>(null);
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState<boolean>(false);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState<boolean>(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState<boolean>(false);
   const [legalModalTab, setLegalModalTab] = useState<LegalTab>('terms');
   const [currentRound, setCurrentRound] = useState<number>(1);
 
@@ -257,8 +259,14 @@ export const App: React.FC = () => {
         defaultTab={legalModalTab}
       />
 
-      {/* Floating GitHub Feedback & Feature Request Button */}
-      <FeedbackButton />
+      {/* In-App Feature Suggestion / Feedback Modal */}
+      <FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+      />
+
+      {/* Floating In-App Feedback Button */}
+      <FeedbackButton onClick={() => setIsFeedbackModalOpen(true)} />
     </div>
   );
 };

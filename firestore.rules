@@ -6,6 +6,18 @@ rules_version = '2';
 // or safe to expose.
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Feature suggestions / feedback submitted by users from the web app
+    match /feature_suggestions/{suggestionId} {
+      allow create: if request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.title.size() <= 200
+                    && request.resource.data.suggestion is string
+                    && request.resource.data.suggestion.size() > 0
+                    && request.resource.data.suggestion.size() <= 2500;
+      allow read, update, delete: if false;
+    }
+
+    // All other collections are completely locked from client access
     match /{document=**} {
       allow read, write: if false;
     }
