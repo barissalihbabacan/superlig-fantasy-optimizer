@@ -1,7 +1,12 @@
 import React from 'react';
-import { Mail, Github, FileText } from 'lucide-react';
+import { Mail, Github, FileText, Scale, ShieldCheck } from 'lucide-react';
+import { LegalTab } from './LegalModal';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenLegal?: (tab?: LegalTab) => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenLegal }) => {
   return (
     <footer id="main-footer" className="mt-0 border-t border-[var(--border)] bg-[var(--bg-surface)] py-3 sm:py-3.5 text-xs text-[var(--text-secondary)]">
       <div className="app-container flex flex-col md:flex-row items-center justify-between gap-2.5">
@@ -15,7 +20,7 @@ export const Footer: React.FC = () => {
           </span>
         </div>
 
-        <div id="footer-links" className="flex items-center gap-4 font-mono text-[11px]">
+        <div id="footer-links" className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 font-mono text-[11px]">
           <a
             id="footer-github-link"
             href="https://github.com/barissalihbabacan/superlig-fantasy-optimizer"
@@ -26,6 +31,29 @@ export const Footer: React.FC = () => {
             <Github className="w-3.5 h-3.5" />
             <span>GitHub</span>
           </a>
+
+          {onOpenLegal && (
+            <>
+              <button
+                id="footer-terms-btn"
+                onClick={() => onOpenLegal('terms')}
+                className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors"
+              >
+                <Scale className="w-3.5 h-3.5 text-amber-400" />
+                <span>Kullanım Koşulları</span>
+              </button>
+
+              <button
+                id="footer-privacy-btn"
+                onClick={() => onOpenLegal('privacy')}
+                className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Gizlilik & KVKK</span>
+              </button>
+            </>
+          )}
+
           <a
             id="footer-license-link"
             href="https://github.com/barissalihbabacan/superlig-fantasy-optimizer/blob/main/LICENSE"
@@ -33,9 +61,10 @@ export const Footer: React.FC = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors"
           >
-            <FileText className="w-3.5 h-3.5 text-emerald-400" />
-            <span>MIT Lisansı</span>
+            <FileText className="w-3.5 h-3.5 text-slate-400" />
+            <span>MIT</span>
           </a>
+
           <a
             id="footer-contact-link"
             href="mailto:barissalihbabacan@gmail.com"
@@ -48,7 +77,7 @@ export const Footer: React.FC = () => {
 
         <div id="footer-disclaimer" className="text-[10px] text-[var(--text-muted)] text-center md:text-right max-w-md leading-relaxed">
           <span>
-            Bağımsız analiz ve optimizasyon asistanıdır. TFF veya resmi lig organizatörleri ile resmi bir bağı yoktur. Veriler yalnızca istatistiki araştırma ve referans (Fair Use) amacıyla işlenmektedir.
+            Bağımsız analiz ve optimizasyon asistanıdır. TFF veya resmî lig organizatörleri ile resmî bir bağı yoktur.
           </span>
         </div>
       </div>

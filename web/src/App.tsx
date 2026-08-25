@@ -6,6 +6,7 @@ import { Header } from './components/Header';
 import { MatchTicker } from './components/MatchTicker';
 import { Footer } from './components/Footer';
 import { SeasonNoticeModal } from './components/SeasonNoticeModal';
+import { LegalModal, LegalTab } from './components/LegalModal';
 import {
   trackTabChange,
   trackThemeToggle,
@@ -35,6 +36,8 @@ export const App: React.FC = () => {
   const [dataset, setDataset] = useState<SeasonDataset | null>(null);
   const [loadingError, setLoadingError] = useState<string | null>(null);
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState<boolean>(false);
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState<boolean>(false);
+  const [legalModalTab, setLegalModalTab] = useState<LegalTab>('terms');
   const [currentRound, setCurrentRound] = useState<number>(1);
 
   // Browser Native Unload & Hard Reload Protection (Safari & Chrome compatible)
@@ -231,14 +234,26 @@ export const App: React.FC = () => {
         {renderActiveTab}
       </main>
 
-      {/* Footer */}
-      <Footer />
+      {/* Footer with Legal Links */}
+      <Footer
+        onOpenLegal={(tab) => {
+          setLegalModalTab(tab || 'terms');
+          setIsLegalModalOpen(true);
+        }}
+      />
 
       {/* Season Pre-start Notice Modal */}
       <SeasonNoticeModal
         isOpen={isNoticeModalOpen}
         onClose={handleCloseNotice}
         dataset={dataset}
+      />
+
+      {/* Legal & Privacy Policy Modal */}
+      <LegalModal
+        isOpen={isLegalModalOpen}
+        onClose={() => setIsLegalModalOpen(false)}
+        defaultTab={legalModalTab}
       />
     </div>
   );
