@@ -104,16 +104,7 @@ export async function measureOptimizerExecution<T>(
 ): Promise<T> {
   return measureTrace(
     'optimizer_execution',
-    async (trace) => {
-      const result = await operation();
-      if (trace && result && typeof result === 'object' && 'totalPoints' in result) {
-        const points = (result as { totalPoints?: number }).totalPoints;
-        if (typeof points === 'number') {
-          trace.putMetric('total_points', points);
-        }
-      }
-      return result;
-    },
+    () => operation(),
     {
       attributes: {
         formation: formation || 'Auto',
