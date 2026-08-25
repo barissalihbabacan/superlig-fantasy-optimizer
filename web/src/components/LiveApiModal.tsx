@@ -27,6 +27,37 @@ interface LiveApiModalProps {
   onClose: () => void;
 }
 
+interface StandingTeam {
+  name?: string;
+  shortName?: string;
+  played?: number | string;
+  pts?: number | string;
+}
+
+interface TopPlayer {
+  name: string;
+  teamName: string;
+  goals: number | string;
+}
+
+interface StandingsApiResponse {
+  response?: {
+    standing?: StandingTeam[];
+  };
+}
+
+interface TopPlayersApiResponse {
+  response?: {
+    players?: TopPlayer[];
+  };
+}
+
+interface MatchesApiResponse {
+  response?: {
+    matches?: unknown[];
+  };
+}
+
 export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) => {
   const [apiKey, setApiKey] = useState('');
   const [isSaved, setIsSaved] = useState(false);
@@ -34,7 +65,7 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
   const [testResult, setTestResult] = useState<{
     success: boolean;
     type: 'standings' | 'goals' | 'matches' | 'none';
-    data?: any;
+    data?: unknown;
     error?: string;
   }>({ success: false, type: 'none' });
 
@@ -61,40 +92,44 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
     try {
       if (testType === 'standings') {
         const res = await getLeagueStandings(SUPER_LIG_LEAGUE_ID, keyToUse);
-        if (res.success && res.data?.response?.standing) {
+        const standingsData = res.data as StandingsApiResponse | undefined;
+        if (res.success && standingsData?.response?.standing) {
           setTestResult({
             success: true,
             type: 'standings',
-            data: res.data.response.standing,
+            data: standingsData.response.standing,
           });
         } else {
           setTestResult({ success: false, type: 'standings', error: res.error || 'Veri çekilemedi.' });
         }
       } else if (testType === 'goals') {
         const res = await getTopPlayersByGoals(SUPER_LIG_LEAGUE_ID, keyToUse);
-        if (res.success && res.data?.response?.players) {
+        const goalsData = res.data as TopPlayersApiResponse | undefined;
+        if (res.success && goalsData?.response?.players) {
           setTestResult({
             success: true,
             type: 'goals',
-            data: res.data.response.players,
+            data: goalsData.response.players,
           });
         } else {
           setTestResult({ success: false, type: 'goals', error: res.error || 'Veri çekilemedi.' });
         }
       } else if (testType === 'matches') {
         const res = await getLeagueMatches(SUPER_LIG_LEAGUE_ID, undefined, keyToUse);
-        if (res.success && res.data?.response?.matches) {
+        const matchesData = res.data as MatchesApiResponse | undefined;
+        if (res.success && matchesData?.response?.matches) {
           setTestResult({
             success: true,
             type: 'matches',
-            data: res.data.response.matches,
+            data: matchesData.response.matches,
           });
         } else {
           setTestResult({ success: false, type: 'matches', error: res.error || 'Veri çekilemedi.' });
         }
       }
-    } catch (err: any) {
-      setTestResult({ success: false, type: testType, error: err?.message || 'Bağlantı hatası' });
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'Bağlantı hatası';
+      setTestResult({ success: false, type: testType, error: errorMsg });
     } finally {
       setLoading(false);
     }
@@ -295,7 +330,7 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
               ) : testResult.success && testResult.data ? (
                 testResult.type === 'standings' ? (
                   <div className="divide-y divide-[var(--border)]">
-                    {testResult.data.slice(0, 5).map((team: any, i: number) => (
+                    {(testResult.data as StandingTeam[]).slice(0, 5).map((team, i: number) => (
                       <div key={i} className="py-1.5 flex items-center justify-between text-[11px]">
                         <div className="flex items-center gap-2">
                           <span className="w-4 text-center font-bold text-[var(--text-muted)]">{i + 1}</span>
@@ -313,7 +348,7 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
                   </div>
                 ) : testResult.type === 'goals' ? (
                   <div className="divide-y divide-[var(--border)]">
-                    {testResult.data.map((pl: any, i: number) => (
+                    {(testResult.data as TopPlayer[]).map((pl, i: number) => (
                       <div key={i} className="py-1.5 flex items-center justify-between text-[11px]">
                         <div className="flex items-center gap-2">
                           <span className="w-4 text-center font-bold text-[var(--text-muted)]">{i + 1}</span>
@@ -326,7 +361,7 @@ export const LiveApiModal: React.FC<LiveApiModalProps> = ({ isOpen, onClose }) =
                   </div>
                 ) : (
                   <div className="p-2 text-[11px] text-[var(--text-secondary)]">
-                    ✅ {testResult.data.length} adet Süper Lig karşılaşması başarıyla doğrulandı.
+                    ✅ {(testResult.data as unknown[]).length} adet Süper Lig karşılaşması başarıyla doğrulandı.
                   </div>
                 )
               ) : testResult.error ? (

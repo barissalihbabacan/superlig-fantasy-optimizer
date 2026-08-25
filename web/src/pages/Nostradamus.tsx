@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { SeasonDataset, Fixture } from '../types';
 import { getTeamBranding, getCurrentActiveRound } from '../services/dataset';
@@ -110,7 +110,7 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
   };
 
   // Determine actual outcome for a match if finished
-  const getActualOutcome = (f: Fixture): PredictionType | null => {
+  const getActualOutcome = useCallback((f: Fixture): PredictionType | null => {
     const override = resultsOverrides[f.id];
     const score = override?.score || f.score;
     const isFin = override?.status === 'finished' || f.status === 'finished';
@@ -119,7 +119,7 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
     if (score.home > score.away) return '1';
     if (score.home === score.away) return 'X';
     return '2';
-  };
+  }, [resultsOverrides]);
 
   // Group fixtures by exact chronological day and time
   const fixturesByDay = useMemo(() => {
@@ -206,7 +206,7 @@ export const Nostradamus: React.FC<NostradamusProps> = ({ dataset, onSelectFixtu
       totalMatches: currentRoundFixtures.length || 9,
       finishedCount,
     };
-  }, [currentRoundFixtures, predictions, resultsOverrides]);
+  }, [currentRoundFixtures, predictions, getActualOutcome]);
 
   return (
     <div id="nostradamus-page-container" className="w-full space-y-4 animate-fadeIn">

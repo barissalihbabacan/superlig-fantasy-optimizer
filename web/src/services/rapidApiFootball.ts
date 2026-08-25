@@ -34,7 +34,7 @@ export const saveRapidApiKey = (key: string): void => {
 /**
  * Generic fetcher for Free API Live Football Data, via our own server-side proxy.
  */
-export async function fetchFootballData<T = any>(
+export async function fetchFootballData<T = unknown>(
   endpoint: string,
   params: Record<string, string | number> = {},
   customApiKey?: string
@@ -59,10 +59,11 @@ export async function fetchFootballData<T = any>(
       return { success: false, error: `API Hatası (${response.status}): ${response.statusText}` };
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as T;
     return { success: true, data };
-  } catch (err: any) {
-    return { success: false, error: err?.message || 'Ağ bağlantı hatası oluştu.' };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Ağ bağlantı hatası oluştu.';
+    return { success: false, error: message };
   }
 }
 

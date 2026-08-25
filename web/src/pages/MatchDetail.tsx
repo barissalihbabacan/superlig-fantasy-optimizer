@@ -406,7 +406,7 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
     }
 
     return rows;
-  }, [fixture.id, fixture.score, homeName, awayName, homeStarting11, awayStarting11, dataset.projections, isFinished]);
+  }, [fixture.id, fixture.home_team_id, fixture.score, homeName, awayName, homeStarting11, awayStarting11, dataset.projections, isFinished]);
 
   // Match Stats for Finished matches vs Pre-match Analysis for upcoming
   const matchStats = useMemo(() => {
