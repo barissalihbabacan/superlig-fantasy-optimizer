@@ -1,0 +1,40 @@
+name: 💡 Feature Request / Geliştirme Önerisi
+description: Süper Lig Fantasy Optimizer için yeni bir fikir veya geliştirme önerisi gönderin.
+title: "[Öneri]: "
+labels: ["enhancement", "community-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Süper Lig Fantasy Optimizer'ı daha iyi hale getirecek fikirlerinizi paylaşın!
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 💡 Öneriniz nedir?
+      description: Eklenmesini veya geliştirilmesini istediğiniz özelliği kısaca açıklayın.
+      placeholder: Örneğin: Oyuncu filtreleme ekranına xG ve son 3 hafta form grafiği eklensin...
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🎯 Hangi problemi çözmesini istersiniz?
+      description: Bu özellik hangi kullanım senaryosunu veya zorluğu kolaylaştıracak?
+      placeholder: Kadro kurarken oyuncuların anlık form trendini daha hızlı görmek istiyorum...
+    validations:
+      required: true
+  - type: textarea
+    id: implementation
+    attributes:
+      label: ⚙️ Nasıl çalışmasını hayal ediyorsunuz? (İsteğe bağlı)
+      description: Düşündüğünüz arayüz veya algoritma davranışı hakkında detaylar.
+      placeholder: Oyuncu kartına tıklandığında mini bir popup ile son maç grafiği açılabilir...
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: 📌 Ek açıklamalar veya örnekler (İsteğe bağlı)
+      description: İlgili ekran görüntüleri, referanslar veya başka fantezi futbol örnekleri.
+    validations:
+      required: false

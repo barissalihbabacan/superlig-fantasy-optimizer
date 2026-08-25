@@ -7,6 +7,7 @@ import { MatchTicker } from './components/MatchTicker';
 import { Footer } from './components/Footer';
 import { SeasonNoticeModal } from './components/SeasonNoticeModal';
 import { LegalModal, LegalTab } from './components/LegalModal';
+import { FeedbackButton } from './components/FeedbackButton';
 import {
   trackTabChange,
   trackThemeToggle,
@@ -255,6 +256,9 @@ export const App: React.FC = () => {
         onClose={() => setIsLegalModalOpen(false)}
         defaultTab={legalModalTab}
       />
+
+      {/* Floating GitHub Feedback & Feature Request Button */}
+      <FeedbackButton />
     </div>
   );
 };
