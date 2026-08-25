@@ -45,6 +45,19 @@ export const initAnalytics = async () => {
   return null;
 };
 
+// Initialize Performance Monitoring conditionally
+export const initPerformance = async () => {
+  if (typeof window !== 'undefined') {
+    try {
+      const { getPerformance } = await import('firebase/performance');
+      return getPerformance(app);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+};
+
 // Google Auth Provider
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });

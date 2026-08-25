@@ -6,6 +6,7 @@ import { initOptimizerWasm, cancelOptimization } from '../services/optimizerWasm
 import { formatPrice, getTeamBranding, getShortPosition } from '../services/dataset';
 import { saveOptimizedSquad, loadOptimizedSquad, clearOptimizedSquad } from '../services/squadStorage';
 import { trackOptimizerRun, trackOptimizerReset } from '../services/analytics';
+import { measureOptimizerExecution } from '../services/performance';
 import {
   Zap,
   Sliders,
@@ -53,7 +54,9 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
   const handleOptimizeClick = async () => {
     setIsOptimizing(true);
     try {
-      const optRes = await runOptimizer(dataset.players, dataset.projections, budget, formation);
+      const optRes = await measureOptimizerExecution(formation, () =>
+        runOptimizer(dataset.players, dataset.projections, budget, formation)
+      );
       setResult(optRes);
       await saveOptimizedSquad(optRes, formation);
       trackOptimizerRun({
