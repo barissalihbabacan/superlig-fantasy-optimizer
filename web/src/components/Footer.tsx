@@ -77,7 +77,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal }) => {
 
         <div id="footer-disclaimer" className="text-[10px] text-[var(--text-muted)] text-center md:text-right max-w-md leading-relaxed">
           <span>
-            Bağımsız analiz ve optimizasyon asistanıdır. TFF veya resmî lig organizatörleri ile resmî bir bağı yoktur.
+            Bağımsız bir fantezi futbol analiz ve optimizasyon aracıdır. TFF veya ilgili lig organizatörleriyle herhangi bir resmî bağı veya ortaklığı yoktur. Veriler istatistiksel analiz ve referans amaçlarıyla kullanılmaktadır.
           </span>
         </div>
       </div>
