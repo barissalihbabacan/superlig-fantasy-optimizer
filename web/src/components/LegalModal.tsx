@@ -26,11 +26,11 @@ export const LegalModal: React.FC<LegalModalProps> = ({
     >
       <div
         id="legal-modal-card"
-        className="glass-panel w-full max-w-3xl p-4 sm:p-6 space-y-4 relative border border-[var(--border)] shadow-2xl rounded-2xl bg-[var(--bg-surface)] text-[var(--text-primary)] max-h-[88vh] flex flex-col"
+        className="glass-panel w-full max-w-3xl p-4 sm:p-5 relative border border-[var(--border)] shadow-2xl rounded-2xl bg-[var(--bg-surface)] text-[var(--text-primary)] max-h-[88vh] flex flex-col gap-2.5"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <div className="flex items-center justify-between border-b border-[var(--border)] pb-2.5">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
               <ShieldCheck className="w-4 h-4" />
@@ -56,7 +56,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex items-center gap-1.5 border-b border-[var(--border)] pb-2 overflow-x-auto">
+        <div className="flex items-center gap-1.5 border-b border-[var(--border)] pb-2 overflow-x-auto mt-0">
           <button
             onClick={() => setActiveTab('terms')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${

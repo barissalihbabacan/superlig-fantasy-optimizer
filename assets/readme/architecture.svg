@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="1200" height="200" viewBox="0 0 1200 200"
+     width="1200" height="240" viewBox="0 0 1200 240"
      role="img" aria-labelledby="arch-title arch-desc">
   <title id="arch-title">Bir Rust çekirdeği, iki tüketici</title>
   <desc id="arch-desc">Kural, puanlama ve optimizer motoru tek bir Rust crate'inde yaşar; sf CLI ve WebAssembly üzerinden web arayüzü bu çekirdeği doğrudan çağırır, aralarında ayrı bir mantık kopyası yoktur.</desc>
 
-  <rect width="1200" height="200" rx="18" fill="#0f1420" stroke="#1c2636" stroke-width="1"/>
+  <rect width="1200" height="240" rx="18" fill="#0f1420" stroke="#1c2636" stroke-width="1"/>
 
   <text x="48" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="21" font-weight="700" fill="#f2f5f9">Bir Rust Çekirdeği, İki Tüketici</text>
   <text x="48" y="60" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" fill="#9aa8bb">Kural + puanlama + optimizer mantığı tek yerde yaşar.</text>
@@ -12,15 +12,15 @@
 
   <!-- core box -->
   <g transform="translate(48 96)">
-    <rect x="0" y="0" width="300" height="80" rx="10" fill="#101d15" stroke="#00d563" stroke-width="1.5"/>
-    <text x="16" y="26" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700" fill="#00d563">superlig_fantasy_optimizer</text>
-    <text x="16" y="48" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#9aa8bb">rules · scoring · optimizer</text>
-    <text x="16" y="66" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#9aa8bb">projection_engine · data</text>
+    <rect x="0" y="0" width="300" height="110" rx="10" fill="#101d15" stroke="#00d563" stroke-width="1.5"/>
+    <text x="16" y="28" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700" fill="#00d563">superlig_fantasy_optimizer</text>
+    <text x="16" y="52" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#9aa8bb">rules · scoring · optimizer</text>
+    <text x="16" y="74" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#9aa8bb">projection_engine · data</text>
   </g>
 
   <!-- fork lines -->
-  <path d="M 348 118 C 420 118, 420 62, 492 62" fill="none" stroke="#2a3648" stroke-width="2"/>
-  <path d="M 348 156 C 420 156, 420 178, 492 178" fill="none" stroke="#2a3648" stroke-width="2"/>
+  <path d="M 348 126 C 420 126, 420 62, 492 62" fill="none" stroke="#2a3648" stroke-width="2"/>
+  <path d="M 348 176 C 420 176, 420 178, 492 178" fill="none" stroke="#2a3648" stroke-width="2"/>
 
   <!-- CLI consumer -->
   <g transform="translate(492 32)">

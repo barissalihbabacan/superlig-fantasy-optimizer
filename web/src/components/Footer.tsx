@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Github, FileText, Scale, ShieldCheck } from 'lucide-react';
+import { Mail, Github, FileText, Scale, ShieldCheck, Coffee } from 'lucide-react';
 import { LegalTab } from './LegalModal';
 
 interface FooterProps {
@@ -30,6 +30,19 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal }) => {
           >
             <Github className="w-3.5 h-3.5" />
             <span>GitHub</span>
+          </a>
+
+          <a
+            id="footer-support-link"
+            href="https://buymeacoffee.com/barissalihbabacan"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-amber-400 hover:text-amber-300 transition-colors font-medium"
+            title="Bu proje ücretsiz ve açık kaynaklıdır. Geliştirilmesini desteklemek istersen gönüllü olarak bir kahve ısmarlayabilirsin ☕"
+            aria-label="Projeyi Destekle (Buy Me a Coffee)"
+          >
+            <Coffee className="w-3.5 h-3.5" />
+            <span>Destekle ☕</span>
           </a>
 
           {onOpenLegal && (
