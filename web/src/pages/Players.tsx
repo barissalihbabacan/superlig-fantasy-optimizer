@@ -1,18 +1,22 @@
 import React, { useState, useMemo } from 'react';
 import { SeasonDataset, Player } from '../types';
 import { formatPrice, getPositionBadgeColor, getShortPosition, getTeamBranding } from '../services/dataset';
+import { calculateAllPlayerStats } from '../services/playerPoints';
 import {
   Search,
   Users,
   ArrowUpDown,
   X,
+  TrendingUp,
+  ShieldCheck,
+  Zap,
 } from 'lucide-react';
 
 interface PlayersProps {
   dataset: SeasonDataset;
 }
 
-type SortField = 'name' | 'price' | 'position' | 'team' | 'points';
+type SortField = 'name' | 'price' | 'position' | 'team' | 'points' | 'avgPoints' | 'matches' | 'expectedPoints';
 type SortOrder = 'asc' | 'desc';
 
 export const Players: React.FC<PlayersProps> = ({ dataset }) => {
@@ -22,9 +26,14 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
   const [minPrice] = useState<number>(400);
   const [maxPrice, setMaxPrice] = useState<number>(1500);
 
-  const [sortField, setSortField] = useState<SortField>('price');
+  const [sortField, setSortField] = useState<SortField>('points');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+
+  // Precompute dynamic match points & performance for all players from finished fixtures
+  const playerStatsMap = useMemo(() => {
+    return calculateAllPlayerStats(dataset.players, dataset.fixtures);
+  }, [dataset.players, dataset.fixtures]);
 
   const teamMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -50,13 +59,34 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
         return true;
       })
       .sort((a, b) => {
-        let valA: string | number = a[sortField as keyof Player] as string | number;
-        let valB: string | number = b[sortField as keyof Player] as string | number;
+        const statsA = playerStatsMap.get(a.id);
+        const statsB = playerStatsMap.get(b.id);
 
-        if (sortField === 'team') {
+        let valA: string | number = 0;
+        let valB: string | number = 0;
+
+        if (sortField === 'name') {
+          valA = a.name;
+          valB = b.name;
+        } else if (sortField === 'price') {
+          valA = a.price;
+          valB = b.price;
+        } else if (sortField === 'position') {
+          valA = a.position;
+          valB = b.position;
+        } else if (sortField === 'team') {
           valA = teamMap.get(a.team_id) || '';
           valB = teamMap.get(b.team_id) || '';
         } else if (sortField === 'points') {
+          valA = statsA?.totalPoints ?? 0;
+          valB = statsB?.totalPoints ?? 0;
+        } else if (sortField === 'avgPoints') {
+          valA = statsA?.averagePoints ?? 0;
+          valB = statsB?.averagePoints ?? 0;
+        } else if (sortField === 'matches') {
+          valA = statsA?.matchesPlayed ?? 0;
+          valB = statsB?.matchesPlayed ?? 0;
+        } else if (sortField === 'expectedPoints') {
           valA = dataset.projections.get(a.id)?.expected_points ?? 0;
           valB = dataset.projections.get(b.id)?.expected_points ?? 0;
         }
@@ -71,7 +101,19 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
         const numB = typeof valB === 'number' ? valB : 0;
         return sortOrder === 'asc' ? numA - numB : numB - numA;
       });
-  }, [dataset.players, dataset.projections, searchTerm, selectedTeam, selectedPosition, minPrice, maxPrice, sortField, sortOrder, teamMap]);
+  }, [
+    dataset.players,
+    dataset.projections,
+    playerStatsMap,
+    searchTerm,
+    selectedTeam,
+    selectedPosition,
+    minPrice,
+    maxPrice,
+    sortField,
+    sortOrder,
+    teamMap,
+  ]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -82,11 +124,20 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
     }
   };
 
+  const selectedPlayerStats = useMemo(() => {
+    if (!selectedPlayer) return null;
+    return playerStatsMap.get(selectedPlayer.id) || null;
+  }, [selectedPlayer, playerStatsMap]);
+
   const upcomingPlayerFixtures = useMemo(() => {
     if (!selectedPlayer) return [];
     return dataset.fixtures
-      .filter((f) => f.home_team_id === selectedPlayer.team_id || f.away_team_id === selectedPlayer.team_id)
-      .slice(0, 3);
+      .filter(
+        (f) =>
+          f.status !== 'finished' &&
+          (f.home_team_id === selectedPlayer.team_id || f.away_team_id === selectedPlayer.team_id)
+      )
+      .slice(0, 4);
   }, [selectedPlayer, dataset.fixtures]);
 
   return (
@@ -97,61 +148,66 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-[var(--color-brand)]" />
             <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-[var(--text-primary)]">
-              Oyuncu Veritabanı & İstatistikler
+              Oyuncu Veritabanı & Canlı Puanlar
             </h2>
           </div>
-          <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-            443 Süper Lig oyuncusunun mevkileri, fiyatları ve sezon puanları.
+          <p className="text-xs text-[var(--text-muted)] mt-0.5">
+            Tamamlanan her maçtan sonra otomatik güncellenen gerçek fantasy puanları ve maç geçmişi
           </p>
         </div>
 
-        <div id="players-count-indicator" className="text-xs font-mono text-[var(--text-muted)] self-start sm:self-auto">
-          Gösterilen: <span className="font-bold text-[var(--text-primary)]">{filteredPlayers.length}</span> / {dataset.players.length}
+        {/* Global summary badge */}
+        <div className="flex items-center gap-2">
+          <div className="px-3 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] text-xs font-mono">
+            <span className="text-[var(--text-muted)]">Kayıtlı: </span>
+            <span className="font-bold text-[var(--color-brand)]">{dataset.players.length}</span>
+            <span className="text-[var(--text-muted)]"> Oyuncu</span>
+          </div>
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <div id="players-filter-card" className="sofa-card p-3 space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
-          {/* Search */}
-          <div className="sofa-search-container">
-            <Search />
+      {/* Filter Toolbar */}
+      <div id="players-filters-card" className="glass-panel p-3.5 space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          {/* Search Box */}
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-[var(--text-muted)]" />
             <input
               id="player-search-input"
               type="text"
-              placeholder="Oyuncu ara (Osimhen, Sané...)"
+              placeholder="Oyuncu ara..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="form-input-sofa"
+              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg bg-[var(--bg-card)] border border-[var(--border)] focus:border-[var(--color-brand)] focus:outline-none text-[var(--text-primary)]"
             />
           </div>
 
-          {/* Team Select */}
+          {/* Team Dropdown */}
           <div>
             <select
-              id="player-team-filter-select"
+              id="player-team-select"
               value={selectedTeam}
               onChange={(e) => setSelectedTeam(e.target.value)}
-              className="form-select-sofa"
+              className="w-full px-3 py-1.5 text-xs rounded-lg bg-[var(--bg-card)] border border-[var(--border)] focus:border-[var(--color-brand)] focus:outline-none text-[var(--text-primary)] cursor-pointer"
             >
-              <option value="all">Tüm Kulüpler (18 Takım)</option>
-              {dataset.teams.map((team) => (
-                <option key={team.id} value={team.id}>
-                  {team.name}
+              <option value="all">Tüm Kulüpler ({dataset.teams.length})</option>
+              {dataset.teams.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Position Select */}
+          {/* Position Dropdown */}
           <div>
             <select
-              id="player-position-filter-select"
+              id="player-position-select"
               value={selectedPosition}
               onChange={(e) => setSelectedPosition(e.target.value)}
-              className="form-select-sofa"
+              className="w-full px-3 py-1.5 text-xs rounded-lg bg-[var(--bg-card)] border border-[var(--border)] focus:border-[var(--color-brand)] focus:outline-none text-[var(--text-primary)] cursor-pointer"
             >
-              <option value="all">Tüm Mevkiler (KL, DEF, OS, FOR)</option>
+              <option value="all">Tüm Mevkiler</option>
               <option value="Goalkeeper">Kaleci (KL)</option>
               <option value="Defender">Defans (DEF)</option>
               <option value="Midfielder">Orta Saha (OS)</option>
@@ -159,13 +215,11 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
             </select>
           </div>
 
-          {/* Price Range */}
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono text-[var(--text-muted)] whitespace-nowrap">
-              Maks:
-            </span>
+          {/* Max Price Slider */}
+          <div className="flex items-center gap-2 px-2 rounded-lg bg-[var(--bg-card)] border border-[var(--border)]">
+            <span className="text-[11px] text-[var(--text-muted)] whitespace-nowrap">Maks Fiyat:</span>
             <input
-              id="player-price-range-slider"
+              id="player-price-slider"
               type="range"
               min={400}
               max={1500}
@@ -200,7 +254,7 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
         </div>
       </div>
 
-      {/* Players Data Table (Sofascore Stats Table) */}
+      {/* Players Data Table */}
       <div id="players-table-wrapper" className="sofa-table-wrapper">
         <table id="players-stats-table" className="sofa-table">
           <thead>
@@ -229,9 +283,27 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
                   <ArrowUpDown className="w-3 h-3" />
                 </div>
               </th>
+              <th id="th-sort-matches" onClick={() => handleSort('matches')} className="cursor-pointer hover:text-white text-center">
+                <div className="flex items-center justify-center gap-1">
+                  <span>OM</span>
+                  <ArrowUpDown className="w-3 h-3" />
+                </div>
+              </th>
               <th id="th-sort-points" onClick={() => handleSort('points')} className="cursor-pointer hover:text-white text-right">
                 <div className="flex items-center justify-end gap-1">
-                  <span>Sezon Puanı</span>
+                  <span className="text-[var(--color-brand)]">Toplam Puan</span>
+                  <ArrowUpDown className="w-3 h-3" />
+                </div>
+              </th>
+              <th id="th-sort-avg" onClick={() => handleSort('avgPoints')} className="cursor-pointer hover:text-white text-right">
+                <div className="flex items-center justify-end gap-1">
+                  <span>Ort.</span>
+                  <ArrowUpDown className="w-3 h-3" />
+                </div>
+              </th>
+              <th id="th-sort-xp" onClick={() => handleSort('expectedPoints')} className="cursor-pointer hover:text-white text-right">
+                <div className="flex items-center justify-end gap-1">
+                  <span>Gelecek xP</span>
                   <ArrowUpDown className="w-3 h-3" />
                 </div>
               </th>
@@ -241,6 +313,7 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
             {filteredPlayers.map((player) => {
               const brand = getTeamBranding(player.team_id);
               const teamName = teamMap.get(player.team_id) || player.team_id;
+              const stats = playerStatsMap.get(player.id);
               const expectedPoints = dataset.projections.get(player.id)?.expected_points ?? 0;
               const shortPos = getShortPosition(player.position);
               const posColor = getPositionBadgeColor(player.position);
@@ -250,7 +323,7 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
                   key={player.id}
                   id={`player-row-${player.id}`}
                   onClick={() => setSelectedPlayer(player)}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:bg-white/5 transition-colors"
                 >
                   <td>
                     <span
@@ -269,22 +342,31 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
                         className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                         style={{ background: brand.primaryColor }}
                       />
-                      <span className="truncate max-w-[140px]">{teamName}</span>
+                      <span className="truncate max-w-[130px]">{teamName}</span>
                     </span>
                   </td>
                   <td className="font-mono font-bold text-[var(--color-brand)]">
                     {formatPrice(player.price)}
                   </td>
+                  <td className="text-center font-mono text-xs text-[var(--text-muted)]">
+                    {stats?.matchesPlayed ?? 0}
+                  </td>
                   <td className="text-right">
-                    {expectedPoints > 0 ? (
-                      <span className="sofa-rating sofa-rating-high font-mono">
-                        {expectedPoints.toFixed(0)} pts
+                    {(stats?.totalPoints ?? 0) > 0 ? (
+                      <span className="sofa-rating sofa-rating-high font-mono font-bold text-xs">
+                        {stats?.totalPoints} pts
                       </span>
                     ) : (
                       <span className="font-mono text-xs text-[var(--text-muted)] opacity-60">
-                        0.0 pts
+                        0 pts
                       </span>
                     )}
+                  </td>
+                  <td className="text-right font-mono text-xs text-[var(--text-secondary)]">
+                    {(stats?.averagePoints ?? 0) > 0 ? stats?.averagePoints.toFixed(1) : '-'}
+                  </td>
+                  <td className="text-right font-mono text-xs text-[var(--text-muted)]">
+                    {expectedPoints > 0 ? `${expectedPoints.toFixed(1)} xP` : '-'}
                   </td>
                 </tr>
               );
@@ -295,16 +377,21 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
 
       {/* Player Detail Drawer Modal */}
       {selectedPlayer && (
-        <div id="player-detail-modal-backdrop" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+        <div
+          id="player-detail-modal-backdrop"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setSelectedPlayer(null)}
+        >
           <div
             id="player-detail-modal"
-            className="bg-[var(--bg-surface)] border border-[var(--border-strong)] rounded-xl w-full max-w-md overflow-hidden shadow-2xl space-y-4 p-5"
+            className="glass-panel w-full max-w-lg overflow-hidden shadow-2xl space-y-4 p-5 max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Header */}
             <div className="flex items-start justify-between pb-3 border-b border-[var(--border)]">
               <div className="flex items-center gap-3">
                 <div
-                  className="w-11 h-11 rounded-full flex items-center justify-center font-black text-sm shadow border"
+                  className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-sm shadow border"
                   style={{
                     background: getTeamBranding(selectedPlayer.team_id).primaryColor,
                     color: getTeamBranding(selectedPlayer.team_id).textColor,
@@ -313,7 +400,7 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
                   {getTeamBranding(selectedPlayer.team_id).code}
                 </div>
                 <div>
-                  <h3 id="player-modal-name" className="font-extrabold text-base text-[var(--text-primary)]">
+                  <h3 id="player-modal-name" className="font-extrabold text-base sm:text-lg text-[var(--text-primary)]">
                     {selectedPlayer.name}
                   </h3>
                   <div className="text-xs text-[var(--text-muted)] font-mono">
@@ -324,34 +411,103 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
               <button
                 id="player-modal-close-btn"
                 onClick={() => setSelectedPlayer(null)}
-                className="p-1 rounded hover:bg-[var(--bg-card)] text-[var(--text-secondary)]"
+                className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/10"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-              <div className="p-2.5 rounded bg-[var(--bg-card)] border border-[var(--border)]">
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+              <div className="p-2.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)]">
+                <div className="text-[10px] text-[var(--text-muted)] uppercase">Toplam Puan</div>
+                <div id="player-modal-total-pts" className="font-black text-base text-[var(--color-brand)] flex items-center gap-1">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span>{selectedPlayerStats?.totalPoints ?? 0} pts</span>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)]">
+                <div className="text-[10px] text-[var(--text-muted)] uppercase">Maç Başı Ort.</div>
+                <div id="player-modal-avg-pts" className="font-black text-base text-[var(--text-primary)]">
+                  {selectedPlayerStats?.averagePoints.toFixed(1) ?? '0.0'} pts
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)]">
                 <div className="text-[10px] text-[var(--text-muted)] uppercase">Kadro Değeri</div>
-                <div id="player-modal-price" className="font-black text-sm text-[var(--color-brand)]">
+                <div id="player-modal-price" className="font-black text-base text-amber-400">
                   {formatPrice(selectedPlayer.price)}
                 </div>
               </div>
 
-              <div className="p-2.5 rounded bg-[var(--bg-card)] border border-[var(--border)]">
-                <div className="text-[10px] text-[var(--text-muted)] uppercase">Sezon Puanı</div>
-                <div id="player-modal-expected-pts" className="font-black text-sm text-[var(--text-primary)]">
-                  {dataset.projections.get(selectedPlayer.id)?.expected_points.toFixed(1) ?? '0.0'} pts
+              <div className="p-2.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)]">
+                <div className="text-[10px] text-[var(--text-muted)] uppercase">Gelecek xP</div>
+                <div id="player-modal-expected-pts" className="font-black text-base text-blue-400 flex items-center gap-1">
+                  <Zap className="w-3.5 h-3.5" />
+                  <span>{dataset.projections.get(selectedPlayer.id)?.expected_points.toFixed(1) ?? '0.0'}</span>
                 </div>
               </div>
             </div>
 
+            {/* Completed Matches Performance Breakdown */}
+            <div id="player-modal-match-history" className="space-y-2">
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase text-[var(--text-muted)] border-b border-[var(--border)] pb-1">
+                <span>Tamamlanan Maç Performansları</span>
+                <span className="font-mono">{selectedPlayerStats?.matchesPlayed ?? 0} Maç Oynandı</span>
+              </div>
+
+              {(selectedPlayerStats?.matchHistory.length ?? 0) === 0 ? (
+                <div className="p-3 text-center text-xs text-[var(--text-muted)] bg-[var(--bg-card)] rounded-lg border border-[var(--border)]">
+                  Henüz tamamlanmış maç verisi bulunmamaktadır.
+                </div>
+              ) : (
+                <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                  {selectedPlayerStats?.matchHistory.map((m) => {
+                    const oppName = teamMap.get(m.opponentTeamId) || m.opponentTeamId;
+                    const scoreText = `${m.teamGoals} - ${m.opponentGoals}`;
+
+                    return (
+                      <div
+                        key={m.fixtureId}
+                        className="p-2 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-between text-xs"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="px-1.5 py-0.5 rounded bg-[var(--bg-surface)] text-[10px] font-mono text-[var(--text-muted)]">
+                            H{m.round}
+                          </span>
+                          <span className="font-medium text-[var(--text-primary)]">
+                            {m.isHome ? 'vs' : '@'} {oppName}
+                          </span>
+                          <span className={`text-[11px] font-mono font-bold ${m.won ? 'text-emerald-400' : 'text-[var(--text-muted)]'}`}>
+                            ({scoreText})
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          {m.cleanSheet && (
+                            <span className="flex items-center gap-0.5 text-[10px] text-emerald-400 font-mono" title="Golsüz Tamamlandı">
+                              <ShieldCheck className="w-3 h-3" />
+                              <span>CS</span>
+                            </span>
+                          )}
+                          <span className="sofa-rating sofa-rating-high font-mono font-bold text-xs">
+                            +{m.points} pts
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             {/* Upcoming Fixtures */}
             <div id="player-modal-fixtures" className="space-y-2">
-              <div className="text-[11px] font-bold uppercase text-[var(--text-muted)]">
+              <div className="text-[11px] font-bold uppercase text-[var(--text-muted)] border-b border-[var(--border)] pb-1">
                 Sıradaki Karşılaşmalar
               </div>
-              <div className="space-y-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {upcomingPlayerFixtures.map((f) => {
                   const isHome = f.home_team_id === selectedPlayer.team_id;
                   const oppId = isHome ? f.away_team_id : f.home_team_id;
@@ -360,14 +516,16 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
                   return (
                     <div
                       key={f.id}
-                      className="p-2 rounded bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-between text-xs"
+                      className="p-2 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-between text-xs"
                     >
-                      <span className="font-mono text-[var(--text-muted)]">H{f.round}</span>
-                      <span className="font-bold text-[var(--text-primary)]">
-                        {isHome ? 'Ev Sahibi vs' : 'Deplasman vs'} {oppName}
-                      </span>
-                      <span className="font-mono text-[10px] text-[var(--text-muted)]">
-                        {f.status === 'finished' ? 'Bitti' : 'Planlandı'}
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono text-[10px] text-[var(--text-muted)]">H{f.round}</span>
+                        <span className="font-semibold text-[var(--text-primary)] truncate max-w-[120px]">
+                          {isHome ? 'Ev Sahibi vs' : 'Dep vs'} {oppName}
+                        </span>
+                      </div>
+                      <span className="font-mono text-[10px] text-blue-400">
+                        {f.status === 'live' ? 'CANLI' : 'Planlandı'}
                       </span>
                     </div>
                   );
