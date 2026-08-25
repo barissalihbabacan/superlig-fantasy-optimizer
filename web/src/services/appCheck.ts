@@ -3,6 +3,8 @@ import type { AppCheck } from 'firebase/app-check';
 
 let appCheckInstance: AppCheck | null = null;
 
+const DEFAULT_RECAPTCHA_ENTERPRISE_SITE_KEY = '6LdyEJgtAAAAALu6JxdBYkEO7qyg6g5MkZhBcc21';
+
 /**
  * Initialize Firebase App Check with reCAPTCHA Enterprise provider.
  * Keeps enforcement strictly in MONITORING mode (Unenforced) to verify token flow safely.
@@ -14,7 +16,7 @@ export const initAppCheck = async (): Promise<AppCheck | null> => {
   try {
     const siteKey =
       (typeof import.meta !== 'undefined' && import.meta.env?.VITE_RECAPTCHA_ENTERPRISE_SITE_KEY) ||
-      '';
+      DEFAULT_RECAPTCHA_ENTERPRISE_SITE_KEY;
 
     const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
     const debugToken =
@@ -26,18 +28,10 @@ export const initAppCheck = async (): Promise<AppCheck | null> => {
       (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken || true;
     }
 
-    if (!siteKey && !isDev && !debugToken) {
-      // No site key provided yet in production; skip gracefully
-      return null;
-    }
-
     const { initializeAppCheck, ReCaptchaEnterpriseProvider } = await import('firebase/app-check');
 
-    // Use dummy/placeholder key if in dev with debug token and no key supplied
-    const effectiveKey = siteKey || '6Ldummy_dev_site_key_for_app_check';
-
     appCheckInstance = initializeAppCheck(app, {
-      provider: new ReCaptchaEnterpriseProvider(effectiveKey),
+      provider: new ReCaptchaEnterpriseProvider(siteKey),
       isTokenAutoRefreshEnabled: true,
     });
 
