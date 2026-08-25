@@ -6,7 +6,6 @@ import { Header } from './components/Header';
 import { MatchTicker } from './components/MatchTicker';
 import { Footer } from './components/Footer';
 import { SeasonNoticeModal } from './components/SeasonNoticeModal';
-import { GoalAlertsModal } from './components/GoalAlertsModal';
 
 import { Dashboard } from './pages/Dashboard';
 import { Players } from './pages/Players';
@@ -31,7 +30,6 @@ export const App: React.FC = () => {
   const [dataset, setDataset] = useState<SeasonDataset | null>(null);
   const [loadingError, setLoadingError] = useState<string | null>(null);
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState<boolean>(false);
-  const [isGoalAlertsModalOpen, setIsGoalAlertsModalOpen] = useState<boolean>(false);
   const [currentRound, setCurrentRound] = useState<number>(1);
 
   // Browser Native Unload & Hard Reload Protection (Safari & Chrome compatible)
@@ -86,10 +84,6 @@ export const App: React.FC = () => {
 
   const handleOpenNotice = () => {
     setIsNoticeModalOpen(true);
-  };
-
-  const handleOpenGoalAlerts = () => {
-    setIsGoalAlertsModalOpen(true);
   };
 
   const teamsMap = useMemo(() => {
@@ -200,7 +194,6 @@ export const App: React.FC = () => {
         season={dataset.meta.season}
         currentRound={currentRound}
         onOpenNotice={handleOpenNotice}
-        onOpenGoalAlerts={handleOpenGoalAlerts}
       />
 
       {/* Sofascore Live Match Ticker Strip */}
@@ -224,13 +217,6 @@ export const App: React.FC = () => {
       <SeasonNoticeModal
         isOpen={isNoticeModalOpen}
         onClose={handleCloseNotice}
-        dataset={dataset}
-      />
-
-      {/* Goal Alerts (Push Notification) Modal */}
-      <GoalAlertsModal
-        isOpen={isGoalAlertsModalOpen}
-        onClose={() => setIsGoalAlertsModalOpen(false)}
         dataset={dataset}
       />
     </div>

@@ -1,6 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAnalytics, isSupported } from 'firebase/analytics';
-import { getMessaging, isSupported as isMessagingSupported, type Messaging } from 'firebase/messaging';
 import {
   getAuth,
   GoogleAuthProvider,
@@ -44,16 +43,6 @@ export const initAnalytics = async () => {
     return getAnalytics(app);
   }
   return null;
-};
-
-// Initialize Cloud Messaging conditionally — unsupported in SSR/older
-// browsers (no ServiceWorker/PushManager), so goal-alert code must always
-// go through this guard rather than calling getMessaging() directly.
-export const getMessagingIfSupported = async (): Promise<Messaging | null> => {
-  if (typeof window === 'undefined' || !(await isMessagingSupported())) {
-    return null;
-  }
-  return getMessaging(app);
 };
 
 // Google Auth Provider
