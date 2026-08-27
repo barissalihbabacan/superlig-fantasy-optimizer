@@ -1,9 +1,5 @@
 rules_version = '2';
 
-// Everything here (pushSubscriptions, liveMatchState, quotaUsage) is written
-// exclusively by the Cloud Functions Admin SDK, which bypasses these rules.
-// There is no user auth in this app, so no client read/write path is needed
-// or safe to expose.
 service cloud.firestore {
   match /databases/{database}/documents {
     // Feature suggestions / feedback submitted by users from the web app
