@@ -24,7 +24,12 @@ const RESULTS_KEY = 'superlig_nostradamus_results_v3';
 const IDB_NAME = 'SuperLigFantasyDB';
 const IDB_STORE = 'nostradamus_data';
 
-// Permanent default predictions based on user's exact kupon (Resilient against hard cache clear Cmd+Opt+R)
+// BULGU 2 düzeltmesi: bu, tek bir kişinin gerçek 1. hafta kuponuydu ve önceki
+// sürümde `loadAllPredictions` her boş/yeni kullanıcıya bunu otomatik olarak
+// "kendi tahminiymiş" gibi enjekte edip gerçek sonuçlarla karşılaştırıyor,
+// kullanıcıya ait olmayan bir "doğru tahmin" skoru gösteriyordu. Artık
+// otomatik enjekte edilmiyor (bkz. `loadAllPredictions` ve migration mantığı
+// aşağıda) — yalnızca referans veri olarak ve testlerde kalıyor.
 export const DEFAULT_W1_PREDICTIONS: WeeklyPredictions = {
   '2026-27-w01-01': '1', // Galatasaray vs Çorum FK -> Galatasaray kazanır (MS 1)
   '2026-27-w01-02': '2', // Konyaspor vs Rizespor -> Rizespor kazanır (MS 2)
@@ -84,9 +89,16 @@ const saveToIDB = async (key: string, value: unknown) => {
   }
 };
 
+function predictionsEqual(a: WeeklyPredictions, b: WeeklyPredictions): boolean {
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) return false;
+  return aKeys.every((key) => a[key] === b[key]);
+}
+
 // --- Load Predictions (LocalStorage + Fallback) ---
 export const loadAllPredictions = (): AllPredictions => {
-  let all: AllPredictions = { 1: { ...DEFAULT_W1_PREDICTIONS } };
+  let all: AllPredictions = {};
 
   try {
     // Check v3 key first, then fallback to previous keys if existed
@@ -105,9 +117,16 @@ export const loadAllPredictions = (): AllPredictions => {
     console.warn('Failed to read predictions from localStorage:', e);
   }
 
-  // Guarantee Week 1 predictions are never empty even after hard cache clear
-  if (!all[1] || Object.keys(all[1]).length === 0) {
-    all[1] = { ...DEFAULT_W1_PREDICTIONS };
+  // Tek seferlik geriye dönük temizlik: eski sürüm, her boş/yeni kullanıcıya
+  // round 1'i otomatik olarak DEFAULT_W1_PREDICTIONS ile dolduruyordu. Bir
+  // kullanıcının organik olarak tüm 9 maçta da bu tam kombinasyonu seçmesi
+  // istatistiksel olarak ihmal edilebilir (3^9 olası kupondan 1'i), bu yüzden
+  // kayıtlı round 1 verisi bu varsayılan kümeyle birebir aynıysa bunun eski
+  // otomatik enjeksiyondan kaldığını kabul edip temizliyoruz. Gerçekten kendi
+  // tahminini yapmış — hatta tamamen aynısını seçmiş olsa bile farklı bir tek
+  // maçta bile ayrışan — bir kullanıcının verisi bundan etkilenmez.
+  if (all[1] && predictionsEqual(all[1], DEFAULT_W1_PREDICTIONS)) {
+    delete all[1];
     try {
       localStorage.setItem(PREDICTIONS_KEY, JSON.stringify(all));
       saveToIDB(PREDICTIONS_KEY, all);

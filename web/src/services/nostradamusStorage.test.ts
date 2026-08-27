@@ -13,23 +13,38 @@ beforeEach(() => {
 });
 
 describe('loadAllPredictions', () => {
-  it('seeds round 1 with the permanent default predictions when storage is empty', () => {
+  it('does not inject any predictions for a brand-new user (BULGU 2)', () => {
     const all = loadAllPredictions();
-    expect(all[1]).toEqual(DEFAULT_W1_PREDICTIONS);
+    expect(all[1]).toBeUndefined();
   });
 
   it('reads back predictions that were previously saved', () => {
     saveWeeklyPredictions(2, { 'fixture-a': 'X' });
     const all = loadAllPredictions();
     expect(all[2]).toEqual({ 'fixture-a': 'X' });
-    // round 1 defaults must survive alongside a newly saved round.
-    expect(all[1]).toEqual(DEFAULT_W1_PREDICTIONS);
   });
 
-  it('never returns an empty round 1, even if storage held an empty object for it', () => {
-    localStorage.setItem('superlig_nostradamus_predictions_v3', JSON.stringify({ 1: {} }));
+  it('migrates away a round-1 prediction set that exactly matches the old auto-injected default', () => {
+    localStorage.setItem(
+      'superlig_nostradamus_predictions_v3',
+      JSON.stringify({ 1: DEFAULT_W1_PREDICTIONS })
+    );
     const all = loadAllPredictions();
-    expect(all[1]).toEqual(DEFAULT_W1_PREDICTIONS);
+    expect(all[1]).toBeUndefined();
+  });
+
+  it('preserves a real user\'s own round-1 picks even when they only differ from the old default on one fixture', () => {
+    const ownPicks = { ...DEFAULT_W1_PREDICTIONS, '2026-27-w01-01': '2' as const };
+    localStorage.setItem('superlig_nostradamus_predictions_v3', JSON.stringify({ 1: ownPicks }));
+    const all = loadAllPredictions();
+    expect(all[1]).toEqual(ownPicks);
+  });
+
+  it('preserves a real user\'s own, smaller round-1 coupon untouched', () => {
+    const ownPicks = { '2026-27-w01-03': 'X' as const };
+    localStorage.setItem('superlig_nostradamus_predictions_v3', JSON.stringify({ 1: ownPicks }));
+    const all = loadAllPredictions();
+    expect(all[1]).toEqual(ownPicks);
   });
 });
 

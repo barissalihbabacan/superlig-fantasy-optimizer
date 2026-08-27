@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>Deterministik Branch-and-Bound Algoritması ile Matematiksel Olarak En İyi 15 Kişilik Kadro Çözücü</strong>
+  <strong>Deterministik Branch-and-Bound Algoritması ile Daraltılmış Aday Havuzunda En İyi 15 Kişilik Kadro Çözücü</strong>
 </p>
 
 <p align="center">
@@ -38,17 +38,17 @@
 
 Pek çok fantezi futbol aracı basit bir *"en yüksek puanlıdan düşüğe doğru sırala"* (greedy) yaklaşımıyla çalışır. Bu yöntem bütçe ve pozisyon kısıtları altında **yanlış ve suboptimal** sonuçlar üretir. 
 
-**Süper Lig Fantasy Optimizer (`sf`)**, bütçe, takım limiti (kulüp başına max 3 oyuncu) ve formasyon kısıtlarını çiğnemeden **milyonlarca olası 15 kişilik kadro kombinasyonunu milisaniyeler içinde budayan deterministik bir Branch-and-Bound algoritması** çalıştırır:
+**Süper Lig Fantasy Optimizer (`sf`)**, bütçe, takım limiti (kulüp başına max 3 oyuncu) ve formasyon kısıtlarını çiğnemeden **her pozisyon için en güçlü ve en ucuz adaylardan oluşan daraltılmış bir havuz üzerinde milisaniyeler içinde tüm kombinasyonları deneyen deterministik bir Branch-and-Bound algoritması** çalıştırır:
 
-* 🎯 **Matematiksel Optimum Garantisi:** Greedy tahminler yerine kısıtlar altında kanıtlanabilir en yüksek toplam xP'yi (beklenen puan) bulur.
+* 🎯 **Daraltılmış Havuzda En İyi Sonuç:** Greedy tahminler yerine, her pozisyonun en yüksek projeksiyonlu ve en ucuz adaylarından oluşturulan aday havuzu içinde kısıtlar altında en yüksek toplam xP'yi (beklenen puan) arar. Gerçek oyuncu havuzu (ör. 180+ orta saha) hesaplama süresi nedeniyle tam olarak taranmaz, bu yüzden sonuç mutlak küresel optimum garantisi taşımaz — bkz. [Kadro Kuralları](#-kadro-kuralları--puanlama) altındaki not.
 * 🚀 **Sıfır Sunucu Maliyeti / İstemci Taraflı (Client-Side):** Ağır kombinatoryal optimizasyon sunucuda değil, kullanıcının tarayıcısında WebAssembly + Web Worker üzerinde donma yapmadan çalışır.
 * 🛡️ **Kurgusuz ve Dürüst Veri:** Tahmini puanlar rastgele uydurulmaz; oyuncunun son 5 maçlık ağırlıklı gerçek saha istatistiklerinden (`[1, 2, 3, 4, 5]` form çarpanı) hesaplanır.
 
 ---
 
-## 📊 Matematiksel Çözüm Kanıtı (Benchmark)
+## 📊 Örnek Çözüm (Benchmark)
 
-Gerçek 2026-27 sezon veri setiyle, CLI üzerinden tek komutla 15 kişilik optimal kadro çözümü:
+Gerçek 2026-27 sezon veri setiyle, CLI üzerinden tek komutla üretilen 15 kişilik kadro çözümü örneği:
 
 ```text
 $ sf optimize --budget 10000 --formation 4-3-3
@@ -112,7 +112,7 @@ Uygulama [https://superlig-fantasy-optimizer.web.app](https://superlig-fantasy-o
 
 | Modül | Açıklama |
 | :--- | :--- |
-| ⚡ **Kadro Optimizer** | 8 farklı formasyon (`3-5-2`, `4-3-3`, `4-4-2` vb.), bütçe seçimi, oyuncu kilitleme/çıkarma ve anında optimal 15'li kadro çıktısı. |
+| ⚡ **Kadro Optimizer** | 8 farklı formasyon (`3-5-2`, `4-3-3`, `4-4-2` vb.), bütçe seçimi, oyuncu kilitleme/çıkarma ve anında en iyi 15'li kadro çıktısı. |
 | 🔮 **Nostradamus** | Haftalık maç tahminleri, gol olasılıkları, form endeksleri ve geçmiş tahmin doğruluk istatistikleri. |
 | 🏟️ **Canlı Maç & Fikstür** | 34 haftalık Süper Lig fikstürü, Sofascore detaylı maç istatistikleri ve resmî beIN SPORTS geniş maç özetleri. |
 | 📊 **Projeksiyon & Oyuncular** | Takım ve mevkilerine göre filtrelenebilir oyuncu listesi, fiyatlar ve tarihsel performans grafikleri. |
@@ -142,7 +142,7 @@ sf version
 ### Temel Komutlar
 
 ```bash
-# 100.0M bütçe ile 3-5-2 formasyonunda optimal kadroyu bul
+# 100.0M bütçe ile 3-5-2 formasyonunda en iyi kadroyu bul
 sf optimize --budget 10000 --formation 3-5-2
 
 # JSON çıktısı al (Otomasyon ve pipeline'lar için)
@@ -171,6 +171,9 @@ sf validate data/2026-27/players.json
 | **Kulüp Limiti** | Max 3 | Aynı Süper Lig takımından en fazla 3 oyuncu seçilebilir |
 | **Bütçe Birimi** | 100.0M TL | Fiyat çarpanı: `10000` = 100.0M TL |
 | **Kaptan Çarpanı** | 2x | Seçilen kaptanın beklenen puanı 2 ile çarpılır |
+
+> [!NOTE]
+> **Kadro çözücüsü hakkında:** `sf optimize`, her pozisyonun tüm gerçek adaylarını (ör. 180+ orta saha) değil; en yüksek projeksiyonlu ve en ucuz adaylardan oluşan daraltılmış bir havuzu (kulüp başına en fazla 2 aday) tam/deterministik biçimde arar. Bu, milisaniyeler içinde yanıt vermesini sağlar ama sonucun tüm oyuncu evreni üzerinde matematiksel küresel optimum olduğunu garanti etmez — orta fiyatlı/orta projeksiyonlu bir oyuncu havuza hiç girmeyebilir. Buna karşılık, sabit 15 kişilik bir kadrodan en iyi ilk 11'i seçen `recommend_lineup` / `recommend_lineup_for_formation` tüm kombinasyonları dener ve gerçekten optimaldir.
 
 ### Puanlama Matrisi (Scoring Matrix)
 

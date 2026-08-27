@@ -6,10 +6,10 @@ import { OptimizationResult } from './optimizer';
 describe('squadStorage', () => {
   const mockResult: OptimizationResult = {
     startingXI: [
-      { id: 'p1', name: 'Muslera', team_id: 'galatasaray', position: 'Goalkeeper', price: 600 },
+      { id: 'p1', name: 'Muslera', team_id: 'galatasaray', position: 'Goalkeeper', price: 600, expectedPoints: 8.5 },
     ],
     bench: [],
-    captain: { id: 'p1', name: 'Muslera', team_id: 'galatasaray', position: 'Goalkeeper', price: 600 },
+    captain: { id: 'p1', name: 'Muslera', team_id: 'galatasaray', position: 'Goalkeeper', price: 600, expectedPoints: 8.5 },
     viceCaptain: null,
     totalPrice: 600,
     totalPoints: 8.5,

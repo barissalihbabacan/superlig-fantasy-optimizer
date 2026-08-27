@@ -215,7 +215,13 @@ pub struct SquadOptimizationResult {
     pub bench: Vec<OptimizedPlayer>,
 }
 
-/// Dataset oyuncuları üzerinde tam 15 kişilik bütçeli kadro optimizasyonu.
+/// Dataset oyuncuları üzerinde bütçe/formasyon/takım kısıtları altında 15 kişilik
+/// kadro arar.
+///
+/// Ayrıntılar için [`optimize_squad_with_options`] üzerindeki uyarıya bakınız: bu
+/// arama, her pozisyonun tam adayı üzerinde değil, önceden daraltılmış (pruned) bir
+/// aday alt kümesi üzerinde çalışır ve dolayısıyla mutlak global optimumu garanti
+/// etmez.
 pub fn optimize_squad(
     players: &[PlayerRecord],
     projections: &[NamedPlayerProjection],
@@ -233,6 +239,36 @@ pub fn optimize_squad(
 }
 
 /// Takım limiti ve kaptan çarpanı açıkça verilebilen optimizer API'si.
+///
+/// ## Optimallik garantisi hakkında önemli not
+///
+/// Bu fonksiyon ve onun çağırdığı [`optimize_one_formation`], her formasyon adayı
+/// için gerçek 15 kişilik kadro arama uzayında **tam (exhaustive) bir dal-sınır
+/// (branch-and-bound) araması** yapar — ancak bu arama, `players` parametresiyle
+/// verilen ham oyuncu havuzunun tamamı üzerinde değil, `optimize_one_formation`
+/// içinde arama başlamadan önce her pozisyon için budanmış (pruned) çok daha küçük
+/// bir aday alt kümesi üzerinde çalışır (bkz. `optimize_one_formation` içindeki
+/// budama bloğu: pozisyon başına en yüksek projeksiyonlu `target_top` aday — kulüp
+/// başına en fazla 2 — artı en ucuz `target_cheap` aday tutulur, geri kalanı
+/// tamamen elenir).
+///
+/// Bunun nedeni performans: gerçek sezon verisinde bazı pozisyonlarda (ör. 180+
+/// orta saha, 140+ defans adayı) tüm kombinasyonları web arayüzünün kabul
+/// edilebilir yanıt süresi (birkaç saniye) içinde tam olarak taramak hesaplama
+/// açısından pratik değildir. Sonuç olarak:
+///
+/// * Arama, budanmış aday alt kümesi **içinde** kanıtlanabilir şekilde en iyisidir
+///   (o alt küme için tam/deterministik bir dal-sınır araması yapılır).
+/// * Arama, tüm gerçek oyuncu evreni üzerinde **mutlak/global** matematiksel
+///   optimum olduğunu garanti etmez: orta fiyatlı, orta projeksiyonlu ama
+///   bütçe-kısıtlı gerçek optimum için gerekli olan bir oyuncu, budama aşamasında
+///   havuzdan tamamen çıkarılmış olabilir ve hiçbir hata/uyarı üretilmeden
+///   göz ardı edilir.
+///
+/// Buna karşılık, sabit (zaten seçilmiş) 15 kişilik bir kadrodan en iyi ilk 11'i
+/// seçen [`recommend_lineup`] ve [`recommend_lineup_for_formation`] budama
+/// yapmaz; tüm geçerli kombinasyonları dener ve gerçekten optimaldir (arama
+/// uzayı zaten küçük olduğundan bu güvenlidir).
 pub fn optimize_squad_with_options(
     players: &[PlayerRecord],
     projections: &[NamedPlayerProjection],
@@ -321,6 +357,16 @@ fn position_index(position: Position) -> usize {
     }
 }
 
+/// Verilen formasyon için en iyi 15 kişilik kadroyu bulmaya çalışır.
+///
+/// Aşağıdaki döngü, arama başlamadan önce her pozisyonun aday listesini budar
+/// (bkz. `target_top`/`target_cheap`); ardından `SquadSearch::search_position` bu
+/// **budanmış** listeler üzerinde tam/deterministik bir dal-sınır (branch-and-bound)
+/// araması yapar. Budama adımı olmasaydı arama uzayı gerçek veri setinde pratik
+/// olmayacak kadar büyür (ör. orta saha havuzu 180+ aday olabilir); bu yüzden
+/// sonuç, budanmış alt küme içinde optimaldir ama tüm gerçek oyuncu evreni
+/// üzerinde global optimum garantisi taşımaz. Ayrıntı için
+/// [`optimize_squad_with_options`] üzerindeki not.
 fn optimize_one_formation(
     players: &[OptimizedPlayer],
     budget: Budget,
@@ -345,6 +391,14 @@ fn optimize_one_formation(
             return None;
         }
 
+        // Heuristic, lossy pruning: keeps only `target_top` highest-projected
+        // candidates (max 2 per club) plus `target_cheap` cheapest candidates,
+        // discarding the rest before the exhaustive search below ever runs. On
+        // real season data this can shrink e.g. a 180+-candidate midfield pool
+        // to under 10 entries. A player who is neither top-projected nor
+        // cheapest, but who would be required for the true budget-optimal
+        // squad, is silently excluded — see the doc comment on
+        // `optimize_squad_with_options` for the full caveat.
         let (target_top, target_cheap) = match position {
             0 => (3, 2), // Goalkeepers (5 total, need 2)
             1 => (6, 3), // Defenders (9 total, need 5)
@@ -1240,5 +1294,248 @@ mod tests {
         let first = optimize_squad(&players, &[], Budget::new(8_000), None).unwrap();
         let second = optimize_squad(&players, &[], Budget::new(8_000), None).unwrap();
         assert_eq!(first, second);
+    }
+
+    fn push_player(
+        players: &mut Vec<PlayerRecord>,
+        next_team: &mut u32,
+        id: &str,
+        position: Position,
+        price: u32,
+    ) {
+        players.push(PlayerRecord {
+            id: id.to_owned(),
+            name: id.to_owned(),
+            team_id: format!("team-{next_team}"),
+            position,
+            price: Price(price),
+        });
+        *next_team += 1;
+    }
+
+    /// Builds an adversarial dataset where the midfielder pool (15 candidates,
+    /// more than the 9-candidate pruning target of 6-top + 3-cheap) contains a
+    /// mid-priced/mid-projection player ("mid-value") that is neither among the
+    /// top-6 by projection nor among the 3 cheapest, and is therefore dropped by
+    /// `optimize_one_formation`'s pruning step before the branch-and-bound search
+    /// ever runs. GK/DEF/FWD pools are sized exactly to their required counts (no
+    /// pruning, no choice) and priced at 0 so they don't affect cost/score, which
+    /// isolates the effect to the midfielder position.
+    fn adversarial_midfield_players() -> Vec<PlayerRecord> {
+        let mut players = Vec::new();
+        let mut team = 0u32;
+        for i in 0..2 {
+            push_player(
+                &mut players,
+                &mut team,
+                &format!("gk-{i}"),
+                Position::Goalkeeper,
+                0,
+            );
+        }
+        for i in 0..5 {
+            push_player(
+                &mut players,
+                &mut team,
+                &format!("def-{i}"),
+                Position::Defender,
+                0,
+            );
+        }
+        for i in 0..3 {
+            push_player(
+                &mut players,
+                &mut team,
+                &format!("fwd-{i}"),
+                Position::Forward,
+                0,
+            );
+        }
+        // 6 "top" candidates: highest projection, high price. These fill the
+        // `target_top` slot of the pruning step entirely.
+        for i in 0..6 {
+            push_player(
+                &mut players,
+                &mut team,
+                &format!("mid-top-{i}"),
+                Position::Midfielder,
+                50,
+            );
+        }
+        // 3 "cheap" candidates: rock-bottom price, negligible projection. These
+        // fill the `target_cheap` slot of the pruning step entirely.
+        for i in 0..3 {
+            push_player(
+                &mut players,
+                &mut team,
+                &format!("mid-cheap-{i}"),
+                Position::Midfielder,
+                1,
+            );
+        }
+        // The adversarial player: better points-per-price than the "top"
+        // candidates (40 pts / 10 price = 4.0 vs. 100 pts / 50 price = 2.0), but
+        // ranked below all 6 "top" candidates by raw projection and priced above
+        // all 3 "cheap" candidates, so the pruning step discards it before search.
+        push_player(
+            &mut players,
+            &mut team,
+            "mid-value",
+            Position::Midfielder,
+            10,
+        );
+        // 5 dominated "filler" candidates: worse points-per-price than
+        // everything else (5 pts / 20 price = 0.25). Padding to push the pool to
+        // 15 candidates and to give the true optimum a legal 5th pick alongside
+        // 2 top + 1 mid-value + 1 cheap.
+        for i in 0..5 {
+            push_player(
+                &mut players,
+                &mut team,
+                &format!("mid-filler-{i}"),
+                Position::Midfielder,
+                20,
+            );
+        }
+        players
+    }
+
+    fn adversarial_projections(players: &[PlayerRecord]) -> Vec<NamedPlayerProjection> {
+        players
+            .iter()
+            .map(|player| {
+                let expected_points = if player.id.starts_with("mid-top-") {
+                    100.0
+                } else if player.id.starts_with("mid-cheap-") {
+                    1.0
+                } else if player.id == "mid-value" {
+                    40.0
+                } else if player.id.starts_with("mid-filler-") {
+                    5.0
+                } else {
+                    0.0
+                };
+                NamedPlayerProjection {
+                    player_id: player.id.clone(),
+                    expected_points,
+                }
+            })
+            .collect()
+    }
+
+    /// Brute-forces every valid 5-player midfielder combination (the other
+    /// three positions have exactly as many candidates as they require, so
+    /// they contribute no combinatorial choice and 0 cost/score) within the
+    /// given budget and returns the maximum attainable score together with one
+    /// combination that achieves it.
+    fn brute_force_best_midfield(
+        players: &[PlayerRecord],
+        projections: &[NamedPlayerProjection],
+        budget: u32,
+    ) -> (f64, Vec<String>) {
+        let pool: Vec<(&str, u32, f64)> = players
+            .iter()
+            .filter(|player| player.position == Position::Midfielder)
+            .map(|player| {
+                let xp = projections
+                    .iter()
+                    .find(|projection| projection.player_id == player.id)
+                    .map_or(0.0, |projection| projection.expected_points);
+                (player.id.as_str(), player.price.0, xp)
+            })
+            .collect();
+
+        let mut best_score = f64::NEG_INFINITY;
+        let mut best_combo = Vec::new();
+        let mut current = Vec::with_capacity(5);
+        fn recurse(
+            pool: &[(&str, u32, f64)],
+            start: usize,
+            k: usize,
+            budget: u32,
+            current: &mut Vec<usize>,
+            best_score: &mut f64,
+            best_combo: &mut Vec<String>,
+        ) {
+            if current.len() == k {
+                let cost: u32 = current.iter().map(|&i| pool[i].1).sum();
+                if cost <= budget {
+                    let score: f64 = current.iter().map(|&i| pool[i].2).sum();
+                    if score > *best_score {
+                        *best_score = score;
+                        *best_combo = current.iter().map(|&i| pool[i].0.to_owned()).collect();
+                    }
+                }
+                return;
+            }
+            if pool.len().saturating_sub(start) < k - current.len() {
+                return;
+            }
+            for i in start..pool.len() {
+                current.push(i);
+                recurse(pool, i + 1, k, budget, current, best_score, best_combo);
+                current.pop();
+            }
+        }
+        recurse(
+            &pool,
+            0,
+            5,
+            budget,
+            &mut current,
+            &mut best_score,
+            &mut best_combo,
+        );
+        (best_score, best_combo)
+    }
+
+    /// Documents the optimizer's guarantee bounds: pre-search pruning can
+    /// discard a player who is required for the true budget-constrained
+    /// optimum, and the branch-and-bound search (which is exhaustive only over
+    /// the pruned candidate set) then returns a strictly worse squad with no
+    /// error or warning. This is a deliberately constructed adversarial case
+    /// (see `adversarial_midfield_players`), not something observed to always
+    /// happen — most of the time the top-projection/cheapest-enabler heuristic
+    /// and `can_still_fit`'s cost-based bound land on the same answer as an
+    /// exhaustive search, but this test proves that isn't guaranteed.
+    #[test]
+    fn pruning_can_miss_the_true_budget_optimal_midfielder() {
+        let players = adversarial_midfield_players();
+        let projections = adversarial_projections(&players);
+
+        // Budget of 145 is chosen so that the pruned candidate set (6 "top" +
+        // 3 "cheap") can only afford 2 top + 3 cheap (cost 103, score 203) -
+        // three top + two cheap would cost 152, over budget. The true optimum
+        // over the full 15-candidate pool is 2 top + 1 mid-value + 1 cheap + 1
+        // filler (cost 131, score 246), which the pruned search can never find
+        // because "mid-value" and the filler candidates were discarded before
+        // the search began.
+        let budget = Budget::new(145);
+        let (true_best_score, true_best_combo) =
+            brute_force_best_midfield(&players, &projections, budget.units());
+        assert_eq!(true_best_score, 246.0);
+        assert!(true_best_combo.iter().any(|id| id == "mid-value"));
+
+        let result = optimize_squad_with_options(
+            &players,
+            &projections,
+            budget,
+            Some(Formation::F352),
+            Some(3),
+            1,
+        )
+        .unwrap();
+
+        // The pruned, exhaustive-over-a-subset search finds the best squad it
+        // can see (203 points) but that is strictly worse than the true
+        // budget-constrained optimum (246 points) computed by brute force
+        // above - and it never even considers "mid-value".
+        assert_eq!(result.expected_points, 203.0);
+        assert!(result.expected_points < true_best_score);
+        assert!(!result
+            .lineup
+            .iter()
+            .chain(result.bench.iter())
+            .any(|player| player.player_id == "mid-value"));
     }
 }
