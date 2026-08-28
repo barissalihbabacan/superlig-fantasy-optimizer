@@ -235,7 +235,11 @@
       "home_team_id": "genclerbirligi",
       "away_team_id": "erzurumspor-fk",
       "kickoff": "2026-08-28T21:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 1,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w03-02",
