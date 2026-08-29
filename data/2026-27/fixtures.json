@@ -247,7 +247,11 @@
       "home_team_id": "gaziantep-fk",
       "away_team_id": "caykur-rizespor",
       "kickoff": "2026-08-29T16:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 1,
+        "away": 2
+      }
     },
     {
       "id": "2026-27-w03-03",
@@ -255,7 +259,11 @@
       "home_team_id": "galatasaray",
       "away_team_id": "goztepe",
       "kickoff": "2026-08-29T19:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 3,
+        "away": 2
+      }
     },
     {
       "id": "2026-27-w03-04",
@@ -263,7 +271,11 @@
       "home_team_id": "konyaspor",
       "away_team_id": "kocaelispor",
       "kickoff": "2026-08-29T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 1,
+        "away": 2
+      }
     },
     {
       "id": "2026-27-w03-05",
