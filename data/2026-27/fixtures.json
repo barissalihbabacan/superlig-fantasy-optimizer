@@ -283,7 +283,11 @@
       "home_team_id": "eyupspor",
       "away_team_id": "alanyaspor",
       "kickoff": "2026-08-30T16:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 2,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w03-06",
@@ -291,7 +295,11 @@
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "kasimpasa",
       "kickoff": "2026-08-30T19:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 1,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w03-07",
@@ -299,7 +307,11 @@
       "home_team_id": "samsunspor",
       "away_team_id": "fenerbahce",
       "kickoff": "2026-08-30T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 0,
+        "away": 2
+      }
     },
     {
       "id": "2026-27-w03-08",
