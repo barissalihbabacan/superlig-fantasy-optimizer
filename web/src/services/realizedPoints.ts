@@ -98,6 +98,53 @@ export interface MatchDataCoverage {
   missingFixtureIds: string[];
 }
 
+/** Tek bir maçtaki bir oyuncunun gerçek, ham performansı + WASM'dan gelen puanı. */
+export interface RealizedMatchPlayerEvent {
+  playerId: string;
+  playerName: string;
+  teamId: string;
+  position: Player['position'];
+  minutes: number;
+  goals: number;
+  assists: number;
+  saves: number;
+  penaltySaves: number;
+  penaltyMisses: number;
+  goalsConceded: number;
+  yellowCards: number;
+  redCards: number;
+  ownGoals: number;
+  cleanSheet: boolean;
+  bonusRank: number | null;
+  points: number;
+}
+
+/**
+ * `players.json`'daki mevkiyi ham maç performansına ekleyip Rust'ın
+ * `MatchPerformance` şekline dönüştürür — `src/projection_engine.rs::to_match_performance`
+ * ile aynı dönüşüm. Tek yerde tanımlanır; hem maç geçmişi toplama (`computeRealizedStats`)
+ * hem de tek-maç olay listesi (`computeMatchPlayerEvents`) bunu paylaşır.
+ */
+function toRustPerformance(player: Player, raw: MatchPlayerPerformanceRaw) {
+  return {
+    player_id: 0,
+    player_name: player.name,
+    position: player.position,
+    minutes: raw.minutes,
+    goals: raw.goals,
+    assists: raw.assists,
+    saves: raw.saves,
+    penalty_saves: raw.penalty_saves,
+    penalty_misses: raw.penalty_misses,
+    goals_conceded: raw.goals_conceded,
+    yellow_cards: raw.yellow_cards,
+    red_cards: raw.red_cards,
+    own_goals: raw.own_goals,
+    clean_sheet: raw.clean_sheet,
+    bonus_rank: raw.bonus_rank,
+  };
+}
+
 const matchModules = import.meta.glob<{ default: MatchDataset }>(
   '../../../data/2026-27/matches/*.json',
   { eager: true }
@@ -168,25 +215,7 @@ export function computeRealizedStats(
         continue;
       }
 
-      const performance = {
-        player_id: 0,
-        player_name: player.name,
-        position: player.position,
-        minutes: raw.minutes,
-        goals: raw.goals,
-        assists: raw.assists,
-        saves: raw.saves,
-        penalty_saves: raw.penalty_saves,
-        penalty_misses: raw.penalty_misses,
-        goals_conceded: raw.goals_conceded,
-        yellow_cards: raw.yellow_cards,
-        red_cards: raw.red_cards,
-        own_goals: raw.own_goals,
-        clean_sheet: raw.clean_sheet,
-        bonus_rank: raw.bonus_rank,
-      };
-
-      const score = scoreFn(performance, undefined);
+      const score = scoreFn(toRustPerformance(player, raw), undefined);
 
       const isHome = fixture ? fixture.home_team_id === player.team_id : true;
       const teamGoals = fixture ? (isHome ? dataset.score.home : dataset.score.away) : dataset.score.home;
@@ -253,6 +282,75 @@ export async function calculateRealizedPlayerStats(
   return computeRealizedStats(
     players,
     fixtures,
+    loadMatchDatasets(),
+    calculatePlayerMatchScore as unknown as ScoreFn
+  );
+}
+
+/**
+ * Saf mantık — belirli bir maçın gerçek oyuncu bazlı olaylarını (gol, asist,
+ * kart, kurtarış, bonus_rank) ve WASM'dan gelen fantasy puanını döner.
+ * `data/2026-27/matches/<matchId>.json` yoksa veya maç henüz bitmemişse
+ * `null` döner — bu durumda çağıran taraf HİÇBİR veri uydurmamalı, açıkça
+ * "veri mevcut değil" göstermelidir (bkz. `web/src/pages/MatchDetail.tsx`).
+ */
+export function computeMatchPlayerEvents(
+  matchId: string,
+  players: Player[],
+  matchDatasets: MatchDataset[],
+  scoreFn: ScoreFn
+): RealizedMatchPlayerEvent[] | null {
+  const dataset = matchDatasets.find(
+    (item) => item.match_id === matchId && item.status === 'finished'
+  );
+  if (!dataset) {
+    return null;
+  }
+
+  const playerById = new Map(players.map((player) => [player.id, player]));
+  const events: RealizedMatchPlayerEvent[] = [];
+
+  for (const raw of dataset.players) {
+    const player = playerById.get(raw.player_id);
+    if (!player || player.team_id !== raw.team_id || raw.minutes === 0) {
+      continue;
+    }
+
+    const score = scoreFn(toRustPerformance(player, raw), undefined);
+
+    events.push({
+      playerId: player.id,
+      playerName: player.name,
+      teamId: player.team_id,
+      position: player.position,
+      minutes: raw.minutes,
+      goals: raw.goals,
+      assists: raw.assists,
+      saves: raw.saves,
+      penaltySaves: raw.penalty_saves,
+      penaltyMisses: raw.penalty_misses,
+      goalsConceded: raw.goals_conceded,
+      yellowCards: raw.yellow_cards,
+      redCards: raw.red_cards,
+      ownGoals: raw.own_goals,
+      cleanSheet: raw.clean_sheet,
+      bonusRank: raw.bonus_rank,
+      points: score.total,
+    });
+  }
+
+  return events;
+}
+
+/** Sayfalarda kullanılan genel giriş noktası: WASM'ı hazırlar, gerçek dataset'i yükler. */
+export async function getMatchPlayerEvents(
+  matchId: string,
+  players: Player[]
+): Promise<RealizedMatchPlayerEvent[] | null> {
+  await ensureWasmReady();
+  return computeMatchPlayerEvents(
+    matchId,
+    players,
     loadMatchDatasets(),
     calculatePlayerMatchScore as unknown as ScoreFn
   );
