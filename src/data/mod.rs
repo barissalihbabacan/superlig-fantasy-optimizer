@@ -124,6 +124,19 @@ pub fn compute_dataset_stats(
             MatchStatus::Cancelled => fixture_stats.cancelled += 1,
         }
     }
+    let finished_fixture_ids: std::collections::HashSet<&str> = fixtures
+        .fixtures
+        .iter()
+        .filter(|fixture| fixture.status == MatchStatus::Finished)
+        .map(|fixture| fixture.id.as_str())
+        .collect();
+    let match_ids: std::collections::HashSet<&str> =
+        matches.iter().map(|item| item.match_id.as_str()).collect();
+    let finished_fixtures_with_player_data = finished_fixture_ids
+        .iter()
+        .filter(|id| match_ids.contains(*id))
+        .count();
+
     DatasetStats {
         season: teams.season.clone(),
         schema_version: CURRENT_SCHEMA_VERSION,
@@ -137,6 +150,8 @@ pub fn compute_dataset_stats(
                 .iter()
                 .filter(|item| item.status == MatchStatus::Finished)
                 .count(),
+            finished_fixtures: finished_fixture_ids.len(),
+            finished_fixtures_with_player_data,
         },
     }
 }
@@ -183,6 +198,12 @@ pub struct TeamStats {
 #[derive(Clone, Debug, Serialize)]
 pub struct MatchStats {
     pub finished: usize,
+    /// `fixtures.json` içinde `status == "finished"` olan fikstür sayısı.
+    pub finished_fixtures: usize,
+    /// Bitmiş fikstürlerden `matches/<fixture_id>.json` dosyası yüklenmiş olanların sayısı.
+    /// Sezon başında bu sayının `finished_fixtures`'dan düşük olması beklenen bir durumdur
+    /// (bkz. CLAUDE.md); bir hata değildir.
+    pub finished_fixtures_with_player_data: usize,
 }
 
 #[derive(Clone, Debug, Serialize)]

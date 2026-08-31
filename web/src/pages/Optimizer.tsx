@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SeasonDataset, FormationType } from '../types';
 import { Pitch } from '../components/Pitch';
-import { runOptimizer, OptimizationResult } from '../services/optimizer';
+import { runOptimizer, OptimizationResult, CAPTAIN_MULTIPLIER } from '../services/optimizer';
 import { initOptimizerWasm, cancelOptimization } from '../services/optimizerWasm';
 import { formatPrice, getTeamBranding, getShortPosition } from '../services/dataset';
 import { saveOptimizedSquad, loadOptimizedSquad, clearOptimizedSquad } from '../services/squadStorage';
@@ -227,7 +227,7 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
                 <span>Optimize Edilmiş 11 Kişilik Kadro Listesi</span>
               </h3>
               <span className="text-xs font-mono text-[var(--text-muted)]">
-                Kaptan: <strong className="text-[var(--color-brand)]">{result.captain?.name}</strong> (2x xP)
+                Kaptan: <strong className="text-[var(--color-brand)]">{result.captain?.name}</strong> ({CAPTAIN_MULTIPLIER}x xP)
               </span>
             </div>
 
@@ -249,8 +249,11 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
                     const isVice = player.id === result.viceCaptain?.id;
                     const teamName = dataset.teams.find((t) => t.id === player.team_id)?.name || player.team_id;
                     const teamBrand = getTeamBranding(player.team_id);
-                    const rawXp = dataset.projections.get(player.id)?.expected_points || 0;
-                    const effectiveXp = isCaptain ? rawXp * 2 : rawXp;
+                    // BULGU 4: bu değer dataset.projections'tan AYRICA sorgulanmaz —
+                    // doğrudan bu optimizasyon çalıştırmasının WASM sonucundan gelir,
+                    // tek kaynak budur (bkz. services/optimizer.ts::OptimizedPlayer).
+                    const rawXp = player.expectedPoints;
+                    const effectiveXp = isCaptain ? rawXp * CAPTAIN_MULTIPLIER : rawXp;
 
                     return (
                       <tr
@@ -280,7 +283,7 @@ export const Optimizer: React.FC<OptimizerProps> = ({ dataset }) => {
                           {formatPrice(player.price)}
                         </td>
                         <td className="py-2 px-3 text-right font-black text-emerald-400">
-                          {effectiveXp.toFixed(1)} {isCaptain && <span className="text-[10px] text-[var(--color-brand)] font-bold">(2x)</span>}
+                          {effectiveXp.toFixed(1)} {isCaptain && <span className="text-[10px] text-[var(--color-brand)] font-bold">({CAPTAIN_MULTIPLIER}x)</span>}
                         </td>
                         <td className="py-2 px-3 text-center">
                           {isCaptain ? (

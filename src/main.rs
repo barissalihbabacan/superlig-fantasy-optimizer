@@ -765,7 +765,22 @@ fn data_validate_command(args: &[String]) -> Result<(), CliError> {
     println!("Players: {}", stats.players.total);
     println!("Fixtures: {}", stats.fixtures.total);
     println!("Matches: {}", stats.matches.finished);
+    print_match_coverage_warning(&stats.matches);
     Ok(())
+}
+
+/// Bitmiş fikstür sayısı ile oyuncu bazlı maç verisi girilmiş fikstür sayısı arasında
+/// fark varsa, bunu bilgilendirici bir UYARI olarak yazdırır. Bu bir hata değildir —
+/// sezon başında bu fark beklenen bir durumdur (bkz. CLAUDE.md); `sf data validate`
+/// bu yüzden başarısız olmaz.
+fn print_match_coverage_warning(matches: &superlig_fantasy_optimizer::data::MatchStats) {
+    if matches.finished_fixtures_with_player_data < matches.finished_fixtures {
+        let missing = matches.finished_fixtures - matches.finished_fixtures_with_player_data;
+        println!(
+            "\nUYARI: {} maç bitti, ancak yalnızca {} tanesi için oyuncu bazlı veri girildi ({} eksik).",
+            matches.finished_fixtures, matches.finished_fixtures_with_player_data, missing
+        );
+    }
 }
 
 fn data_stats_command(args: &[String]) -> Result<(), CliError> {
@@ -773,7 +788,10 @@ fn data_stats_command(args: &[String]) -> Result<(), CliError> {
     let context = load_data_context(&options)?;
     let stats = context.stats();
     match options.format {
-        OutputFormat::Human => print_stats(&stats),
+        OutputFormat::Human => {
+            print_stats(&stats);
+            print_match_coverage_warning(&stats.matches);
+        }
         OutputFormat::Json => println!("{}", serde_json::to_string_pretty(&stats)?),
     }
     Ok(())
@@ -799,7 +817,12 @@ fn print_stats(stats: &superlig_fantasy_optimizer::data::DatasetStats) {
         stats.fixtures.postponed,
         stats.fixtures.cancelled
     );
-    println!("Matches:\n  Finished: {}\n", stats.matches.finished);
+    println!(
+        "Matches:\n  Finished: {}\n  Finished fixtures: {}\n  Finished fixtures with player data: {}\n",
+        stats.matches.finished,
+        stats.matches.finished_fixtures,
+        stats.matches.finished_fixtures_with_player_data
+    );
     println!("Dataset:\n  Schema version: {}", stats.schema_version);
 }
 

@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Fixture, SeasonDataset, Player } from '../types';
 import { getTeamBranding, getShortPosition, formatPrice, formatDateDDMMYYYY } from '../services/dataset';
 import { calculateMatchProbabilities } from '../services/matchPredictor';
 import { checkHighlightAvailability } from '../services/highlightChecker';
+import { getMatchPlayerEvents, RealizedMatchPlayerEvent } from '../services/realizedPoints';
 import {
   ArrowLeft,
   Calendar,
@@ -17,6 +18,7 @@ import {
   Clock,
   Calculator,
   Shield,
+  Info,
 } from 'lucide-react';
 
 interface MatchDetailProps {
@@ -25,16 +27,23 @@ interface MatchDetailProps {
   onBack: () => void;
 }
 
+/**
+ * Gösterilen her satır ya gerçek `data/2026-27/matches/<id>.json` verisinden
+ * (bitmiş maç + veri mevcutsa) ya da gerçek `projections.json`'dan (henüz
+ * oynanmamış maç) türetilir. `pts: null` ve `bonusRank: null`, o alan için
+ * gerçek veri bulunmadığı anlamına gelir — bu durumda UI "Veri Yok" gösterir,
+ * asla sayı uydurmaz. `rating`/`motm` gibi kaynağı `data/2026-27` içinde hiç
+ * var olmayan alanlar bilinçli olarak bu tipte YOK — bkz. proje denetim notu.
+ */
 interface PerformanceRow {
   id: string;
   name: string;
   team: string;
   pos: string;
-  pts: number;
+  pts: number | null;
   events: string;
   price: number;
-  rating: string;
-  motm: boolean;
+  bonusRank: number | null;
 }
 
 export const MatchDetail: React.FC<MatchDetailProps> = ({
@@ -95,318 +104,119 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
   const homeStarting11 = useMemo(() => getStartingEleven(homePlayers), [homePlayers]);
   const awayStarting11 = useMemo(() => getStartingEleven(awayPlayers), [awayPlayers]);
 
-  // Dynamic Fantasy Performances for Finished Matches / Expected Projections for Upcoming Matches
-  const fantasyPerformances = useMemo<PerformanceRow[]>(() => {
-    // If NOT finished, show pre-match expected projected points without fake match ratings or MOTM
+  // Oyuncu bazlı gerçek maç verisi: `data/2026-27/matches/<id>.json` bir dosya
+  // içeriyorsa Rust/WASM puanlama motoruyla hesaplanır (bkz.
+  // services/realizedPoints.ts) — burada ikinci bir puanlama mantığı
+  // KURULMAZ. Veri yoksa `null` döner; hiçbir satır uydurulmaz.
+  const [matchEvents, setMatchEvents] = useState<RealizedMatchPlayerEvent[] | null>(null);
+  const [matchEventsLoading, setMatchEventsLoading] = useState<boolean>(isFinished);
+
+  useEffect(() => {
     if (!isFinished) {
+      setMatchEvents(null);
+      setMatchEventsLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setMatchEventsLoading(true);
+    getMatchPlayerEvents(fixture.id, dataset.players).then((events) => {
+      if (!cancelled) {
+        setMatchEvents(events);
+        setMatchEventsLoading(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [fixture.id, isFinished, dataset.players]);
+
+  const playerById = useMemo(
+    () => new Map(dataset.players.map((p) => [p.id, p])),
+    [dataset.players]
+  );
+
+  /**
+   * Gerçek olay alanlarından (gol/asist/kart/kurtarış/temiz sayfa) okunabilir
+   * bir özet kurar. Dakika-bazlı olay bilgisi (ör. "53'") KASITLI OLARAK
+   * üretilmez — `MatchPlayerPerformance` şemasında böyle bir alan yok, bu
+   * yüzden herhangi bir dakika göstermek uydurma olurdu.
+   */
+  const describeRealEvents = (event: RealizedMatchPlayerEvent): string => {
+    const parts: string[] = [];
+    if (event.goals > 0) parts.push(`⚽ Gol x${event.goals}`);
+    if (event.assists > 0) parts.push(`🎯 Asist x${event.assists}`);
+    if (event.position === 'Goalkeeper' && event.saves > 0) parts.push(`🧤 ${event.saves} Kurtarış`);
+    if (event.position === 'Goalkeeper' || event.position === 'Defender') {
+      if (event.cleanSheet) {
+        parts.push('🛡️ Gol Yemedi');
+      } else if (event.goalsConceded > 0) {
+        parts.push(`${event.goalsConceded} Gol Yedi`);
+      }
+    }
+    if (event.penaltySaves > 0) parts.push(`🧤 ${event.penaltySaves} Penaltı Kurtardı`);
+    if (event.penaltyMisses > 0) parts.push(`${event.penaltyMisses} Penaltı Kaçırdı`);
+    if (event.yellowCards > 0) parts.push('🟨 Sarı Kart');
+    if (event.redCards > 0) parts.push('🟥 Kırmızı Kart');
+    if (event.ownGoals > 0) parts.push('Kendi Kalesine Gol');
+    parts.push(`${event.minutes} Dk`);
+    return parts.join(' · ');
+  };
+
+  const fantasyPerformances = useMemo<PerformanceRow[]>(() => {
+    if (!isFinished) {
+      // Henüz oynanmamış maç: yalnızca gerçek projeksiyon motorunun
+      // (src/projection_engine.rs) ürettiği expected_points gösterilir.
+      // Projeksiyonu olmayan bir oyuncu için fiyattan türetilmiş sahte bir
+      // xP ASLA üretilmez — böyle bir oyuncu "Veri Yok" olarak gösterilir.
       const allSquad = [...homeStarting11, ...awayStarting11];
-      return allSquad.map((p) => {
-        const proj = dataset.projections.get(p.id);
-        const expectedPts = proj ? proj.expected_points : Math.round((p.price / 1000) * 4) + 2;
-        const isHome = p.team_id === fixture.home_team_id;
-        const team = isHome ? homeName : awayName;
-
-        return {
-          id: p.id,
-          name: p.name,
-          team,
-          pos: getShortPosition(p.position),
-          pts: expectedPts,
-          events: 'Maç Bekleniyor',
-          price: p.price,
-          rating: '-',
-          motm: false, // NO MOTM for unplayed match
-        };
-      }).sort((a, b) => b.pts - a.pts);
+      return allSquad
+        .map((p) => {
+          const proj = dataset.projections.get(p.id);
+          const isHome = p.team_id === fixture.home_team_id;
+          return {
+            id: p.id,
+            name: p.name,
+            team: isHome ? homeName : awayName,
+            pos: getShortPosition(p.position),
+            pts: proj ? proj.expected_points : null,
+            events: 'Maç Bekleniyor',
+            price: p.price,
+            bonusRank: null,
+          };
+        })
+        .sort((a, b) => (b.pts ?? -1) - (a.pts ?? -1));
     }
 
-    // Finished matches logic
-    if (fixture.id === '2026-27-w01-01') {
-      // Galatasaray 2 - 2 Çorum FK
-      return [
-        { id: 'victor-james-osimhen', name: 'Victor Osimhen', team: homeName, pos: 'FOR', pts: 13, events: '⚽⚽ 53\', 90\'', price: 1200, rating: '9.4', motm: true },
-        { id: 'leroy-aziz-sane', name: 'Leroy Sané', team: homeName, pos: 'OS', pts: 7, events: '🎯 Asist 90\' · Bonus 2', price: 850, rating: '7.8', motm: false },
-        { id: 'jesus-andres-ramirez-diaz', name: 'Jesús Ramírez', team: awayName, pos: 'FOR', pts: 7, events: '⚽ Gol 61\' · Bonus 3', price: 550, rating: '7.9', motm: false },
-        { id: 'alexandros-kyziridis', name: 'Alexandros Kyziridis', team: awayName, pos: 'OS', pts: 7, events: '⚽ Gol 59\'', price: 450, rating: '7.5', motm: false },
-        { id: 'serdar-gurler', name: 'Serdar Gürler', team: awayName, pos: 'OS', pts: 5, events: '🎯 Asist 59\'', price: 500, rating: '7.3', motm: false },
-        { id: 'gabriel-davi-gomes-sara', name: 'Gabriel Sara', team: homeName, pos: 'OS', pts: 2, events: '90 Dk · 4 Kilit Pas', price: 700, rating: '7.2', motm: false },
-        { id: 'ilkay-gundogan', name: 'İlkay Gündoğan', team: homeName, pos: 'OS', pts: 2, events: '84 Dk', price: 800, rating: '6.9', motm: false },
-        { id: 'mario-rene-junior-lemina', name: 'Mario Lemina', team: homeName, pos: 'OS', pts: 2, events: '71 Dk', price: 600, rating: '6.8', motm: false },
-        { id: 'marcos-felipe-de-freitas-monteiro', name: 'Marcos Felipe', team: awayName, pos: 'KL', pts: 3, events: '5 Kurtarış · 2 Gol Yedi', price: 450, rating: '7.4', motm: false },
-        { id: 'ugurcan-cakir', name: 'Uğurcan Çakır', team: homeName, pos: 'KL', pts: 2, events: '3 Kurtarış · 2 Gol Yedi', price: 550, rating: '6.4', motm: false },
-        { id: 'kaan-ayhan', name: 'Kaan Ayhan', team: homeName, pos: 'DEF', pts: 1, events: '90 Dk · 2 Gol Yedi', price: 550, rating: '6.5', motm: false },
-        { id: 'abdulkerim-bardakci', name: 'Abdülkerim Bardakcı', team: homeName, pos: 'DEF', pts: 1, events: '84 Dk · 2 Gol Yedi', price: 600, rating: '6.3', motm: false },
-        { id: 'davinson-sanchez-mina', name: 'Davinson Sánchez', team: homeName, pos: 'DEF', pts: 1, events: '71 Dk · 2 Gol Yedi', price: 650, rating: '6.4', motm: false },
-        { id: 'hrvoje-smolcic', name: 'Hrvoje Smolčić', team: awayName, pos: 'DEF', pts: 1, events: '76 Dk · 2 Gol Yedi', price: 450, rating: '6.6', motm: false },
-        { id: 'yunus-akgun', name: 'Yunus Akgün', team: homeName, pos: 'OS', pts: 1, events: '🟨 Sarı Kart 78\'', price: 650, rating: '6.1', motm: false },
-      ];
+    // Bitmiş maç: yalnızca gerçek `data/2026-27/matches/<id>.json` verisi
+    // varsa satır üretilir. Yoksa boş dizi döner; JSX bunu "Bu maç için
+    // oyuncu bazlı performans verisi henüz mevcut değil." olarak gösterir.
+    if (!matchEvents || matchEvents.length === 0) {
+      return [];
     }
 
-    if (fixture.id === '2026-27-w01-02') {
-      // Konyaspor 0 - 1 Rizespor
-      const rows: PerformanceRow[] = [];
-      awayStarting11.forEach((p, idx) => {
-        const isGoalScorer = idx === 0;
-        const pts = isGoalScorer ? 9 : p.position === 'Defender' || p.position === 'Goalkeeper' ? 6 : 4;
-        rows.push({
-          id: p.id,
-          name: p.name,
-          team: awayName,
-          pos: getShortPosition(p.position),
-          pts,
-          events: isGoalScorer ? '⚽ Gol 67\' · Bonus 3' : p.position === 'Goalkeeper' ? '🧤 Gol Yemedi · 4 Kurtarış' : '90 Dk',
-          price: p.price,
-          rating: isGoalScorer ? '8.3' : '7.2',
-          motm: isGoalScorer,
-        });
-      });
-      homeStarting11.forEach((p) => {
-        rows.push({
-          id: p.id,
-          name: p.name,
-          team: homeName,
-          pos: getShortPosition(p.position),
-          pts: 2,
-          events: '90 Dk',
-          price: p.price,
-          rating: '6.5',
-          motm: false,
-        });
-      });
-      return rows.sort((a, b) => b.pts - a.pts);
-    }
-
-    if (fixture.id === '2026-27-w01-03') {
-      // Gaziantep FK 1 - 1 Alanyaspor
-      return [
-        { id: 'paulo-victor-mileo-vidotti', name: 'Paulo Victor', team: awayName, pos: 'KL', pts: 8, events: '🧤 6 Kurtarış · Bonus 3', price: 500, rating: '8.1', motm: true },
-        { id: 'deian-cristian-sorescu', name: 'Deian Sorescu', team: homeName, pos: 'OS', pts: 8, events: '⚽ Gol 61\' · Bonus 2', price: 550, rating: '7.8', motm: false },
-        { id: 'ruan-pereira-duarte', name: 'Ruan Pereira Duarte', team: awayName, pos: 'OS', pts: 8, events: '⚽ Gol 20\' · Bonus 2', price: 550, rating: '7.7', motm: false },
-        { id: 'juninho-bacuna', name: 'Juninho Bacuna', team: homeName, pos: 'OS', pts: 5, events: '🎯 Asist 61\'', price: 600, rating: '7.4', motm: false },
-        { id: 'alexandru-iulian-maxim', name: 'Alexandru Maxim', team: homeName, pos: 'OS', pts: 2, events: '90 Dk · 3 Kilit Pas', price: 650, rating: '7.1', motm: false },
-        { id: 'kacper-kozlowski', name: 'Kacper Kozłowski', team: homeName, pos: 'OS', pts: 2, events: '70 Dk', price: 600, rating: '7.0', motm: false },
-        { id: 'fidan-aliti', name: 'Fidan Aliti', team: awayName, pos: 'DEF', pts: 1, events: '90 Dk · 1 Gol Yedi', price: 500, rating: '6.8', motm: false },
-        { id: 'kacper-tobiasz', name: 'Kacper Tobiasz', team: homeName, pos: 'KL', pts: 2, events: '4 Kurtarış · 1 Gol Yedi', price: 500, rating: '6.6', motm: false },
-        { id: 'lucas-perez', name: 'Lucas Pérez', team: homeName, pos: 'DEF', pts: 1, events: '90 Dk · 1 Gol Yedi', price: 500, rating: '6.7', motm: false },
-        { id: 'florent-hadergjonaj', name: 'Florent Hadërgjonaj', team: awayName, pos: 'DEF', pts: 1, events: '90 Dk · 1 Gol Yedi', price: 550, rating: '6.7', motm: false },
-        { id: 'gaius-makouta', name: 'Gaius Makouta', team: awayName, pos: 'OS', pts: 2, events: '78 Dk', price: 600, rating: '6.8', motm: false },
-        { id: 'hwang-ui-jo', name: 'Hwang Ui-Jo', team: awayName, pos: 'FOR', pts: 2, events: '69 Dk', price: 600, rating: '6.5', motm: false },
-        { id: 'serdar-dursun', name: 'Serdar Dursun', team: homeName, pos: 'FOR', pts: 1, events: '20 Dk', price: 550, rating: '6.4', motm: false },
-      ];
-    }
-
-    if (fixture.id === '2026-27-w01-04') {
-      // Gençlerbirliği 2 - 1 Fenerbahçe
-      return [
-        { id: 'irfan-can-egribayat', name: 'İrfan Can Eğribayat', team: homeName, pos: 'KL', pts: 8, events: '🧤 7 Kurtarış · Bonus 3', price: 450, rating: '8.4', motm: true },
-        { id: 'franco-tongya', name: 'Franco Tongya', team: homeName, pos: 'OS', pts: 8, events: '⚽ Gol 37\' · Bonus 2', price: 500, rating: '7.9', motm: false },
-        { id: 'ogulcan-ulgun', name: 'Oğulcan Ülgün', team: homeName, pos: 'OS', pts: 8, events: '⚽ Gol 56\' · Bonus 2', price: 500, rating: '7.8', motm: false },
-        { id: 'anderson-souza-conceicao', name: 'Talisca', team: awayName, pos: 'OS', pts: 7, events: '⚽ Gol 13\'', price: 950, rating: '7.5', motm: false },
-        { id: 'sekou-koita', name: 'Sekou Koita', team: homeName, pos: 'FOR', pts: 5, events: '🎯 Asist 37\'', price: 550, rating: '7.3', motm: false },
-        { id: 'alihan-dursun', name: 'Alihan Dursun', team: homeName, pos: 'DEF', pts: 4, events: '🎯 Asist 56\' · 1 Gol Yedi', price: 450, rating: '7.2', motm: false },
-        { id: 'levent-mercan', name: 'Levent Mercan', team: awayName, pos: 'DEF', pts: 4, events: '🎯 Asist 13\' · 2 Gol Yedi', price: 550, rating: '7.1', motm: false },
-        { id: 'ngolo-kante', name: 'N\'Golo Kanté', team: awayName, pos: 'OS', pts: 2, events: '31 Dk', price: 800, rating: '6.9', motm: false },
-        { id: 'pedro-miguel-almeida-lopes-pereira', name: 'Pedro Pereira', team: homeName, pos: 'DEF', pts: 1, events: '90 Dk · 1 Gol Yedi', price: 450, rating: '6.7', motm: false },
-        { id: 'dimitrios-goutas', name: 'Dimitrios Goutas', team: homeName, pos: 'DEF', pts: 1, events: '90 Dk · 1 Gol Yedi', price: 500, rating: '6.8', motm: false },
-        { id: 'milan-skriniar', name: 'Milan Škriniar', team: awayName, pos: 'DEF', pts: 1, events: '90 Dk · 2 Gol Yedi', price: 650, rating: '6.4', motm: false },
-        { id: 'nathan-ake', name: 'Nathan Aké', team: awayName, pos: 'DEF', pts: 1, events: '90 Dk · 2 Gol Yedi', price: 700, rating: '6.5', motm: false },
-        { id: 'tarik-cetin', name: 'Tarık Çetin', team: awayName, pos: 'KL', pts: 1, events: '2 Kurtarış · 2 Gol Yedi', price: 500, rating: '6.2', motm: false },
-        { id: 'mason-greenwood', name: 'Mason Greenwood', team: awayName, pos: 'OS', pts: 1, events: '31 Dk', price: 900, rating: '6.6', motm: false },
-        { id: 'vedat-muriqi', name: 'Vedat Muriqi', team: awayName, pos: 'FOR', pts: 1, events: '30 Dk', price: 850, rating: '6.5', motm: false },
-        { id: 'kerem-aktürkoğlu', name: 'Kerem Aktürkoğlu', team: awayName, pos: 'OS', pts: 1, events: '25 Dk', price: 850, rating: '6.3', motm: false },
-      ];
-    }
-
-    if (fixture.id === '2026-27-w01-05') {
-      // Kasımpaşa 1 - 1 Trabzonspor
-      const rows: PerformanceRow[] = [];
-      homeStarting11.slice(0, 7).forEach((p, idx) => {
-        const isGoalScorer = idx === 0;
-        rows.push({
-          id: p.id,
-          name: p.name,
-          team: homeName,
-          pos: getShortPosition(p.position),
-          pts: isGoalScorer ? 8 : 3,
-          events: isGoalScorer ? '⚽ Gol 42\' · Bonus 2' : '90 Dk',
-          price: p.price,
-          rating: isGoalScorer ? '7.9' : '6.8',
-          motm: false,
-        });
-      });
-      awayStarting11.slice(0, 7).forEach((p, idx) => {
-        const isGoalScorer = idx === 0;
-        rows.push({
-          id: p.id,
-          name: p.name,
-          team: awayName,
-          pos: getShortPosition(p.position),
-          pts: isGoalScorer ? 9 : 3,
-          events: isGoalScorer ? '⚽ Gol 74\' · Bonus 3' : '90 Dk',
-          price: p.price,
-          rating: isGoalScorer ? '8.2' : '6.9',
-          motm: isGoalScorer,
-        });
-      });
-      return rows.sort((a, b) => b.pts - a.pts);
-    }
-
-    // Dynamic Fantasy Performance Engine for Any Finished Match
-    const hScore = fixture.score?.home ?? 0;
-    const aScore = fixture.score?.away ?? 0;
-    const isHomeWin = hScore > aScore;
-    const isAwayWin = aScore > hScore;
-
-    const rows: PerformanceRow[] = [];
-
-    // Home Team Calculations
-    homeStarting11.forEach((p, idx) => {
-      const pos = getShortPosition(p.position);
-      let pts = 2; // base 90 mins played
-      let rating = '6.6';
-      let events = '90 Dk';
-
-      if (pos === 'KL') {
-        if (aScore === 0) {
-          pts += 4; // Clean sheet
-          events = '🧤 Gol Yemedi · 4 Kurtarış';
-          rating = '7.7';
-        } else {
-          pts = Math.max(1, pts - Math.floor(aScore / 2));
-          events = `${aScore} Gol Yedi · 3 Kurtarış`;
-          rating = (6.6 - aScore * 0.3).toFixed(1);
-        }
-      } else if (pos === 'DEF') {
-        if (aScore === 0) {
-          pts += 4; // Clean sheet
-          events = '🛡️ Gol Yemedi · 5 Pas Arası';
-          rating = '7.5';
-        } else {
-          pts = Math.max(1, pts - Math.floor(aScore / 2));
-          events = `${aScore} Gol Yedi`;
-          rating = (6.5 - aScore * 0.2).toFixed(1);
-        }
-      } else if (pos === 'FOR') {
-        if (hScore >= 2 && idx === 0) {
-          pts = 13;
-          events = `⚽⚽ 2 Gol · Bonus 3`;
-          rating = '8.9';
-        } else if (hScore >= 1 && (idx === 0 || idx === 1)) {
-          pts = 8;
-          events = `⚽ Gol 54' · Bonus 2`;
-          rating = '7.9';
-        } else if (isHomeWin) {
-          pts = 4;
-          events = '3 İsabetli Şut';
-          rating = '7.1';
-        }
-      } else if (pos === 'OS') {
-        if (hScore >= 3 && idx === 0) {
-          pts = 10;
-          events = `⚽ 1 Gol 1 Asist · 4 Kilit Pas`;
-          rating = '8.4';
-        } else if (hScore >= 1 && idx === 1) {
-          pts = 6;
-          events = `🎯 Asist · 3 Kilit Pas`;
-          rating = '7.5';
-        } else if (isHomeWin) {
-          pts = 3;
-          events = '90 Dk · %88 Pas İsabeti';
-          rating = '7.0';
-        }
-      }
-
-      rows.push({
-        id: p.id,
-        name: p.name,
-        team: homeName,
-        pos,
-        pts,
-        events,
-        price: p.price,
-        rating,
-        motm: false,
-      });
-    });
-
-    // Away Team Calculations
-    awayStarting11.forEach((p, idx) => {
-      const pos = getShortPosition(p.position);
-      let pts = 2; // base 90 mins played
-      let rating = '6.6';
-      let events = '90 Dk';
-
-      if (pos === 'KL') {
-        if (hScore === 0) {
-          pts += 4; // Clean sheet
-          events = '🧤 Gol Yemedi · 4 Kurtarış';
-          rating = '7.7';
-        } else {
-          pts = Math.max(1, pts - Math.floor(hScore / 2));
-          events = `${hScore} Gol Yedi · 3 Kurtarış`;
-          rating = (6.6 - hScore * 0.3).toFixed(1);
-        }
-      } else if (pos === 'DEF') {
-        if (hScore === 0) {
-          pts += 4; // Clean sheet
-          events = '🛡️ Gol Yemedi · 5 Pas Arası';
-          rating = '7.5';
-        } else {
-          pts = Math.max(1, pts - Math.floor(hScore / 2));
-          events = `${hScore} Gol Yedi`;
-          rating = (6.5 - hScore * 0.2).toFixed(1);
-        }
-      } else if (pos === 'FOR') {
-        if (aScore >= 2 && idx === 0) {
-          pts = 13;
-          events = `⚽⚽ 2 Gol · Bonus 3`;
-          rating = '8.9';
-        } else if (aScore >= 1 && (idx === 0 || idx === 1)) {
-          pts = 8;
-          events = `⚽ Gol 62' · Bonus 2`;
-          rating = '7.9';
-        } else if (isAwayWin) {
-          pts = 4;
-          events = '3 İsabetli Şut';
-          rating = '7.1';
-        }
-      } else if (pos === 'OS') {
-        if (aScore >= 3 && idx === 0) {
-          pts = 10;
-          events = `⚽ 1 Gol 1 Asist · 4 Kilit Pas`;
-          rating = '8.4';
-        } else if (aScore >= 1 && idx === 1) {
-          pts = 6;
-          events = `🎯 Asist · 3 Kilit Pas`;
-          rating = '7.5';
-        } else if (isAwayWin) {
-          pts = 3;
-          events = '90 Dk · %88 Pas İsabeti';
-          rating = '7.0';
-        }
-      }
-
-      rows.push({
-        id: p.id,
-        name: p.name,
-        team: awayName,
-        pos,
-        pts,
-        events,
-        price: p.price,
-        rating,
-        motm: false,
-      });
-    });
-
-    // Sort by points descending and set MOTM
-    rows.sort((a, b) => b.pts - a.pts);
-    if (rows.length > 0) {
-      rows[0].motm = true;
-    }
-
-    return rows;
-  }, [fixture.id, fixture.home_team_id, fixture.score, homeName, awayName, homeStarting11, awayStarting11, dataset.projections, isFinished]);
+    return matchEvents
+      .map((event) => ({
+        id: event.playerId,
+        name: event.playerName,
+        team: event.teamId === fixture.home_team_id ? homeName : awayName,
+        pos: getShortPosition(event.position),
+        pts: event.points,
+        events: describeRealEvents(event),
+        price: playerById.get(event.playerId)?.price ?? 0,
+        bonusRank: event.bonusRank,
+      }))
+      .sort((a, b) => (b.pts ?? 0) - (a.pts ?? 0));
+  }, [
+    isFinished,
+    matchEvents,
+    homeStarting11,
+    awayStarting11,
+    dataset.projections,
+    fixture.home_team_id,
+    homeName,
+    awayName,
+    playerById,
+  ]);
 
   // Match Stats for Finished matches vs Pre-match Analysis for upcoming
   const matchStats = useMemo(() => {
@@ -601,53 +411,53 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
             </div>
           </div>
 
-          {/* Goalscorers Timeline for Finished Matches */}
+          {/* Golcüler: yalnızca gerçek oyuncu bazlı veri (matchEvents) varsa
+              gösterilir. Dakika bilgisi ASLA üretilmez — `MatchPlayerPerformance`
+              şemasında gol/asist dakikası hiç yok, bu yüzden herhangi bir "53'"
+              göstermek uydurma olurdu. */}
           {isFinished && (
-            <div id="match-detail-goals" className="mt-8 pt-5 border-t border-[var(--border)] grid grid-cols-2 gap-4 text-xs sm:text-sm">
-              <div className="space-y-1 text-left font-mono font-bold text-[var(--text-primary)]">
-                {fixture.id === '2026-27-w01-01' ? (
-                  <>
-                    <div>⚽ Victor Osimhen <span className="text-[var(--color-brand)]">53', 90'</span></div>
-                    <div className="text-[11px] text-[var(--text-muted)] font-normal">Asistler: Gabriel Sara, Leroy Sané</div>
-                  </>
-                ) : fixture.id === '2026-27-w01-03' ? (
-                  <>
-                    <div>⚽ Deian Sorescu <span className="text-[var(--color-brand)]">61'</span></div>
-                    <div className="text-[11px] text-[var(--text-muted)] font-normal">Asist: Juninho Bacuna</div>
-                  </>
-                ) : fixture.id === '2026-27-w01-04' ? (
-                  <>
-                    <div><span className="text-emerald-400">37'</span> Franco Tongya ⚽</div>
-                    <div><span className="text-emerald-400">56'</span> Oğulcan Ülgün ⚽</div>
-                    <div className="text-[11px] text-[var(--text-muted)] font-normal">Asistler: Sekou Koita, Alihan Dursun</div>
-                  </>
-                ) : fixture.id === '2026-27-w01-05' ? (
-                  <div>⚽ Haris Hajradinović <span className="text-[var(--color-brand)]">42'</span></div>
-                ) : (
-                  <div className="text-xs text-[var(--text-muted)] font-normal">Gol sesi çıkmadı</div>
-                )}
-              </div>
-              <div className="space-y-1 text-right font-mono font-bold text-[var(--text-primary)]">
-                {fixture.id === '2026-27-w01-01' ? (
-                  <>
-                    <div><span className="text-[var(--color-brand)]">59'</span> Alexandros Kyziridis ⚽</div>
-                    <div><span className="text-[var(--color-brand)]">61'</span> Jesús Ramírez ⚽</div>
-                  </>
-                ) : fixture.id === '2026-27-w01-02' ? (
-                  <div><span className="text-emerald-400">67'</span> Ali Sowe ⚽</div>
-                ) : fixture.id === '2026-27-w01-03' ? (
-                  <div><span className="text-emerald-400">20'</span> Ruan Pereira Duarte ⚽</div>
-                ) : fixture.id === '2026-27-w01-04' ? (
-                  <>
-                    <div>⚽ Talisca <span className="text-[var(--color-brand)]">13'</span></div>
-                    <div className="text-[11px] text-[var(--text-muted)] font-normal">Asist: Levent Mercan</div>
-                  </>
-                ) : fixture.id === '2026-27-w01-05' ? (
-                  <div><span className="text-emerald-400">74'</span> Simon Banza ⚽</div>
-                ) : (
-                  <div className="text-xs text-[var(--text-muted)] font-normal">Gol sesi çıkmadı</div>
-                )}
-              </div>
+            <div id="match-detail-goals" className="mt-8 pt-5 border-t border-[var(--border)] text-xs sm:text-sm">
+              {matchEvents && matchEvents.length > 0 ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {([fixture.home_team_id, fixture.away_team_id] as const).map((teamId, sideIdx) => {
+                    const scorers = matchEvents!.filter((e) => e.teamId === teamId && e.goals > 0);
+                    const assisters = matchEvents!.filter((e) => e.teamId === teamId && e.assists > 0);
+                    const isHomeSide = sideIdx === 0;
+                    return (
+                      <div
+                        key={teamId}
+                        className={`space-y-1 font-mono font-bold text-[var(--text-primary)] ${
+                          isHomeSide ? 'text-left' : 'text-right'
+                        }`}
+                      >
+                        {scorers.length > 0 ? (
+                          scorers.map((e) => (
+                            <div key={e.playerId}>
+                              {isHomeSide ? '⚽ ' : ''}
+                              {e.playerName}
+                              {e.goals > 1 ? ` x${e.goals}` : ''}
+                              {isHomeSide ? '' : ' ⚽'}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-[var(--text-muted)] font-normal">Gol sesi çıkmadı</div>
+                        )}
+                        {assisters.length > 0 && (
+                          <div className="text-[11px] text-[var(--text-muted)] font-normal">
+                            {assisters.length > 1 ? 'Asistler' : 'Asist'}:{' '}
+                            {assisters.map((e) => e.playerName).join(', ')}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-[var(--text-muted)]">
+                  <Info className="w-3.5 h-3.5 flex-shrink-0 text-amber-400" />
+                  <span>Gol detayları için oyuncu bazlı performans verisi henüz mevcut değil.</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -782,7 +592,7 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
         </button>
       </div>
 
-      {/* Tab 1: Fantasy / Pre-Match Ratings Table */}
+      {/* Tab 1: Fantasy / Pre-Match Projection Table — yalnızca gerçek veriden üretilir */}
       {activeTab === 'fantasy' && (
         <div id="match-detail-fantasy-tab" className="space-y-4">
           <div className="sofa-card overflow-hidden">
@@ -796,76 +606,96 @@ export const MatchDetail: React.FC<MatchDetailProps> = ({
                 </span>
               </div>
               <span className="text-[10px] font-mono text-[var(--text-muted)]">
-                {isFinished ? 'Resmi Puanlama Motoru' : 'İstatistiksel Projeksiyon Modeli'}
+                {isFinished ? 'Rust/WASM Puanlama Motoru (Gerçekleşen Veri)' : 'İstatistiksel Projeksiyon Modeli'}
               </span>
             </div>
 
-            <div className="sofa-table-wrapper border-none rounded-none">
-              <table id="match-fantasy-table" className="sofa-table">
-                <thead>
-                  <tr>
-                    <th>Mevki</th>
-                    <th>Oyuncu</th>
-                    <th>Kulüp</th>
-                    <th>{isFinished ? 'Önemli Aksiyonlar' : 'Piyasa Değeri'}</th>
-                    <th>{isFinished ? 'Maç Reytingi' : 'Durum'}</th>
-                    <th className="text-right">{isFinished ? 'Fantasy Puanı' : 'Beklenen Puan (xP)'}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {fantasyPerformances.map((perf, idx) => (
-                    <tr key={idx} id={`match-fantasy-row-${idx}`}>
-                      <td>
-                        <span className="font-mono font-bold text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-subtle)]">
-                          {perf.pos}
-                        </span>
-                      </td>
-                      <td className="font-bold text-[var(--text-primary)]">
-                        <div className="flex items-center gap-1.5">
-                          <span>{perf.name}</span>
-                          {isFinished && perf.motm && (
-                            <span className="flex items-center gap-0.5 text-amber-400 text-[10px] font-mono font-bold bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/30">
-                              <Star className="w-3 h-3 fill-current" />
-                              Maçın Adamı
+            {isFinished && matchEventsLoading ? (
+              <div className="p-6 text-center text-xs text-[var(--text-muted)]">Yükleniyor…</div>
+            ) : isFinished && fantasyPerformances.length === 0 ? (
+              <div
+                id="match-detail-fantasy-unavailable"
+                className="flex items-start gap-2 p-4 text-xs text-amber-200 bg-amber-500/10"
+              >
+                <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-400" />
+                <span>Bu maç için oyuncu bazlı performans verisi henüz mevcut değil.</span>
+              </div>
+            ) : (
+              <div className="sofa-table-wrapper border-none rounded-none">
+                <table id="match-fantasy-table" className="sofa-table">
+                  <thead>
+                    <tr>
+                      <th>Mevki</th>
+                      <th>Oyuncu</th>
+                      <th>Kulüp</th>
+                      <th>{isFinished ? 'Önemli Aksiyonlar' : 'Piyasa Değeri'}</th>
+                      <th>{isFinished ? 'Bonus' : 'Durum'}</th>
+                      <th className="text-right">{isFinished ? 'Fantasy Puanı' : 'Beklenen Puan (xP)'}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fantasyPerformances.map((perf, idx) => (
+                      <tr key={idx} id={`match-fantasy-row-${idx}`}>
+                        <td>
+                          <span className="font-mono font-bold text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-subtle)]">
+                            {perf.pos}
+                          </span>
+                        </td>
+                        <td className="font-bold text-[var(--text-primary)]">
+                          <div className="flex items-center gap-1.5">
+                            <span>{perf.name}</span>
+                            {isFinished && perf.bonusRank === 1 && (
+                              <span className="flex items-center gap-0.5 text-amber-400 text-[10px] font-mono font-bold bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/30">
+                                <Star className="w-3 h-3 fill-current" />
+                                Bonus #1
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="text-xs text-[var(--text-secondary)] font-medium">
+                          {perf.team}
+                        </td>
+                        <td className="text-xs text-[var(--text-muted)] font-mono">
+                          {isFinished ? perf.events : formatPrice(perf.price)}
+                        </td>
+                        <td>
+                          {isFinished ? (
+                            perf.bonusRank !== null ? (
+                              <span className="sofa-rating sofa-rating-high">Bonus #{perf.bonusRank}</span>
+                            ) : (
+                              <span className="text-[10px] font-mono text-[var(--text-muted)]">—</span>
+                            )
+                          ) : (
+                            <span className="text-[10px] font-mono text-[var(--text-muted)] bg-[var(--bg-subtle)] px-2 py-0.5 rounded border border-[var(--border)]">
+                              Başlamadı
                             </span>
                           )}
-                        </div>
-                      </td>
-                      <td className="text-xs text-[var(--text-secondary)] font-medium">
-                        {perf.team}
-                      </td>
-                      <td className="text-xs text-[var(--text-muted)] font-mono">
-                        {isFinished ? perf.events : formatPrice(perf.price)}
-                      </td>
-                      <td>
-                        {isFinished ? (
-                          <span className={`sofa-rating ${Number(perf.rating) >= 7.5 ? 'sofa-rating-high' : 'sofa-rating-mid'}`}>
-                            {perf.rating}
-                          </span>
-                        ) : (
-                          <span className="text-[10px] font-mono text-[var(--text-muted)] bg-[var(--bg-subtle)] px-2 py-0.5 rounded border border-[var(--border)]">
-                            Başlamadı
-                          </span>
-                        )}
-                      </td>
-                      <td className="text-right">
-                        <span className={`font-mono font-black text-xs px-2.5 py-0.5 rounded ${
-                          isFinished
-                            ? perf.pts >= 7
-                              ? 'bg-[var(--color-brand)] text-black'
-                              : perf.pts >= 4
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-[var(--bg-subtle)] text-[var(--text-primary)]'
-                            : 'bg-[var(--bg-subtle)] text-[var(--color-brand)] border border-[var(--border)]'
-                        }`}>
-                          {isFinished ? `${perf.pts} pts` : `~${perf.pts} xP`}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                        </td>
+                        <td className="text-right">
+                          {perf.pts === null ? (
+                            <span className="font-mono text-xs text-[var(--text-muted)] px-2.5 py-0.5">
+                              Veri Yok
+                            </span>
+                          ) : (
+                            <span className={`font-mono font-black text-xs px-2.5 py-0.5 rounded ${
+                              isFinished
+                                ? perf.pts >= 7
+                                  ? 'bg-[var(--color-brand)] text-black'
+                                  : perf.pts >= 4
+                                  ? 'bg-blue-500 text-white'
+                                  : 'bg-[var(--bg-subtle)] text-[var(--text-primary)]'
+                                : 'bg-[var(--bg-subtle)] text-[var(--color-brand)] border border-[var(--border)]'
+                            }`}>
+                              {isFinished ? `${perf.pts} pts` : `~${perf.pts.toFixed(1)} xP`}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       )}

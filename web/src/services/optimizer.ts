@@ -1,11 +1,21 @@
 import { Player, ProjectionItem, FormationType, PositionType } from '../types';
 import { optimizeSquadInWorker } from './optimizerWasm';
 
+/**
+ * `Player` + WASM'ın bu optimizasyon çalıştırması için döndürdüğü, kaptan
+ * çarpanı UYGULANMADAN önceki ham beklenen puan. BULGU 4: UI, bu değeri
+ * `dataset.projections`'tan AYRICA sorgulamak yerine doğrudan buradan okur —
+ * tek kaynak WASM sonucudur.
+ */
+export interface OptimizedPlayer extends Player {
+  expectedPoints: number;
+}
+
 export interface OptimizationResult {
-  startingXI: Player[];
-  bench: Player[];
-  captain: Player | null;
-  viceCaptain: Player | null;
+  startingXI: OptimizedPlayer[];
+  bench: OptimizedPlayer[];
+  captain: OptimizedPlayer | null;
+  viceCaptain: OptimizedPlayer | null;
   totalPrice: number;
   totalPoints: number;
   formation: FormationType;
@@ -39,15 +49,22 @@ interface WasmError {
 }
 
 const MAX_PLAYERS_PER_TEAM = 3;
-const CAPTAIN_MULTIPLIER = 2;
+/**
+ * Kaptan çarpanı — hem WASM optimizasyon çağrısına parametre olarak
+ * gönderilir hem de UI'da kaptanın gösterilen beklenen puanını hesaplamak
+ * için kullanılır (bkz. `Optimizer.tsx`). Tek tanım noktası burasıdır; bu
+ * değeri başka bir dosyada ayrıca literal olarak tekrar yazmayın.
+ */
+export const CAPTAIN_MULTIPLIER = 2;
 
-function toPlayer(optimized: WasmOptimizedPlayer): Player {
+function toPlayer(optimized: WasmOptimizedPlayer): OptimizedPlayer {
   return {
     id: optimized.player_id,
     name: optimized.name,
     team_id: optimized.team_id,
     position: optimized.position,
     price: optimized.price,
+    expectedPoints: optimized.expected_points,
   };
 }
 

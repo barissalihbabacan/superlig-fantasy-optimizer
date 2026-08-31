@@ -327,6 +327,9 @@ fn data_stats_are_dynamic_and_json_is_stable() {
     assert!(text.contains(&format!("Goalkeepers: {expected_goalkeepers}")));
     assert!(text.contains("Finished: 2"));
 
+    assert!(text.contains("Finished fixtures: 2"));
+    assert!(text.contains("Finished fixtures with player data: 2"));
+
     let json = command()
         .args(["data", "stats", "--path", dataset_path, "--format", "json"])
         .output()
@@ -338,6 +341,58 @@ fn data_stats_are_dynamic_and_json_is_stable() {
     assert_eq!(value["players"]["total"], 443);
     assert_eq!(value["fixtures"]["finished"], 2);
     assert_eq!(value["matches"]["finished"], 2);
+    // Both synthetic finished fixtures here have a matching per-player match file.
+    assert_eq!(value["matches"]["finished_fixtures"], 2);
+    assert_eq!(value["matches"]["finished_fixtures_with_player_data"], 2);
+}
+
+/// Gerçek `data/2026-27` dizinindeki maç veri kapsamını doğrular: `fixtures.json`'daki
+/// bitmiş maç sayısı ile `matches/*.json` altında oyuncu bazlı verisi girilmiş maç sayısı
+/// arasındaki fark, sezon başında beklenen ve CLI'da görünür olması gereken bir durumdur
+/// (bkz. CLAUDE.md ve `sf data stats` UYARI mesajı). Kesin değer sabitlenmiştir çünkü bu
+/// test, gerçek dataset'in şu anki (yazım anındaki) durumunu doğruluyor; yeni maç dosyaları
+/// eklendikçe bu sayı büyüyecektir — bu yüzden asıl garanti `>=` karşılaştırmasıdır.
+#[test]
+fn real_dataset_reports_finished_fixture_coverage() {
+    let real_dataset_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("data/2026-27");
+    let json = command()
+        .args([
+            "data",
+            "stats",
+            "--path",
+            real_dataset_path.to_str().unwrap(),
+            "--format",
+            "json",
+        ])
+        .output()
+        .unwrap();
+    assert!(json.status.success());
+    let value: Value = serde_json::from_slice(&json.stdout).unwrap();
+    let finished_fixtures = value["matches"]["finished_fixtures"].as_u64().unwrap();
+    let finished_fixtures_with_player_data = value["matches"]["finished_fixtures_with_player_data"]
+        .as_u64()
+        .unwrap();
+    // Player-level match data can only ever be a subset of finished fixtures.
+    assert!(finished_fixtures_with_player_data <= finished_fixtures);
+    // Known state of the committed dataset as of writing this test: 18 fixtures from
+    // rounds 1-2 are finished, but only round 1's Galatasaray vs Çorum FK match has a
+    // corresponding matches/*.json file loaded.
+    assert_eq!(finished_fixtures, 18);
+    assert_eq!(finished_fixtures_with_player_data, 1);
+
+    let human = command()
+        .args([
+            "data",
+            "validate",
+            "--path",
+            real_dataset_path.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(human.status.success());
+    let text = String::from_utf8_lossy(&human.stdout);
+    assert!(text.contains("UYARI"));
+    assert!(text.contains("18"));
 }
 
 #[test]

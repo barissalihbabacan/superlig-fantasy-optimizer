@@ -40,5 +40,14 @@ jobs:
       - name: Check wasm-bindings crate builds for wasm32
         run: cargo build -p sfo-wasm --target wasm32-unknown-unknown
 
-      - name: Frontend build and test
-        run: npm ci && npm run build
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build wasm bindings
+        run: npm run build:wasm
+
+      - name: Run frontend tests (vitest)
+        run: npm test
+
+      - name: Frontend build
+        run: npm run build

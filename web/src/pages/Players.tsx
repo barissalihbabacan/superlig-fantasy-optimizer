@@ -1,7 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { SeasonDataset, Player } from '../types';
 import { formatPrice, getPositionBadgeColor, getShortPosition, getTeamBranding } from '../services/dataset';
-import { calculateAllPlayerStats } from '../services/playerPoints';
+import {
+  calculateRealizedPlayerStats,
+  getMatchDataCoverage,
+  RealizedPlayerStats,
+  MatchDataCoverage,
+} from '../services/realizedPoints';
 import {
   Search,
   Users,
@@ -10,6 +15,7 @@ import {
   TrendingUp,
   ShieldCheck,
   Zap,
+  Info,
 } from 'lucide-react';
 
 interface PlayersProps {
@@ -30,9 +36,26 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
-  // Precompute dynamic match points & performance for all players from finished fixtures
-  const playerStatsMap = useMemo(() => {
-    return calculateAllPlayerStats(dataset.players, dataset.fixtures);
+  // Gerçekleşen puanlar tek otorite olan Rust/WASM puanlama motorundan
+  // (bkz. services/realizedPoints.ts) asenkron olarak hesaplanır — bkz.
+  // BULGU 1: burada hiçbir puan yerel/sentetik bir formülle üretilmez.
+  const [playerStatsMap, setPlayerStatsMap] = useState<Map<string, RealizedPlayerStats>>(new Map());
+  const [statsLoading, setStatsLoading] = useState<boolean>(true);
+  const [coverage, setCoverage] = useState<MatchDataCoverage | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setStatsLoading(true);
+    calculateRealizedPlayerStats(dataset.players, dataset.fixtures).then((map) => {
+      if (!cancelled) {
+        setPlayerStatsMap(map);
+        setStatsLoading(false);
+      }
+    });
+    setCoverage(getMatchDataCoverage(dataset.fixtures));
+    return () => {
+      cancelled = true;
+    };
   }, [dataset.players, dataset.fixtures]);
 
   const teamMap = useMemo(() => {
@@ -84,8 +107,8 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
           valA = statsA?.averagePoints ?? 0;
           valB = statsB?.averagePoints ?? 0;
         } else if (sortField === 'matches') {
-          valA = statsA?.matchesPlayed ?? 0;
-          valB = statsB?.matchesPlayed ?? 0;
+          valA = statsA?.matchesWithData ?? 0;
+          valB = statsB?.matchesWithData ?? 0;
         } else if (sortField === 'expectedPoints') {
           valA = dataset.projections.get(a.id)?.expected_points ?? 0;
           valB = dataset.projections.get(b.id)?.expected_points ?? 0;
@@ -152,7 +175,7 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
             </h2>
           </div>
           <p className="text-xs text-[var(--text-muted)] mt-0.5">
-            Tamamlanan her maçtan sonra otomatik güncellenen gerçek fantasy puanları ve maç geçmişi
+            Oyuncu bazlı maç verisi girilmiş tamamlanan maçlardan Rust/WASM puanlama motoruyla hesaplanan gerçekleşen puanlar ve maç geçmişi
           </p>
         </div>
 
@@ -165,6 +188,24 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
           </div>
         </div>
       </div>
+
+      {/* Veri Kapsamı Uyarısı — bitmiş maç sayısı ile oyuncu bazlı veri girilmiş
+          maç sayısı farklıysa bunu açıkça göster; sessizce 0 puan gösterip
+          "hiç oynamadı" izlenimi vermemek için. */}
+      {coverage && coverage.fixturesWithPlayerData < coverage.finishedFixtures && (
+        <div
+          id="players-data-coverage-notice"
+          className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/25 text-xs text-amber-200"
+        >
+          <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-400" />
+          <span>
+            {coverage.finishedFixtures} biten maçtan yalnızca{' '}
+            <strong>{coverage.fixturesWithPlayerData}</strong> tanesi için oyuncu bazlı maç verisi girildi.
+            Verisi henüz girilmemiş maçlarda oynayan oyuncuların Gerçekleşen Puan / Maç sayısı, o maçlar için{' '}
+            <strong>"Veri Yok"</strong> olarak gösterilir — tahmini bir değer üretilmez.
+          </span>
+        </div>
+      )}
 
       {/* Filter Toolbar */}
       <div id="players-filters-card" className="glass-panel p-3.5 space-y-3">
@@ -291,7 +332,7 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
               </th>
               <th id="th-sort-points" onClick={() => handleSort('points')} className="cursor-pointer hover:text-white text-right">
                 <div className="flex items-center justify-end gap-1">
-                  <span className="text-[var(--color-brand)]">Toplam Puan</span>
+                  <span className="text-[var(--color-brand)]" title="Sadece oyuncu bazlı maç verisi girilmiş maçlardan hesaplanır">Gerçekleşen Puan</span>
                   <ArrowUpDown className="w-3 h-3" />
                 </div>
               </th>
@@ -349,21 +390,26 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
                     {formatPrice(player.price)}
                   </td>
                   <td className="text-center font-mono text-xs text-[var(--text-muted)]">
-                    {stats?.matchesPlayed ?? 0}
+                    {stats?.matchesWithData ?? 0}
                   </td>
                   <td className="text-right">
-                    {(stats?.totalPoints ?? 0) > 0 ? (
-                      <span className="sofa-rating sofa-rating-high font-mono font-bold text-xs">
-                        {stats?.totalPoints} pts
+                    {statsLoading ? (
+                      <span className="font-mono text-xs text-[var(--text-muted)] opacity-60">…</span>
+                    ) : (stats?.matchesWithData ?? 0) === 0 ? (
+                      <span
+                        className="font-mono text-xs text-[var(--text-muted)] opacity-60"
+                        title="Bu oyuncunun takımının maçları için henüz oyuncu bazlı veri girilmedi"
+                      >
+                        Veri Yok
                       </span>
                     ) : (
-                      <span className="font-mono text-xs text-[var(--text-muted)] opacity-60">
-                        0 pts
+                      <span className="sofa-rating sofa-rating-high font-mono font-bold text-xs">
+                        {stats?.totalPoints} pts
                       </span>
                     )}
                   </td>
                   <td className="text-right font-mono text-xs text-[var(--text-secondary)]">
-                    {(stats?.averagePoints ?? 0) > 0 ? stats?.averagePoints.toFixed(1) : '-'}
+                    {(stats?.matchesWithData ?? 0) === 0 ? '-' : stats?.averagePoints.toFixed(1)}
                   </td>
                   <td className="text-right font-mono text-xs text-[var(--text-muted)]">
                     {expectedPoints > 0 ? `${expectedPoints.toFixed(1)} xP` : '-'}
@@ -420,17 +466,23 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
             {/* Quick Metrics Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
               <div className="p-2.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)]">
-                <div className="text-[10px] text-[var(--text-muted)] uppercase">Toplam Puan</div>
+                <div className="text-[10px] text-[var(--text-muted)] uppercase">Gerçekleşen Puan</div>
                 <div id="player-modal-total-pts" className="font-black text-base text-[var(--color-brand)] flex items-center gap-1">
                   <TrendingUp className="w-3.5 h-3.5" />
-                  <span>{selectedPlayerStats?.totalPoints ?? 0} pts</span>
+                  <span>
+                    {(selectedPlayerStats?.matchesWithData ?? 0) === 0
+                      ? 'Veri Yok'
+                      : `${selectedPlayerStats?.totalPoints} pts`}
+                  </span>
                 </div>
               </div>
 
               <div className="p-2.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)]">
                 <div className="text-[10px] text-[var(--text-muted)] uppercase">Maç Başı Ort.</div>
                 <div id="player-modal-avg-pts" className="font-black text-base text-[var(--text-primary)]">
-                  {selectedPlayerStats?.averagePoints.toFixed(1) ?? '0.0'} pts
+                  {(selectedPlayerStats?.matchesWithData ?? 0) === 0
+                    ? '-'
+                    : `${selectedPlayerStats?.averagePoints.toFixed(1)} pts`}
                 </div>
               </div>
 
@@ -454,7 +506,7 @@ export const Players: React.FC<PlayersProps> = ({ dataset }) => {
             <div id="player-modal-match-history" className="space-y-2">
               <div className="flex items-center justify-between text-[11px] font-bold uppercase text-[var(--text-muted)] border-b border-[var(--border)] pb-1">
                 <span>Tamamlanan Maç Performansları</span>
-                <span className="font-mono">{selectedPlayerStats?.matchesPlayed ?? 0} Maç Oynandı</span>
+                <span className="font-mono">{selectedPlayerStats?.matchesWithData ?? 0} Maç Oynandı</span>
               </div>
 
               {(selectedPlayerStats?.matchHistory.length ?? 0) === 0 ? (

@@ -54,8 +54,10 @@ Note: `package.json` lives at the repo root but all frontend source is under `we
 aliases `@` to `web/src` and reads `base` from `VITE_BASE_PATH` (defaults to `/`, matching Firebase
 Hosting). `npm run build`/`npm run dev` first run `wasm-pack` on `crates/wasm-bindings` (needs the
 `wasm32-unknown-unknown` rustup target and `wasm-pack` installed) before building the frontend.
-Vitest (`npm test`) covers the wasm optimizer binding; everything else is `tsc --noEmit` + `eslint` +
-manual/browser check.
+Vitest (`npm test`) covers the wasm optimizer binding and the wasm-backed realized-points scoring
+pipeline (`services/realizedPoints.ts`) against the real compiled `.wasm` artifact and the real
+`data/2026-27` dataset; it runs in CI (`ci.yml`, after the wasm build step) as well as locally.
+Everything else is `tsc --noEmit` + `eslint` + manual/browser check.
 
 ## Architecture
 
@@ -125,18 +127,27 @@ squad, or single match performance) from the file contents.
 
 ### Data sync (`scripts/`)
 
-- `sync_fixtures_results.py` — pulls live/finished match results from the RapidAPI
-  `free-api-live-football-data` endpoint (Süper Lig league id `71`) and merges them into
-  `data/2026-27/fixtures.json`, matching teams via a Turkish-name-to-team-id map. Requires
-  `RAPIDAPI_KEY`. Run by `.github/workflows/sync_match_data.yml` on a schedule around Süper Lig
-  matchdays (Fri/Sat/Sun/Mon evenings), which validates the synced data (`sf data validate`) before
-  rebuilding and redeploying the web app.
+- `sync_thesportsdb.py` — dual-source live/finished match result syncer: TheSportsDB API (`v2`,
+  league id `4339`) as primary, with a Turkish Wikipedia MediaWiki API completed-match matrix as a
+  fast fallback. Merges results into `data/2026-27/fixtures.json`, matching teams via a
+  Turkish-name-to-team-id map. Run by `.github/workflows/sync_thesportsdb.yml` every 5 minutes
+  during Süper Lig matchdays (Fri/Sat/Sun/Mon 15:00-22:00 UTC / 18:00-01:00 TSİ) plus twice daily on
+  weekdays, and commits+pushes directly to `main` on any diff. **This workflow does not run
+  `sf data validate` before pushing** — data-integrity checks only happen afterwards, if/when CI
+  (`ci.yml`) runs on that push.
+- `apply_tff_calendar.py` — one-off/manual script that seeded the full 34-round `fixtures.json`
+  schedule from the official TFF calendar (Friday-anchored round dates).
+- `record_match_result.py` — manual, fully offline CLI for recording a match score directly into
+  `fixtures.json` without any external API.
+- `update_player_points.py` — recomputes player match points/projections from finished fixtures.
 
-The canonical hosting is Firebase Hosting (deployed from the committed `dist/`, `firebase.json`'s
-`public` dir). `.github/workflows/pages.yml` no longer builds/deploys the app itself — it only
-publishes `gh-pages-redirect/index.html`, a static page pointing visitors at the Firebase URL, and
-only runs when that page (or the workflow) changes. `sync_match_data.yml` still rebuilds and commits
-`dist/` after a data sync so it stays in sync for Firebase deployment.
+The canonical hosting is Firebase Hosting. `.github/workflows/firebase-hosting-merge.yml` (an
+auto-generated Firebase CLI workflow) rebuilds the app fresh (`npm run build`, which runs the wasm
+build too) and deploys it on every push to `main` — including the auto-commits from
+`sync_thesportsdb.yml` — via the Firebase Hosting GitHub Action; it does not read from or write to a
+committed `dist/` directory. `.github/workflows/pages.yml` no longer builds/deploys the app itself —
+it only publishes `gh-pages-redirect/index.html`, a static page pointing visitors at the Firebase
+URL, and only runs when that page (or the workflow) changes.
 
 ## Contribution norms (from CONTRIBUTING.md)
 
