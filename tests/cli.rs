@@ -374,10 +374,12 @@ fn real_dataset_reports_finished_fixture_coverage() {
         .unwrap();
     // Player-level match data can only ever be a subset of finished fixtures.
     assert!(finished_fixtures_with_player_data <= finished_fixtures);
-    // Known state of the committed dataset as of writing this test: 18 fixtures from
-    // rounds 1-2 are finished, but only round 1's Galatasaray vs Çorum FK match has a
-    // corresponding matches/*.json file loaded.
-    assert_eq!(finished_fixtures, 18);
+    // Known state of the committed dataset as of writing this test: at least 18 fixtures
+    // from rounds 1-2 are finished, but only round 1's Galatasaray vs Çorum FK match has a
+    // corresponding matches/*.json file loaded. `sync_match_data.yml` grows finished_fixtures
+    // over the season as real results come in, so this must stay a lower bound, not an exact
+    // match, or CI breaks on every sync.
+    assert!(finished_fixtures >= 18);
     assert_eq!(finished_fixtures_with_player_data, 1);
 
     let human = command()
@@ -392,7 +394,7 @@ fn real_dataset_reports_finished_fixture_coverage() {
     assert!(human.status.success());
     let text = String::from_utf8_lossy(&human.stdout);
     assert!(text.contains("UYARI"));
-    assert!(text.contains("18"));
+    assert!(text.contains(&finished_fixtures.to_string()));
 }
 
 #[test]
