@@ -19,7 +19,7 @@
   <img src="https://img.shields.io/badge/React-18.x-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React">
   <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/Vite-5.x-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/Testler-79%20Rust%20%7C%2039%20Vitest-brightgreen?style=flat-square" alt="Testler">
+  <img src="https://img.shields.io/badge/Testler-89%20Rust%20%7C%2052%20Vitest-brightgreen?style=flat-square" alt="Testler">
   <img src="https://img.shields.io/badge/Sezon-2026--27-00d563?style=flat-square" alt="Sezon">
 </p>
 
@@ -108,7 +108,19 @@ superlig-fantasy-optimizer/
 
 ## 🌐 Canlı Demo & Özellikler
 
-Uygulama [https://superlig-fantasy-optimizer.web.app](https://superlig-fantasy-optimizer.web.app) adresinde yayındadır.
+Uygulama [https://superlig-fantasy-optimizer.web.app](https://superlig-fantasy-optimizer.web.app) adresinde yayındadır. Aşağıdaki iki görsel, kurgusal bir mockup değil — canlı üretim sitesinden alınmış gerçek ekran görüntüleridir.
+
+<p align="center">
+  <img src="./assets/readme/screenshots/optimizer.png" width="100%" alt="Kadro Optimizer sayfasında gerçek 2026-27 sezon verisiyle üretilmiş 3-5-2 diziliş, kaptan ve yedek kulübesi">
+  <br>
+  <sub><strong>Kadro Optimizer</strong> — tek tıkla üretilen 3-5-2 diziliş: toplam xP, kadro maliyeti ve kalan bütçe üstte, kaptan/vice-kaptan sahada işaretli.</sub>
+</p>
+
+<p align="center">
+  <img src="./assets/readme/screenshots/dashboard.png" width="100%" alt="Maç Merkezi sayfasında güncel hafta fikstürü ve haftanın en iyi oyuncuları listesi">
+  <br>
+  <sub><strong>Maç Merkezi</strong> — güncel haftanın fikstürü, canlı skor şeridi ve haftanın en iyi fantezi puanlı oyuncuları.</sub>
+</p>
 
 | Modül | Açıklama |
 | :--- | :--- |
