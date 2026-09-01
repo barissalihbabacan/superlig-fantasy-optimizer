@@ -319,7 +319,11 @@
       "home_team_id": "amed-sportif-faaliyetler",
       "away_team_id": "trabzonspor",
       "kickoff": "2026-08-31T19:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 2,
+        "away": 1
+      }
     },
     {
       "id": "2026-27-w03-09",
@@ -327,7 +331,11 @@
       "home_team_id": "besiktas",
       "away_team_id": "corum-fk",
       "kickoff": "2026-08-31T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 6,
+        "away": 2
+      }
     },
     {
       "id": "2026-27-w04-01",
