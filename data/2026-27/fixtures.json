@@ -359,7 +359,11 @@
       "home_team_id": "istanbul-basaksehir",
       "away_team_id": "galatasaray",
       "kickoff": "2026-09-12T19:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 2,
+        "away": 3
+      }
     },
     {
       "id": "2026-27-w04-04",
