@@ -343,7 +343,11 @@
       "home_team_id": "corum-fk",
       "away_team_id": "eyupspor",
       "kickoff": "2026-09-11T21:00:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 3,
+        "away": 0
+      }
     },
     {
       "id": "2026-27-w04-02",
@@ -351,7 +355,11 @@
       "home_team_id": "trabzonspor",
       "away_team_id": "genclerbirligi",
       "kickoff": "2026-09-12T16:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 5,
+        "away": 0
+      }
     },
     {
       "id": "2026-27-w04-03",
@@ -383,7 +391,11 @@
       "home_team_id": "kocaelispor",
       "away_team_id": "samsunspor",
       "kickoff": "2026-09-13T16:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 1,
+        "away": 0
+      }
     },
     {
       "id": "2026-27-w04-06",
@@ -399,7 +411,11 @@
       "home_team_id": "kasimpasa",
       "away_team_id": "amed-sportif-faaliyetler",
       "kickoff": "2026-09-13T21:30:00+03:00",
-      "status": "scheduled"
+      "status": "finished",
+      "score": {
+        "home": 2,
+        "away": 2
+      }
     },
     {
       "id": "2026-27-w04-08",
